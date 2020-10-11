@@ -1,0 +1,25 @@
+.toggle-menu{
+    margin-top: 5px;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.app-tittle {
+ font-size: 22px;   
+ white-space: nowrap;
+ font-weight: bold ;
+ margin:auto;
+ text-align: right;
+}
+
+.logo{
+    margin-left: -15px;
+}
+
+.dark-blue-text {
+    color: #5c8ebe;
+}
+
+.light-blue-text {
+    color : #0873C7;
+}
