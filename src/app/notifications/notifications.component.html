@@ -1,0 +1,38 @@
+<div>
+    <div class="p-d-flex  p-jc-end">
+        <button pButton type="button" label="Add Notification" class="p-mb-2 p-mr-2 p-button-info"
+            (click)="showAddNotifyDialog()"></button>
+    </div>
+    <p-accordion>
+        <p-accordionTab header="Public" [selected]="true">
+            Content 1
+        </p-accordionTab>
+        <p-accordionTab header="Private">
+            Content 2
+        </p-accordionTab>
+    </p-accordion>
+    <p-dialog header="Add Notification" [(visible)]="display" [style]="{width: '50vw'}">
+
+        <div class="p-fluid">
+            <div class="p-field p-grid">
+                <label for="details" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Details</label>
+                <div class="p-col-12 p-md-10">
+                    <textarea pInputTextarea [(ngModel)]="textAreaData" (ngModelChange)="textChanged($event)"
+                        aria-describedby="username-help"></textarea>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label for="files" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Choose file</label>
+                <div class="p-col-12 p-md-10">
+                    <p-fileUpload name="files" [showUploadButton]="false" [showCancelButton]="false"
+                        (onSelect)="onFileUpload($event)" (onRemove)="onFileRmoved()"></p-fileUpload>
+                </div>
+            </div>
+            <div class="p-field p-end">
+                <button pButton [disabled]="isButtonDisabled" type="button" label="Submit"
+                    class="p-col-12 p-md-10 p-button-info" (click)="addNotification()"></button>
+            </div>
+        </div>
+    </p-dialog>
+
+</div>
