@@ -1,7 +1,7 @@
 <div>
     <div class="p-d-flex  p-jc-end">
-        <button pButton type="button" label="Add Notification" class="p-mb-2 p-mr-2 p-button-info"
-            (click)="showAddNotifyDialog()"></button>
+        <button pButton type="button" label="Add Boards" class="p-mb-2 p-mr-2 p-button-info"
+            (click)="showAddBoardDialog()"></button>
     </div>
     <p-accordion>
         <p-accordionTab header="Public" [selected]="true">
@@ -11,22 +11,13 @@
             Content 2
         </p-accordionTab>
     </p-accordion>
-    <p-dialog header="Add Notification" [(visible)]="display" [style]="{width: '80vw'}" (onHide)="onDialogClose()">
+    <p-dialog header="Add Boards" [(visible)]="display" [style]="{width: '50vw'}">
 
         <div class="p-fluid">
             <div class="p-field p-grid">
-                <label  class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Group type:</label>
-                <div class="p-col-6 p-md-5">
-                    <p-dropdown [options]="groupTypes" (onChange)="onGroupTypeSelect($event)" [(ngModel)]="isPublic"></p-dropdown>
-                </div>
-                <div class="p-col-6 p-md-5">
-                    <p-multiSelect [options]="groupsData" [(ngModel)]="groupModel.groupId"></p-multiSelect>
-                </div>
-            </div>
-            <div class="p-field p-grid p-jc-center">
                 <label for="details" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Details</label>
                 <div class="p-col-12 p-md-10">
-                    <textarea [rows]="5" [cols]="60"pInputTextarea [(ngModel)]="groupModel.message" (ngModelChange)="textChanged($event)"
+                    <textarea pInputTextarea [(ngModel)]="textAreaData" (ngModelChange)="textChanged($event)"
                         aria-describedby="username-help"></textarea>
                 </div>
             </div>
@@ -37,10 +28,10 @@
                         (onSelect)="onFileUpload($event)" (onRemove)="onFileRmoved()"></p-fileUpload>
                 </div>
             </div>
-            <div class="p-field p-grid p-jc-end">
-                <div class="p-col-4 p-md-2">
+            <div class="p-field p-grid p-end">
+                <div class="p-col">
                 <button pButton [disabled]="isButtonDisabled" type="button" label="Submit"
-                    class="p-button-info" (click)="addNotification()"></button>
+                    class="p-col-12 p-md-10 p-button-info" (click)="addBoards()"></button>
                 </div>
             </div>
         </div>

@@ -1,14 +1,47 @@
-<p-card>
-    <div class="p-d-flex  p-jc-center">
-        <div class="p-mb-2 p-mr-2">
-            <input type="text" pInputText class="p-inputtext-sm" placeholder="User Name">
-        </div>
-        <div class="p-mb-2 p-mr-2">
-            <input type="password" pInputText class="p-inputtext-sm" placeholder="Password">
-            
-        </div>
-        <div class="p-mb-2 p-mr-2">
-            <button pButton type="button" label="Login" class="p-button-info" (click)="processLogin()"></button>
-        </div>
+﻿<div>
+    <div class="p-grid p-fluid p-jc-center">
+    <div *ngIf="isLoginError" class="p-invalid">
+        Invalid Username And/or Password
+       
     </div>
-</p-card>
+</div>
+
+    <div class="p-grid p-fluid p-jc-center">
+        <form [formGroup]="form" (ngSubmit)="processLogin()">
+            <div class="form-group p-col-12 ">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+                    <input type="text" pInputText formControlName="username" class="form-control" (ngModelChange) = "onChange()"
+                        [ngClass]="{ 'p-invalid': (submitted && f.username.errors) || isLoginError }" placeholder="User Name" />
+                       
+                    <div *ngIf="submitted && f.username.errors" class="p-invalid">
+                        <div *ngIf="f.username.errors.required">Username is required
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group p-col-12 ">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-key"></i></span>
+                    <input type="password" pInputText formControlName="password" (ngModelChange) = "onChange()" placeholder="Password"
+                        class="form-control"
+                        [ngClass]="{ 'p-invalid': (submitted && f.password.errors) || isLoginError }" />
+                    <div *ngIf="submitted && f.password.errors" class="p-invalid">
+                        <div *ngIf="f.password.errors.required">Password is required
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group p-col-12 ">
+                <div class="p-inputgroup">
+                <p-button label="Login" [disabled]="loading" (click)="processLogin()" class="p-col" styleClass="p-button-sm">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                </p-button>
+                <p-button label="Close" [disabled]="loading" class="p-col" (click)="closeLogin()" styleClass="p-button-sm">
+                </p-button>
+            </div>
+            </div>
+        </form>
+    </div>
+    
+</div>

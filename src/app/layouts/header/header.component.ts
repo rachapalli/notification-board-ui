@@ -10,7 +10,8 @@ import { DataService } from 'src/app/data.service';
 export class HeaderComponent implements OnInit {
 
   isLoginSuccess = false;
-
+  isLoginDialogOpen = false;
+  isRegistrationDisplay = false;
   constructor(private router: Router, public dataService: DataService) { }
 
   ngOnInit(): void {
@@ -18,7 +19,9 @@ export class HeaderComponent implements OnInit {
 
   handleLogin(){
     console.log("Login Clicked");
-    this.router.navigate(['/login']);
+    
+    this.isLoginDialogOpen = true;
+    this.isRegistrationDisplay = false;
   }
 
   handleLogOut(){
@@ -27,7 +30,17 @@ export class HeaderComponent implements OnInit {
   }
   handleSignUp(){
     console.log("Signup CLicked");
-    this.router.navigate(['/registration']);
+   
+    this.isRegistrationDisplay = true;
+    this.isLoginDialogOpen = false;
+  }
+
+  onLogInDialogClose(){
+    this.isLoginDialogOpen = false;
+  }
+
+  onRegistrationDialogClose(){
+    this.isRegistrationDisplay = false;
   }
 
 }
