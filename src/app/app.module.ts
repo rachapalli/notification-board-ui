@@ -19,8 +19,13 @@ import {AccordionModule} from 'primeng/accordion';
 import {DialogModule} from 'primeng/dialog';
 import {FileUploadModule} from 'primeng/fileupload';
 import {InputTextareaModule} from 'primeng/inputtextarea';
+import {DropdownModule} from 'primeng/dropdown';
+import {MultiSelectModule} from 'primeng/multiselect';
 import { HttpClientModule } from '@angular/common/http';
 import { RegistrationComponent } from './registration/registration.component';
+import { GenericdialogComponent } from './genericdialog/genericdialog.component';
+import { BoardDetailsComponent } from './board-details/board-details.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +35,10 @@ import { RegistrationComponent } from './registration/registration.component';
     LoginComponent,
     BoardmemberComponent,
     NotificationsComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    GenericdialogComponent,
+    BoardDetailsComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +56,9 @@ import { RegistrationComponent } from './registration/registration.component';
     AccordionModule,
     DialogModule,
     FileUploadModule,
-    InputTextareaModule
+    InputTextareaModule,
+    DropdownModule,
+    MultiSelectModule,
   ],
   providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent],
