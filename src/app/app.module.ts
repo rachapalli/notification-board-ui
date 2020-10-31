@@ -20,6 +20,7 @@ import {DialogModule} from 'primeng/dialog';
 import {FileUploadModule} from 'primeng/fileupload';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {DropdownModule} from 'primeng/dropdown';
+import {TableModule} from 'primeng/table';
 import {MultiSelectModule} from 'primeng/multiselect';
 import { HttpClientModule } from '@angular/common/http';
 import { RegistrationComponent } from './registration/registration.component';
@@ -59,6 +60,7 @@ import { FooterComponent } from './footer/footer.component';
     InputTextareaModule,
     DropdownModule,
     MultiSelectModule,
+    TableModule,
   ],
   providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
   bootstrap: [AppComponent],

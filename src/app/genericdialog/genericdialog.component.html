@@ -5,7 +5,7 @@
             <app-login (onClose)="onDialogClose()"></app-login>
         </div>
         <div *ngIf="isRegistrationDisplay">
-            <app-registration (onClose)="onDialogClose()"></app-registration>
+            <app-registration (onClose)="onDialogClose($event)"></app-registration>
         </div>
     </div>
 </p-dialog>

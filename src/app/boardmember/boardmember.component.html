@@ -1,11 +1,11 @@
-<p-tabView>
+<p-tabView (onChange)="handleChange($event)">
   <p-tabPanel header="Add Boards" >
-    <app-board-details></app-board-details>
+    <app-board-details *ngIf="index === 0"></app-board-details>
   </p-tabPanel>
   <p-tabPanel header="Invite Members" leftIcon="pi pi-arrow-down">
     Invite Members Content
   </p-tabPanel>
   <p-tabPanel header="Notifications" leftIcon="pi pi-bell">
-    <app-notifications></app-notifications>
+    <app-notifications  *ngIf="index === 2"></app-notifications>
   </p-tabPanel>
 </p-tabView>

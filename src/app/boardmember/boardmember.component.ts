@@ -7,12 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BoardmemberComponent implements OnInit {
 
-
+  index = 0;
   
   constructor() { }
 
   ngOnInit(): void {
     
+  }
+
+  handleChange(event: any){
+    this.index = event.index;
   }
 
 }
