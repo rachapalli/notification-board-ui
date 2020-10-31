@@ -7,8 +7,3 @@ export class users {
     contactNumber: string;
     userType: string;
 }
-
-export class CreateGroupModel {
-    groupId: number;
-    message: string;
-}

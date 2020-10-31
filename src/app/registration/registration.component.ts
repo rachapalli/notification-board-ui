@@ -17,21 +17,23 @@ export class RegistrationComponent implements OnInit {
   constructor(private httpService: HttpServiceClient) { }
 
   ngOnInit(): void {
-    this.userTypes = [{label:'Select City', value:null}];
+    this.userTypes = [{label:'User Type', value:null}];
     this.httpService.getUserTypes().subscribe((res) => {
       for(let user of res){
-        this.userTypes.push({label:user, value:{user}});
+        this.userTypes.push({label:user, value:user});
       }
     });
   }
 
   processSignUp(){
     this.httpService.registerNewUser(this.model).subscribe((res) => {
-    console.log(res);
+      this.onClose.emit({isRegistrationSuccess: true});
+    },error => {
+      console.log(error);
     });
   }
 
   closeSignUp(){
-    this.onClose.emit();
+    this.onClose.emit({isRegistrationSuccess: false});
   }
 }

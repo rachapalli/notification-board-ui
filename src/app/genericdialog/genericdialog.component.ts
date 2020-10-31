@@ -29,8 +29,8 @@ export class GenericdialogComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onDialogClose(){
-    this.onClose.emit();
+  onDialogClose(event: any){
+    this.onClose.emit(event);
   }
 
 }

@@ -15,6 +15,11 @@
             <input type="password" [(ngModel)]="model.password" pInputText class="p-inputtext-sm" placeholder="Password">
         </div>
     </div>
+    <div class="p-field p-grid p-jc-center">
+        <div class="p-col-12 p-md-10">
+            <p-dropdown [options]="userTypes"  [(ngModel)]="model.userType"></p-dropdown>
+        </div>
+    </div>
         <div class="p-field p-grid p-jc-center">
             <div class="p-col-12  p-md-10">
                 <input type="text"[(ngModel)]="model.email"  pInputText class="p-inputtext-sm" placeholder="Email Address">
@@ -31,11 +36,7 @@
             </div>
         </div>
 
-        <div class="p-field p-grid p-jc-center">
-            <div class="p-col-12 p-md-10">
-                <p-dropdown [options]="userTypes"  [(ngModel)]="model.userType"></p-dropdown>
-            </div>
-        </div>
+        
        
         <div class="p-field p-grid p-jc-end">
             <div class="p-col-4 p-md-2">

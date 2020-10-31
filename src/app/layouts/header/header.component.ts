@@ -18,8 +18,6 @@ export class HeaderComponent implements OnInit {
   }
 
   handleLogin(){
-    console.log("Login Clicked");
-    
     this.isLoginDialogOpen = true;
     this.isRegistrationDisplay = false;
   }
@@ -29,8 +27,6 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['*']);
   }
   handleSignUp(){
-    console.log("Signup CLicked");
-   
     this.isRegistrationDisplay = true;
     this.isLoginDialogOpen = false;
   }
@@ -39,8 +35,11 @@ export class HeaderComponent implements OnInit {
     this.isLoginDialogOpen = false;
   }
 
-  onRegistrationDialogClose(){
+  onRegistrationDialogClose(event: any){
     this.isRegistrationDisplay = false;
+    if(event && event.isRegistrationSuccess){
+      this.handleLogin();
+    }
   }
 
 }

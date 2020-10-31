@@ -27,4 +27,4 @@
     </div>
 </div>
 <app-genericdialog  [isLoginDisplay] = "isLoginDialogOpen" (onClose)="onLogInDialogClose()" [display]= "isLoginDialogOpen" [headerText]="'Login'"></app-genericdialog>
-<app-genericdialog  [isRegistrationDisplay] = "isRegistrationDisplay" (onClose)="onRegistrationDialogClose()"[display]= "isRegistrationDisplay" [headerText]="'Registration'"></app-genericdialog>
+<app-genericdialog  [isRegistrationDisplay] = "isRegistrationDisplay" (onClose)="onRegistrationDialogClose($event)" [display]= "isRegistrationDisplay" [headerText]="'Registration'"></app-genericdialog>

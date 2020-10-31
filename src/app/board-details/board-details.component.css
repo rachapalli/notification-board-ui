@@ -1,0 +1,29 @@
+:host ::ng-deep .p-dialog .p-dialog-header {
+    border-bottom: 0 none;
+    background: #ffffff;
+    color: #495057;
+    padding: 0.3rem;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    background-color: #2196f3;
+  }
+
+:host ::ng-deep  .p-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -0.5rem;
+    margin-left: -0.5rem;
+    margin-top: 0.8rem;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    text-align: left;
+    padding: 1rem 1rem;
+    border: 1px solid #e9ecef;
+    border-width: 0 0 1px 0;
+    font-weight: 600;
+    color: #495057;
+    background: #f8f9fa;
+    transition: box-shadow 0.2s;
+  }
+
