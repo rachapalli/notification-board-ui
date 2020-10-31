@@ -1,8 +1,8 @@
 <p-dialog [header]="headerText" [(visible)]="display" modal="false" draggable="false" [style]="{width: '50vw'}"
-    (onHide)="onDialogClose()">
+    (onHide)="onDialogClose($event)">
     <div>
         <div *ngIf="isLoginDisplay">
-            <app-login (onClose)="onDialogClose()"></app-login>
+            <app-login (onClose)="onDialogClose($event)"></app-login>
         </div>
         <div *ngIf="isRegistrationDisplay">
             <app-registration (onClose)="onDialogClose($event)"></app-registration>
