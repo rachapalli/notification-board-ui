@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { DataService } from 'src/app/data.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class HeaderComponent implements OnInit {
   isLoginSuccess = false;
   isLoginDialogOpen = false;
   isRegistrationDisplay = false;
-  constructor(private router: Router, public dataService: DataService) { }
+  constructor(private router: Router, public dataService: DataService, private messageService: MessageService) { }
 
   ngOnInit(): void {
   }
@@ -35,11 +36,12 @@ export class HeaderComponent implements OnInit {
     this.isLoginDialogOpen = false;
   }
 
-  onRegistrationDialogClose(event: any){
+  onRegistrationDialogClose(){
     this.isRegistrationDisplay = false;
-    if(event && event.isRegistrationSuccess){
-      this.handleLogin();
-    }
+  }
+
+  showResponseMessages(event: any){
+    this.messageService.add({severity:event.severity, summary: event.summary, detail: event.detail});
   }
 
 }

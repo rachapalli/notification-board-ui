@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { CreateGroupModel } from './model/group.model';
-import { users } from './model/users.model';
+import { Users } from './model/users.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class HttpServiceClient {
     return this.httpService.post(this.url + "/user/authenticate", { "username": userName, password: password });
   }
 
-  registerNewUser(userDetails: users): any {
+  registerNewUser(userDetails: Users): any {
     return this.httpService.post(this.url + "/user/register", userDetails);
   }
 
@@ -42,4 +42,8 @@ export class HttpServiceClient {
   getUserGRoupNotifications(email: string): any {
     return this.httpService.post(this.url + "/notification/getUserGroupNotifications", { email: email });
   }
+  getNotifications(groupName: string): any{
+    return this.httpService.get(this.url + "/notification/getNotifications/"+ groupName);
+  }
+  
 }

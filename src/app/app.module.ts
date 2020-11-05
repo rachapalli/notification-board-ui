@@ -21,12 +21,16 @@ import {FileUploadModule} from 'primeng/fileupload';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {DropdownModule} from 'primeng/dropdown';
 import {TableModule} from 'primeng/table';
+import {ToastModule} from 'primeng/toast';
 import {MultiSelectModule} from 'primeng/multiselect';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { HttpClientModule } from '@angular/common/http';
 import { RegistrationComponent } from './registration/registration.component';
 import { GenericdialogComponent } from './genericdialog/genericdialog.component';
 import { BoardDetailsComponent } from './board-details/board-details.component';
 import { FooterComponent } from './footer/footer.component';
+import { MessageService } from 'primeng/api';
+import { NotificationByGroupNameComponent } from './notification-by-group-name/notification-by-group-name.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +43,8 @@ import { FooterComponent } from './footer/footer.component';
     RegistrationComponent,
     GenericdialogComponent,
     BoardDetailsComponent,
-    FooterComponent
+    FooterComponent,
+    NotificationByGroupNameComponent
   ],
   imports: [
     BrowserModule,
@@ -61,8 +66,10 @@ import { FooterComponent } from './footer/footer.component';
     DropdownModule,
     MultiSelectModule,
     TableModule,
+    ToastModule,
+    ProgressSpinnerModule
   ],
-  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, MessageService],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ]
 })

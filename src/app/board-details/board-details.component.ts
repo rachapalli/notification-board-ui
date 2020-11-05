@@ -22,10 +22,15 @@ export class BoardDetailsComponent implements OnInit {
   errorMessage = '';
   publicGroups: Groups[];
   privateGroups: Groups[];
+  localUrl = "";
   constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient) { }
 
   ngOnInit(): void {
    this.createForm();
+   const hrefUrl = document.location.href.split('#');
+   if(hrefUrl){
+     this.localUrl = hrefUrl[0]+'#/notification/getNotifications/';
+   }
     this.groupTypes = [{label:'Public', value:true},{label:'Private', value:false}];
     this.fetchAllGroups();
   }

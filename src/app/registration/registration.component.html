@@ -1,10 +1,12 @@
-
-    <div class="p-fluid">
+<form [formGroup]="form" (ngSubmit)="processSignUp()">
+<div class="p-fluid">
         <div class="p-field p-grid">
         </div>
         <div class="p-field p-grid p-jc-center">
             <div class="p-col-12 p-md-10">
-                <input type="text" [(ngModel)]="model.userName" pInputText class="p-inputtext-sm" placeholder="User Name">
+                <input type="text" formControlName="userName" 
+                [ngClass]="{ 'p-invalid': (formSubmitted && f.userName.errors)}"
+                 pInputText class="p-inputtext-sm" placeholder="User Name">
             </div>
             <!-- <div class="p-col-6 p-md-5">
                 <input type="text" pInputText class="p-inputtext-sm" placeholder="Last Name">
@@ -12,27 +14,32 @@
         </div>
         <div class="p-field p-grid p-jc-center">
         <div class="p-col-12 p-md-10">
-            <input type="password" [(ngModel)]="model.password" pInputText class="p-inputtext-sm" placeholder="Password">
+            <input type="password" formControlName="password" 
+            [ngClass]="{ 'p-invalid': (formSubmitted && f.password.errors)}"  pInputText class="p-inputtext-sm" placeholder="Password">
         </div>
     </div>
     <div class="p-field p-grid p-jc-center">
         <div class="p-col-12 p-md-10">
-            <p-dropdown [options]="userTypes"  [(ngModel)]="model.userType"></p-dropdown>
+            <p-dropdown [options]="userTypes"  formControlName="userType" 
+            [ngClass]="{ 'p-invalid': (formSubmitted && f.userType.errors)}"></p-dropdown>
         </div>
     </div>
         <div class="p-field p-grid p-jc-center">
             <div class="p-col-12  p-md-10">
-                <input type="text"[(ngModel)]="model.email"  pInputText class="p-inputtext-sm" placeholder="Email Address">
+                <input type="text"  formControlName="email" 
+                [ngClass]="{ 'p-invalid': (formSubmitted && f.email.errors)}" pInputText class="p-inputtext-sm" placeholder="Email Address">
             </div>
         </div>
         <div class="p-field p-grid p-jc-center">
         <div class="p-col-12  p-md-10">
-            <input type="text" [(ngModel)]="model.alternateEmail" pInputText class="p-inputtext-sm" placeholder="Alternate Email">
+            <input type="text" formControlName="altEmail" 
+            [ngClass]="{ 'p-invalid': (formSubmitted && f.altEmail.errors)}" pInputText class="p-inputtext-sm" placeholder="Alternate Email">
         </div>
     </div>
         <div class="p-field p-grid p-jc-center">
             <div class="p-col-12 p-md-10">
-                <input type="text" [(ngModel)]="model.contactNumber" pInputText class="p-inputtext-sm" placeholder="Mobile Number">
+                <input type="text"  formControlName="mobile" 
+                [ngClass]="{ 'p-invalid': (formSubmitted && f.mobile.errors)}" pInputText class="p-inputtext-sm" placeholder="Mobile Number">
             </div>
         </div>
 
@@ -40,7 +47,7 @@
        
         <div class="p-field p-grid p-jc-end">
             <div class="p-col-4 p-md-2">
-                <button pButton type="button" label="Sign up" class="p-button-info"  styleClass="p-button-sm" (click)="processSignUp()"></button>
+                <button pButton type="button" [disabled]="isRegistrationClicked" label="Sign up" class="p-button-info"  styleClass="p-button-sm" (click)="processSignUp()"></button>
             </div>
             <div class="p-col-4 p-md-2">
             <button pButton type="button" label="Close"  class="p-button-info" (click)="closeSignUp()" styleClass="p-button-sm">
@@ -48,3 +55,4 @@
         </div>
         </div>
     </div>
+    </form>
