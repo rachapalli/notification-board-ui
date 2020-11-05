@@ -1,0 +1,25 @@
+<p-toast></p-toast>
+<p-table [value]="publicNotifications" styleClass="p-datatable-gridlines">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Image</th>
+            <th>Group Name</th>
+            <!-- <th>Notificatin Type</th> -->
+            <th>Message</th>
+            <!-- <th>Field Id</th> -->
+            <!-- <th>Created By</th> -->
+            <th>Created Date</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-publicNotification>
+        <tr>
+            <td><img [alt]="'No Image'" src="{{publicNotification.fileKey}}" width="32" style="vertical-align: middle" /></td>
+            <td>{{publicNotification.groupName}}</td>
+            <!-- <td>{{publicNotification.notificationType}}</td> -->
+            <td>{{publicNotification.message}}</td>
+            <!-- <td>{{publicNotification.fileId}}</td> -->
+            <!-- <td>{{publicNotification.createdBy}}</td> -->
+            <td>{{publicNotification.createdDate}}</td>
+        </tr>
+    </ng-template>
+</p-table>

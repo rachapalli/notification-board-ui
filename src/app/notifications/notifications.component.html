@@ -5,12 +5,11 @@
     </div>
     <p-accordion>
         <p-accordionTab header="Public" [selected]="true">
-            <p-table [value]="publicNotifications">
+            <p-table [value]="publicNotifications" styleClass="p-datatable-gridlines">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Group ID</th>
+                        <th>Image</th>
                         <th>Group Name</th>
-                        <th>Notificatin Id</th>
                         <th>Notificatin Type</th>
                         <th>Message</th>
                         <th>Field Id</th>
@@ -20,9 +19,8 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-publicNotification>
                     <tr>
-                        <td>{{publicNotification.groupId}}</td>
+                        <td><img [alt]="publicNotification.fileKey" src="{{publicNotification.fileKey}}" width="32" style="vertical-align: middle" /></td>
                         <td>{{publicNotification.groupName}}</td>
-                        <td>{{publicNotification.notificationId}}</td>
                         <td>{{publicNotification.notificationType}}</td>
                         <td>{{publicNotification.message}}</td>
                         <td>{{publicNotification.fileId}}</td>
@@ -33,27 +31,23 @@
             </p-table>
         </p-accordionTab>
         <p-accordionTab header="Private">
-            <p-table [value]="privateNotifications">
+            <p-table [value]="privateNotifications" styleClass="p-datatable-gridlines">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Group ID</th>
+                        <th>Image</th>
                         <th>Group Name</th>
-                        <th>Notificatin Id</th>
                         <th>Notificatin Type</th>
                         <th>Message</th>
-                        <th>Field Id</th>
                         <th>Created By</th>
                         <th>Created Date</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-privateNotification>
                     <tr>
-                        <td>{{privateNotification.groupId}}</td>
+                        <td><img [alt]="privateNotification.fileKey" src="{{privateNotification.fileKey}}" width="32" style="vertical-align: middle" /></td>
                         <td>{{privateNotification.groupName}}</td>
-                        <td>{{privateNotification.notificationId}}</td>
                         <td>{{privateNotification.notificationType}}</td>
                         <td>{{privateNotification.message}}</td>
-                        <td>{{privateNotification.fileId}}</td>
                         <td>{{privateNotification.createdBy}}</td>
                         <td>{{privateNotification.createdDate}}</td>
                 </ng-template>

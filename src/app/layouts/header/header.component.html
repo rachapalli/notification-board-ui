@@ -1,5 +1,5 @@
-﻿<div class="backGround p-d-flex p-jc-between">
-
+﻿<p-toast></p-toast>
+<div class="backGround p-d-flex p-jc-between">
     <div class="p-mb-2 p-mr-2">
         <h6>
             <img src="assets/Logo.jpg" style="width:20%;display:inline-block;background-color: aqua;" />
@@ -27,4 +27,4 @@
     </div>
 </div>
 <app-genericdialog  [isLoginDisplay] = "isLoginDialogOpen" (onClose)="onLogInDialogClose()" [display]= "isLoginDialogOpen" [headerText]="'Login'"></app-genericdialog>
-<app-genericdialog  [isRegistrationDisplay] = "isRegistrationDisplay" (onClose)="onRegistrationDialogClose($event)" [display]= "isRegistrationDisplay" [headerText]="'Registration'"></app-genericdialog>
+<app-genericdialog  [isRegistrationDisplay] = "isRegistrationDisplay" (onResponseMessages) = "showResponseMessages($event)" (onClose)="onRegistrationDialogClose()" [display]= "isRegistrationDisplay" [headerText]="'Registration'"></app-genericdialog>

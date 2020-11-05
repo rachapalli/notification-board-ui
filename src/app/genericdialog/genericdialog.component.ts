@@ -23,6 +23,8 @@ export class GenericdialogComponent implements OnInit {
   @Output()
   onClose = new EventEmitter();
   
+  @Output()
+  onResponseMessages = new EventEmitter();
 
   constructor() { }
 
@@ -31,6 +33,10 @@ export class GenericdialogComponent implements OnInit {
 
   onDialogClose(event: any){
     this.onClose.emit(event);
+  }
+
+  sendResponseMessages(event: any){
+    this.onResponseMessages.emit(event);
   }
 
 }

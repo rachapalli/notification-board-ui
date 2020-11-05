@@ -5,13 +5,14 @@
     </div>
     <p-accordion>
         <p-accordionTab header="Public" [selected]="true">
-            <p-table [value]="publicGroups">
+            <p-table [value]="publicGroups" styleClass="p-datatable-gridlines">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Group ID</th>
-                        <th>Group Name</th>
-                        <th>Created By</th>
-                        <th>Created Date</th>
+                        <th style="width:4em">Group ID</th>
+                        <th style="width:4em">Group Name</th>
+                        <th style="width:4em">Created By</th>
+                        <th style="width:8em">Created Date</th>
+                        <th style="width:12em">Group Url</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-publicGroup>
@@ -20,19 +21,21 @@
                         <td>{{publicGroup.groupName}}</td>
                         <td>{{publicGroup.createdBy}}</td>
                         <td>{{publicGroup.createdDate}}</td>
+                        <td>{{localUrl}}{{publicGroup.groupName}}</td>
                     </tr>
                 </ng-template>
             </p-table>
             
         </p-accordionTab>
         <p-accordionTab header="Private">
-            <p-table [value]="privateGroups">
+            <p-table [value]="privateGroups" styleClass="p-datatable-gridlines">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Group ID</th>
-                        <th>Group Name</th>
-                        <th>Created By</th>
-                        <th>Created Date</th>
+                        <th style="width:4em">Group ID</th>
+                        <th style="width:4em">Group Name</th>
+                        <th style="width:4em">Created By</th>
+                        <th style="width:8em">Created Date</th>
+                        <th style="width:12em">Group Url</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-privateGroup>
@@ -41,6 +44,7 @@
                         <td>{{privateGroup.groupName}}</td>
                         <td>{{privateGroup.createdBy}}</td>
                         <td>{{privateGroup.createdDate}}</td>
+                        <td>{{localUrl}}{{privateGroup.groupName}}</td>
                     </tr>
                 </ng-template>
             </p-table>
