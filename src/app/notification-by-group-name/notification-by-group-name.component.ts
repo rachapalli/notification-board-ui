@@ -23,7 +23,15 @@ export class NotificationByGroupNameComponent implements OnInit {
   ngOnInit(): void {
     this.service.getNotifications(this.groupName).subscribe( res => {
       if(res){
-        this.publicNotifications = res;
+        for(const fileKeyObj of res){
+          this.service.getImageWithFileKey(fileKeyObj.fileKey).subscribe((imgRes)=>{
+            fileKeyObj.fileKey = imgRes;
+            this.publicNotifications = res;
+          }, err => {
+            console.log('Image Fetching Error' + err);
+          });
+        }
+        this.publicNotifications = res; // need to remove once getImageWithFileKey service is up
       }
     }, () => {
       this.messageService.add({severity:'error', summary:'Error', detail: 'Error Occured While Fetching details with ' + this.groupName});

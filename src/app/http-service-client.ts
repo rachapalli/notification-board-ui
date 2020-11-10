@@ -8,7 +8,7 @@ import { Users } from './model/users.model';
   providedIn: 'root'
 })
 export class HttpServiceClient {
-  url = 'http://localhost:8080/notification-board-0.0.1-SNAPSHOT';
+  url = 'https://notification-demo-app.azurewebsites.net';
   constructor(private httpService: HttpClient) { }
 
   getGroups(): any {
@@ -45,5 +45,9 @@ export class HttpServiceClient {
   getNotifications(groupName: string): any{
     return this.httpService.get(this.url + "/notification/getNotifications/"+ groupName);
   }
-  
+ 
+  getImageWithFileKey(fileKey: string): any{
+    return this.httpService.get(this.url + "/file/download?file="+fileKey);
+
+  }
 }
