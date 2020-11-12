@@ -8,43 +8,57 @@
             <p-table [value]="publicGroups" styleClass="p-datatable-gridlines">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width:4em">Group ID</th>
-                        <th style="width:4em">Group Name</th>
-                        <th style="width:4em">Created By</th>
+                        <th style="width:8em">Group Name</th>
                         <th style="width:8em">Created Date</th>
                         <th style="width:12em">Group Url</th>
+                        <th style="width:2em">Edit/Delete</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-publicGroup>
                     <tr>
-                        <td>{{publicGroup.groupId}}</td>
                         <td>{{publicGroup.groupName}}</td>
-                        <td>{{publicGroup.createdBy}}</td>
-                        <td>{{publicGroup.createdDate}}</td>
+                        <td>{{publicGroup.createdDate | date:'dd/MM/yyyy'}}</td>
                         <td>{{localUrl}}{{publicGroup.groupName}}</td>
+                        <td>
+                            <div class="p-field p-grid p-jc-center">
+                                <div class="p-col-6">
+                                    <i class="pi pi-pencil" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(publicGroup)"></i>
+                                </div>
+                                <div class="p-col-6">
+                                    <i class="pi pi-trash" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(publicGroup)"></i>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 </ng-template>
             </p-table>
-            
+
         </p-accordionTab>
         <p-accordionTab header="Private">
             <p-table [value]="privateGroups" styleClass="p-datatable-gridlines">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width:4em">Group ID</th>
-                        <th style="width:4em">Group Name</th>
-                        <th style="width:4em">Created By</th>
+                        <th style="width:8em">Group Name</th>
                         <th style="width:8em">Created Date</th>
                         <th style="width:12em">Group Url</th>
+                        <th style="width:2em">Edit/Delete</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-privateGroup>
                     <tr>
-                        <td>{{privateGroup.groupId}}</td>
                         <td>{{privateGroup.groupName}}</td>
-                        <td>{{privateGroup.createdBy}}</td>
-                        <td>{{privateGroup.createdDate}}</td>
+                        <td>{{privateGroup.createdDate | date:'dd/MM/yyyy'}}</td>
                         <td>{{localUrl}}{{privateGroup.groupName}}</td>
+                        <td>
+                            <div class="p-field p-grid p-jc-center">
+                                <div class="p-col-6">
+                                    <i class="pi pi-pencil" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(privateGroup)"></i>
+                                </div>
+                                <div class="p-col-6">
+                                    <i class="pi pi-trash" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(privateGroup)"></i>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 </ng-template>
             </p-table>
@@ -62,14 +76,14 @@
             <div *ngIf="isCreateError" class="p-invalid">
                 {{errorMessage}}
             </div>
-            </div>
+        </div>
         <form [formGroup]="form" (ngSubmit)="createGroup()">
             <div class="p-field p-grid p-jc-center">
                 <div class="form-group p-col-12">
                     <div class="p-inputgroup">
                         <label class="p-col-3">Group Name</label>
                         <input type="text" pInputText formControlName="groupName" (ngModelChange)="onGroupNameChange()"
-                            class="form-control p-inputtext-lg p-col-9"
+                            class="form-control p-col-9"
                             [ngClass]="{ 'p-invalid': submitted && (f.groupName.errors) }" />
                     </div>
                 </div>
@@ -78,8 +92,8 @@
                 <div class="form-group p-col-12 ">
                     <div class="p-inputgroup">
                         <label class="p-col-3">Group Type</label>
-                        <p-dropdown class="form-control p-col-9" formControlName="groupType" [style]="{'width':'35vw'}" [options]="groupTypes"
-                            (onChange)="onGroupTypeSelect()"
+                        <p-dropdown class="form-control p-col-9" formControlName="groupType" [style]="{'width':'35vw'}"
+                            [options]="groupTypes" (onChange)="onGroupTypeSelect()"
                             [ngClass]="{ 'p-invalid': submitted && (f.groupType.errors) }"></p-dropdown>
 
                     </div>

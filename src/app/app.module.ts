@@ -22,6 +22,7 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {DropdownModule} from 'primeng/dropdown';
 import {TableModule} from 'primeng/table';
 import {ToastModule} from 'primeng/toast';
+import {TooltipModule} from 'primeng/tooltip';
 import {MultiSelectModule} from 'primeng/multiselect';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { HttpClientModule } from '@angular/common/http';
@@ -67,7 +68,8 @@ import { NotificationByGroupNameComponent } from './notification-by-group-name/n
     MultiSelectModule,
     TableModule,
     ToastModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    TooltipModule
   ],
   providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, MessageService],
   bootstrap: [AppComponent],

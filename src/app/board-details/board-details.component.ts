@@ -19,6 +19,7 @@ export class BoardDetailsComponent implements OnInit {
   submitted: boolean;
   groupTypes: any;
   isCreateError = false;
+  groupId: number;
   errorMessage = '';
   publicGroups: Groups[];
   privateGroups: Groups[];
@@ -50,7 +51,13 @@ export class BoardDetailsComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.httpService.createGroup(this.form.value.groupName, this.form.value.groupType).subscribe((res) =>{
+    const groupReq = new Groups();
+    groupReq.groupName = this.form.value.groupName;
+    groupReq.isPublic = this.form.value.groupType;
+    if(this.groupId !== 0){
+      groupReq.groupId = this.groupId;
+    }
+    this.httpService.createGroup(groupReq).subscribe((res) =>{
       this.onDialogClose();
     },error => {
      this.isCreateError = true;
@@ -70,6 +77,7 @@ export class BoardDetailsComponent implements OnInit {
     this.submitted = false;
     this.isCreateError = false;
     this.errorMessage = '';
+    this.groupId = 0;
     this.createForm();
     this.fetchAllGroups();
   }
@@ -91,6 +99,22 @@ export class BoardDetailsComponent implements OnInit {
     }else{
       this.isButtonDisabled = true;
     }
+  }
+
+  onEditRow(event: any){
+    console.log(event);
+    this.display = true;
+    let groupType = null;
+    event.isPublic ? groupType = true : groupType = false;
+    this.form = this.formBuilder.group({
+      groupName: [event.groupName, Validators.required],
+      groupType: [groupType, Validators.required]
+    });
+    this.groupId = event.groupId;
+  }
+
+  onDeleteRow(event: any){
+    console.log(event);
   }
 
 }

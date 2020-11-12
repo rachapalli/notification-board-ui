@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
-import { CreateGroupModel } from './model/group.model';
+import { CreateGroupModel, Groups } from './model/group.model';
 import { Users } from './model/users.model';
 
 @Injectable({
@@ -31,8 +31,8 @@ export class HttpServiceClient {
     return this.httpService.get(this.url + "/user/userTypes");
   }
 
-  createGroup(groupName: string, isPublic: boolean): any {
-    return this.httpService.post(this.url + "/group/create", { groupName: groupName, isPublic: isPublic });
+  createGroup(req: Groups): any {
+    return this.httpService.post(this.url + "/group/create", req);
   }
 
   createNotification(data: CreateGroupModel): any {

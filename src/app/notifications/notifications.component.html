@@ -3,53 +3,70 @@
         <button pButton type="button" label="Add Notification" class="p-mb-2 p-mr-2 p-button-info"
             (click)="showAddNotifyDialog()"></button>
     </div>
+    <div class="p-fluid">
+        <div class="p-field p-grid">
+        <label class="p-col-1  p-jc-end">Select Group</label>
+        <div class="p-col-6 p-md-5">
+            <p-dropdown [options]="totalGroups" (onChange)="onGroupSelect($event)" [(ngModel)]="mainGroupModel.groupId"></p-dropdown>
+        </div>
+        <div class="p-col-4 p-md-3">
+        </div>
+        </div>
+    </div>
     <p-accordion>
-        <p-accordionTab header="Public" [selected]="true">
+        <p-accordionTab header="Public" [(selected)]="isPublicSelect">
             <p-table [value]="publicNotifications" styleClass="p-datatable-gridlines">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Image</th>
-                        <th>Group Name</th>
-                        <th>Notificatin Type</th>
-                        <th>Message</th>
-                        <th>Field Id</th>
-                        <th>Created By</th>
-                        <th>Created Date</th>
+                        <th style="width:8em">Notification Text</th>
+                        <th style="width:12em">Notification File</th>
+                        <th style="width:2em">Edit/Delete</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-publicNotification>
                     <tr>
-                        <td><img [alt]="publicNotification.fileKey" src="{{publicNotification.fileKey}}" width="32" style="vertical-align: middle" /></td>
-                        <td>{{publicNotification.groupName}}</td>
-                        <td>{{publicNotification.notificationType}}</td>
                         <td>{{publicNotification.message}}</td>
-                        <td>{{publicNotification.fileId}}</td>
-                        <td>{{publicNotification.createdBy}}</td>
-                        <td>{{publicNotification.createdDate}}</td>
+                        <td><img [alt]="publicNotification.fileKey" src="{{publicNotification.fileKey}}" width="32"
+                                style="vertical-align: middle" /></td>
+                        <td>
+                            <div class="p-field p-grid p-jc-center">
+                                <div class="p-col-6">
+                                    <i class="pi pi-pencil" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(publicNotification)"></i>
+                                </div>
+                                <div class="p-col-6">
+                                    <i class="pi pi-trash" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(publicNotification)"></i>
+                                </div>
+                            </div>
+                        </td>
+
                     </tr>
                 </ng-template>
             </p-table>
         </p-accordionTab>
-        <p-accordionTab header="Private">
+        <p-accordionTab header="Private" [(selected)]="!isPublicSelect">
             <p-table [value]="privateNotifications" styleClass="p-datatable-gridlines">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Image</th>
-                        <th>Group Name</th>
-                        <th>Notificatin Type</th>
-                        <th>Message</th>
-                        <th>Created By</th>
-                        <th>Created Date</th>
+                        <th style="width:8em">Notification Text</th>
+                        <th  style="width:12em">Notification File</th>
+                        <th style="width:2em">Edit/Delete</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-privateNotification>
                     <tr>
-                        <td><img [alt]="privateNotification.fileKey" src="{{privateNotification.fileKey}}" width="32" style="vertical-align: middle" /></td>
-                        <td>{{privateNotification.groupName}}</td>
-                        <td>{{privateNotification.notificationType}}</td>
                         <td>{{privateNotification.message}}</td>
-                        <td>{{privateNotification.createdBy}}</td>
-                        <td>{{privateNotification.createdDate}}</td>
+                        <td><img [alt]="privateNotification.fileKey" src="{{privateNotification.fileKey}}" width="32"
+                                style="vertical-align: middle" /></td>
+                        <td>
+                            <div class="p-field p-grid p-jc-center">
+                                <div class="p-col-6">
+                                    <i class="pi pi-pencil" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(privateNotification)"></i>
+                                </div>
+                                <div class="p-col-6">
+                                    <i class="pi pi-trash" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(privateNotification)"></i>
+                                </div>
+                            </div>
+                        </td>
                 </ng-template>
             </p-table>
         </p-accordionTab>
@@ -86,10 +103,16 @@
                         (onSelect)="onFileUpload($event)" (onRemove)="onFileRmoved()"></p-fileUpload>
                 </div>
             </div>
+
             <div class="p-field p-grid p-jc-end">
-                <div class="p-col-4 p-md-2">
-                    <button pButton [disabled]="isButtonDisabled" type="button" label="Submit" class="p-button-info"
-                        (click)="addNotification()"></button>
+                <div class="p-col-2 p-md-2">
+                    <button pButton type="button" [disabled]="isButtonDisabled" label="Submit" class="p-button-info"
+                        styleClass="p-button-sm" (click)="addNotification()"></button>
+                </div>
+                <div class="p-col-2 p-md-2">
+                    <button pButton type="button" label="Close" class="p-button-info" (click)="onDialogClose()"
+                        styleClass="p-button-sm">
+                    </button>
                 </div>
             </div>
         </div>
