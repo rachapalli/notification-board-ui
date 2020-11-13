@@ -28,12 +28,25 @@ export class NotificationsComponent implements OnInit {
   privateNotifications: GroupNotificationModel[];
   publicGroups: any;
   privateGroups: any;
+  userId: any;
   constructor(private httpService: HttpServiceClient, private dataService: DataService) { }
 
   ngOnInit(): void {
+    if (this.dataService.loginUser) {
+      this.fetchUserDetails();
+    }
     this.fetchGroups();
   }
 
+  fetchUserDetails() {
+    this.httpService.getUserDetailsWithEmail(this.dataService.loginUser).subscribe(res => {
+      if (res) {
+        this.userId = res.userId;
+      }
+    }, err => {
+      console.log(err);
+    });
+  }
   fetchGroups() {
     if (!this.dataService.loginUser) return;
     this.httpService.getGroups().subscribe((res) => {
@@ -43,35 +56,35 @@ export class NotificationsComponent implements OnInit {
           this.totalGroups.push({ label: groupData.groupName, value: groupData.groupId, ref: groupData.isPublic });
         }
         this.publicGroups = this.totalGroups.filter(t => t.ref);
-        this.privateGroups = this.totalGroups.filter(t => !t.ref);
+        // this.privateGroups = this.totalGroups.filter(t => !t.ref);
         this.fetchUserGroupNotifications();
       }
     }, error => {
       console.log(error);
     });
-   
+
   }
 
   onGroupSelect(event: any) {
-    if(!event.value){
+    if (!event.value) {
       this.fetchUserGroupNotifications();
       return;
     }
     this.httpService.getUserGRoupNotifications(this.dataService.loginUser).subscribe((res) => {
       if (res) {
         let isPublicRef = null;
-        if(this.totalGroups && event.value){
+        if (this.totalGroups && event.value) {
           const refRes = this.totalGroups.filter(s => s.value === event.value)
-          if(refRes){
+          if (refRes) {
             isPublicRef = refRes[0].ref;
           }
         }
         if (isPublicRef) {
           this.privateNotifications = [];
-          this.isPublicSelect  = true;
+          this.isPublicSelect = true;
           this.publicNotifications = res.filter(s => s.groupId === event.value);
         } else {
-          this.isPublicSelect  = false;
+          this.isPublicSelect = false;
           this.publicNotifications = [];
           this.privateNotifications = res.filter(s => s.groupId === event.value);
         }
@@ -83,9 +96,9 @@ export class NotificationsComponent implements OnInit {
   fetchUserGroupNotifications() {
     this.httpService.getUserGRoupNotifications(this.dataService.loginUser).subscribe((res) => {
       if (res) {
-        this.isPublicSelect  = true;
+        this.isPublicSelect = true;
         this.publicNotifications = res.filter(r1 => this.publicGroups.some(r2 => r1.groupId === r2.value));
-        this.privateNotifications = res.filter(r1 => this.privateGroups.some(r2 => r1.groupId === r2.value));
+        // this.privateNotifications = res.filter(r1 => this.privateGroups.some(r2 => r1.groupId === r2.value));
       }
     }, error => {
       console.log(error);
@@ -94,11 +107,12 @@ export class NotificationsComponent implements OnInit {
   }
   showAddNotifyDialog() {
     this.display = true;
-    this.groupTypes = [{ label: 'Public', value: true }, { label: 'Private', value: false }];
+    this.groupTypes = [{ label: 'Public', value: true }];// , { label: 'Private', value: false }
     this.onGroupTypeSelect({ value: true });
   }
   addNotification() {
     this.enableorDisableSUbmit();
+    this.groupModel.createdBy = this.userId;
     this.httpService.createNotification(this.groupModel).subscribe((res) => {
       this.onDialogClose();
     }, err => {
@@ -157,19 +171,20 @@ export class NotificationsComponent implements OnInit {
     this.isCreateError = false;
     this.errorMessage = '';
     this.isPublic = true;
+    this.fetchGroups();
   }
 
-  onEditRow(event: any){
+  onEditRow(event: any) {
     this.groupModel = new CreateGroupModel();
     this.groupTypes = [{ label: 'Public', value: true }, { label: 'Private', value: false }];
     this.groupsData = this.publicGroups;
     this.groupModel.message = event.message;
     this.groupModel.groupId = event.groupId;
-    this.isPublic = this.publicGroups.some(group => group.value ===  event.groupId);
+    this.isPublic = this.publicGroups.some(group => group.value === event.groupId);
     this.display = true;
   }
 
-  onDeleteRow(event: any){
+  onDeleteRow(event: any) {
     console.log(event);
   }
 

@@ -26,7 +26,7 @@
                 <ng-template pTemplate="body" let-publicNotification>
                     <tr>
                         <td>{{publicNotification.message}}</td>
-                        <td><img [alt]="publicNotification.fileKey" src="{{publicNotification.fileKey}}" width="32"
+                        <td><img alt="No Image" src="{{publicNotification.fileKey}}" width="32"
                                 style="vertical-align: middle" /></td>
                         <td>
                             <div class="p-field p-grid p-jc-center">
@@ -52,7 +52,7 @@
                         <th style="width:2em">Edit/Delete</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-privateNotification>
+                <!-- <ng-template pTemplate="body" let-privateNotification>
                     <tr>
                         <td>{{privateNotification.message}}</td>
                         <td><img [alt]="privateNotification.fileKey" src="{{privateNotification.fileKey}}" width="32"
@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                         </td>
-                </ng-template>
+                </ng-template> -->
             </p-table>
         </p-accordionTab>
     </p-accordion>

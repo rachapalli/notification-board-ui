@@ -23,7 +23,7 @@ export class HttpServiceClient {
     return this.httpService.post(this.url + "/user/register", userDetails);
   }
 
-  getOwnerGroups(user: string, isPublic: boolean): any {
+  getOwnerGroups(user: string): any {
     return this.httpService.post(this.url + "/group/getOwnerGroups", { email: user });
   }
 
@@ -49,5 +49,9 @@ export class HttpServiceClient {
   getImageWithFileKey(fileKey: string): any{
     return this.httpService.get(this.url + "/file/download?file="+fileKey);
 
+  }
+
+  getUserDetailsWithEmail(email: any): any{
+    return this.httpService.get(this.url + "/user/"+email);
   }
 }
