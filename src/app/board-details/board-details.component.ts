@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DataService } from '../data.service';
 import { HttpServiceClient } from '../http-service-client';
 import { Groups } from '../model/group.model';
 
@@ -24,9 +25,13 @@ export class BoardDetailsComponent implements OnInit {
   publicGroups: Groups[];
   privateGroups: Groups[];
   localUrl = "";
-  constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient) { }
+  userId: number;
+  constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient, private dataService: DataService) { }
 
   ngOnInit(): void {
+    if (this.dataService.loginUser) {
+      this.fetchUserDetails();
+    }
    this.createForm();
    const hrefUrl = document.location.href.split('#');
    if(hrefUrl){
@@ -35,6 +40,17 @@ export class BoardDetailsComponent implements OnInit {
     this.groupTypes = [{label:'Public', value:true},{label:'Private', value:false}];
     this.fetchAllGroups();
   }
+
+  fetchUserDetails() {
+    this.httpService.getUserDetailsWithEmail(this.dataService.loginUser).subscribe(res => {
+      if (res) {
+        this.userId = res.userId;
+      }
+    }, err => {
+      console.log(err);
+    });
+  }
+
   createForm(){
     this.form = this.formBuilder.group({
       groupName: ['', Validators.required],
@@ -54,6 +70,7 @@ export class BoardDetailsComponent implements OnInit {
     const groupReq = new Groups();
     groupReq.groupName = this.form.value.groupName;
     groupReq.isPublic = this.form.value.groupType;
+    groupReq.createdBy = this.userId;
     if(this.groupId !== 0){
       groupReq.groupId = this.groupId;
     }
@@ -83,7 +100,8 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   fetchAllGroups(){
-    this.httpService.getGroups().subscribe((res) => {
+    if (!this.dataService.loginUser) return;
+    this.httpService.getOwnerGroups(this.dataService.loginUser).subscribe((res) => {
       if(res){
        this.publicGroups = res.filter(s => s.isPublic);
        this.privateGroups = res.filter(s => !s.isPublic);
