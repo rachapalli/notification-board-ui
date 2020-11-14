@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
+import { LoaderService } from './loader.service';
 import { CreateGroupModel, Groups } from './model/group.model';
 import { Users } from './model/users.model';
 
@@ -9,7 +10,7 @@ import { Users } from './model/users.model';
 })
 export class HttpServiceClient {
   url = 'https://notification-demo-app.azurewebsites.net';
-  constructor(private httpService: HttpClient) { }
+  constructor(private httpService: HttpClient, public loaderService: LoaderService) { }
 
   getGroups(): any {
     return this.httpService.get(this.url + "/group/getGroups");

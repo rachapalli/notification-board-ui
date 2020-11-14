@@ -25,13 +25,15 @@ import {ToastModule} from 'primeng/toast';
 import {TooltipModule} from 'primeng/tooltip';
 import {MultiSelectModule} from 'primeng/multiselect';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RegistrationComponent } from './registration/registration.component';
 import { GenericdialogComponent } from './genericdialog/genericdialog.component';
 import { BoardDetailsComponent } from './board-details/board-details.component';
 import { FooterComponent } from './footer/footer.component';
 import { MessageService } from 'primeng/api';
 import { NotificationByGroupNameComponent } from './notification-by-group-name/notification-by-group-name.component';
+import { LoaderService } from './loader.service';
+import { LoaderInterceptorService } from './loader-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,13 @@ import { NotificationByGroupNameComponent } from './notification-by-group-name/n
     ProgressSpinnerModule,
     TooltipModule
   ],
-  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, MessageService],
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy},
+     MessageService,
+     LoaderService,
+     { provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptorService,
+      multi: true
+    }],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ]
 })

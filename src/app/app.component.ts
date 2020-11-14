@@ -1,18 +1,25 @@
-import { AfterViewChecked, Component, ElementRef, HostListener, NgZone, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, ViewChild } from '@angular/core';
 import { DataService } from './data.service';
+import { HttpServiceClient } from './http-service-client';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewChecked {
+export class AppComponent implements AfterViewChecked, AfterViewInit {
   @ViewChild('headerDiv', { static: true }) divView: ElementRef;
   paddingTop = 120;
   headerOffsetHeight = 0;
   title = 'notification-board-ui';
-  constructor(private readonly ngZone: NgZone, private dataService: DataService) {
+  httpservice: any;
+  constructor(private readonly ngZone: NgZone, private dataService: DataService,
+    httpService: HttpServiceClient, private cdr: ChangeDetectorRef) {
+  this.httpservice = httpService.loaderService;
+  }
 
+  ngAfterViewInit() {
+    this.cdr.detectChanges();
   }
 
   ngAfterViewChecked() {

@@ -26,12 +26,9 @@ export class BoardDetailsComponent implements OnInit {
   privateGroups: Groups[];
   localUrl = "";
   userId: number;
-  constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient, private dataService: DataService) { }
+  constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient, public dataService: DataService) { }
 
   ngOnInit(): void {
-    if (this.dataService.loginUser) {
-      this.fetchUserDetails();
-    }
    this.createForm();
    const hrefUrl = document.location.href.split('#');
    if(hrefUrl){
@@ -39,16 +36,6 @@ export class BoardDetailsComponent implements OnInit {
    }
     this.groupTypes = [{label:'Public', value:true},{label:'Private', value:false}];
     this.fetchAllGroups();
-  }
-
-  fetchUserDetails() {
-    this.httpService.getUserDetailsWithEmail(this.dataService.loginUser).subscribe(res => {
-      if (res) {
-        this.userId = res.userId;
-      }
-    }, err => {
-      console.log(err);
-    });
   }
 
   createForm(){
@@ -70,12 +57,14 @@ export class BoardDetailsComponent implements OnInit {
     const groupReq = new Groups();
     groupReq.groupName = this.form.value.groupName;
     groupReq.isPublic = this.form.value.groupType;
-    groupReq.createdBy = this.userId;
+    if(this.dataService.userDetails){
+    groupReq.createdBy = this.dataService.userDetails.userId;
+    }
     if(this.groupId !== 0){
       groupReq.groupId = this.groupId;
     }
     this.httpService.createGroup(groupReq).subscribe((res) =>{
-      this.onDialogClose();
+      this.onDialogClose(true);
     },error => {
      this.isCreateError = true;
      this.errorMessage = error.error.error;
@@ -89,14 +78,16 @@ export class BoardDetailsComponent implements OnInit {
     this.enableorDisableSubmit();
   }
 
-  onDialogClose(){
+  onDialogClose(isData: boolean){
     this.display = false;
     this.submitted = false;
     this.isCreateError = false;
     this.errorMessage = '';
     this.groupId = 0;
     this.createForm();
-    this.fetchAllGroups();
+    if(isData){
+      this.fetchAllGroups();
+    }
   }
 
   fetchAllGroups(){

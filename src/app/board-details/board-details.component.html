@@ -1,25 +1,25 @@
 <div>
     <div class="p-d-flex  p-jc-end">
-        <button pButton type="button" label="Add Boards" class="p-mb-2 p-mr-2 p-button-info"
+        <button pButton type="button" [disabled]="!dataService.loginUser" label="Add Boards" class="p-mb-2 p-mr-2 p-button-info"
             (click)="showAddBoardDialog()"></button>
     </div>
     <p-accordion>
         <p-accordionTab header="Public" [selected]="true">
-            <p-table [value]="publicGroups" styleClass="p-datatable-gridlines">
+            <p-table [value]="publicGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:8em">Group Name</th>
                         <th style="width:8em">Created Date</th>
                         <th style="width:12em">Group Url</th>
-                        <th style="width:2em">Edit/Delete</th>
+                        <th style="width:2em">Action</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-publicGroup>
                     <tr>
-                        <td>{{publicGroup.groupName}}</td>
-                        <td>{{publicGroup.createdDate | date:'dd/MM/yyyy'}}</td>
-                        <td>{{localUrl}}{{publicGroup.groupName}}</td>
-                        <td>
+                        <td style="width:8em">{{publicGroup.groupName}}</td>
+                        <td style="width:8em">{{publicGroup.createdDate | date:'dd/MM/yyyy'}}</td>
+                        <td style="width:12em">{{localUrl}}{{publicGroup.groupName}}</td>
+                        <td style="width:2em">
                             <div class="p-field p-grid p-jc-center">
                                 <div class="p-col-6">
                                     <i class="pi pi-pencil" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(publicGroup)"></i>
@@ -35,21 +35,21 @@
 
         </p-accordionTab>
         <p-accordionTab header="Private">
-            <p-table [value]="privateGroups" styleClass="p-datatable-gridlines">
+            <p-table [value]="privateGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:8em">Group Name</th>
                         <th style="width:8em">Created Date</th>
                         <th style="width:12em">Group Url</th>
-                        <th style="width:2em">Edit/Delete</th>
+                        <th style="width:2em">Action</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-privateGroup>
                     <tr>
-                        <td>{{privateGroup.groupName}}</td>
-                        <td>{{privateGroup.createdDate | date:'dd/MM/yyyy'}}</td>
-                        <td>{{localUrl}}{{privateGroup.groupName}}</td>
-                        <td>
+                        <td style="width:8em">{{privateGroup.groupName}}</td>
+                        <td style="width:8em">{{privateGroup.createdDate | date:'dd/MM/yyyy'}}</td>
+                        <td style="width:12em">{{localUrl}}{{privateGroup.groupName}}</td>
+                        <td style="width:2em">
                             <div class="p-field p-grid p-jc-center">
                                 <div class="p-col-6">
                                     <i class="pi pi-pencil" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(privateGroup)"></i>
@@ -64,7 +64,7 @@
             </p-table>
         </p-accordionTab>
     </p-accordion>
-    <p-dialog header="Add Boards" [(visible)]="display" [style]="{width: '50vw'}" (onHide)="onDialogClose()">
+    <p-dialog header="Add Boards" modal="false" draggable="false"[(visible)]="display" [style]="{width: '50vw'}" (onHide)="onDialogClose(false)">
 
         <div class="p-grid  vertical-container">
             <div class="p-col p-as-start">
@@ -78,42 +78,29 @@
             </div>
         </div>
         <form [formGroup]="form" (ngSubmit)="createGroup()">
-            <div class="p-field p-grid p-jc-center">
-                <div class="form-group p-col-12">
-                    <div class="p-inputgroup">
-                        <label class="p-col-3">Group Name</label>
-                        <input type="text" pInputText formControlName="groupName" (ngModelChange)="onGroupNameChange()"
-                            class="form-control p-col-9"
-                            [ngClass]="{ 'p-invalid': submitted && (f.groupName.errors) }" />
-                    </div>
+            <div class="p-field p-grid p-jc-start">
+                <label class="p-col-3">Group Name</label>
+                <div class="p-col-9 p-md-9">
+                    <input type="text" formControlName="groupName"  (ngModelChange)="onGroupNameChange()" [style]="{'width':'35vw'}"
+                      pInputText class="p-inputtext-sm" [ngClass]="{ 'p-invalid': submitted && (f.groupName.errors) }" >
                 </div>
             </div>
-            <div class="p-field p-grid p-jc-center">
-                <div class="form-group p-col-12 ">
-                    <div class="p-inputgroup">
-                        <label class="p-col-3">Group Type</label>
-                        <p-dropdown class="form-control p-col-9" formControlName="groupType" [style]="{'width':'35vw'}"
-                            [options]="groupTypes" (onChange)="onGroupTypeSelect()"
-                            [ngClass]="{ 'p-invalid': submitted && (f.groupType.errors) }"></p-dropdown>
-
-                    </div>
-                </div>
-
-            </div>
-            <div class="p-grid ">
-                <div class="p-col p-as-start">
+            <div class="p-field p-grid p-jc-start">
+                <label class="p-col-3">Group Type</label>
+                <div class="p-col-9 p-md-9">
+                    <p-dropdown class="form-control p-col-9" formControlName="groupType" [style]="{'width':'35vw'}"
+                    [options]="groupTypes" (onChange)="onGroupTypeSelect()"
+                    [ngClass]="{ 'p-invalid': submitted && (f.groupType.errors) }"></p-dropdown>
                 </div>
             </div>
-            <div class="p-field p-grid p-jc-center">
-
-                <div class="p-mr-2">
-                    <p-button styleClass="p-button" label="Submit" class="p-button-info" (click)="createGroup()">
-                    </p-button>
+            <div class="p-field p-grid p-jc-end">
+                <div class="p-col-4 p-md-2">
+                    <button pButton type="button"  label="Submit" class="p-button-info"  styleClass="p-button-sm" (click)="createGroup()"></button>
                 </div>
-                <div class="p-mr-2">
-                    <p-button styleClass="p-button" label="Close" class="p-button-info" (click)="onDialogClose()">
-                    </p-button>
-                </div>
+                <div class="p-col-4 p-md-2">
+                <button pButton type="button" label="Close"  class="p-button-info" (click)="onDialogClose(false)" styleClass="p-button-sm">
+                </button>
+            </div>
             </div>
 
         </form>

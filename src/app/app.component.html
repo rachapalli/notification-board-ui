@@ -21,6 +21,9 @@
   
      
   </div> -->
+    <div class="progress-spinner" *ngIf="httpservice.isLoading | async">
+      <p-progressSpinner></p-progressSpinner>
+  </div>
   <div class="layout-content" >
     <router-outlet></router-outlet>
   </div>
