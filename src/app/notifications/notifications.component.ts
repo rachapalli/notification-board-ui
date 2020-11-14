@@ -29,27 +29,15 @@ export class NotificationsComponent implements OnInit {
   publicGroups: any;
   privateGroups: any;
   userId: any;
-  constructor(private httpService: HttpServiceClient, private dataService: DataService) { }
+  constructor(private httpService: HttpServiceClient,public dataService: DataService) { }
 
   ngOnInit(): void {
-    if (this.dataService.loginUser) {
-      this.fetchUserDetails();
-    }
     this.fetchGroups();
   }
 
-  fetchUserDetails() {
-    this.httpService.getUserDetailsWithEmail(this.dataService.loginUser).subscribe(res => {
-      if (res) {
-        this.userId = res.userId;
-      }
-    }, err => {
-      console.log(err);
-    });
-  }
   fetchGroups() {
     if (!this.dataService.loginUser) return;
-    this.httpService.getGroups().subscribe((res) => {
+    this.httpService.getOwnerGroups(this.dataService.loginUser).subscribe((res) => {
       if (res) {
         this.totalGroups = [{ label: 'Select Group', value: null }];
         for (const groupData of res) {
@@ -97,7 +85,11 @@ export class NotificationsComponent implements OnInit {
     this.httpService.getUserGRoupNotifications(this.dataService.loginUser).subscribe((res) => {
       if (res) {
         this.isPublicSelect = true;
+        
         this.publicNotifications = res.filter(r1 => this.publicGroups.some(r2 => r1.groupId === r2.value));
+        if(this.mainGroupModel.groupId){
+          this.publicNotifications = this.publicNotifications.filter(s => s.groupId === this.mainGroupModel.groupId);
+        }
         // this.privateNotifications = res.filter(r1 => this.privateGroups.some(r2 => r1.groupId === r2.value));
       }
     }, error => {
@@ -109,12 +101,15 @@ export class NotificationsComponent implements OnInit {
     this.display = true;
     this.groupTypes = [{ label: 'Public', value: true }];// , { label: 'Private', value: false }
     this.onGroupTypeSelect({ value: true });
+    this.enableorDisableSubmit();
   }
   addNotification() {
-    this.enableorDisableSUbmit();
-    this.groupModel.createdBy = this.userId;
+    this.enableorDisableSubmit();
+    if(this.dataService.userDetails){
+    this.groupModel.createdBy = this.dataService.userDetails.userId;
+    }
     this.httpService.createNotification(this.groupModel).subscribe((res) => {
-      this.onDialogClose();
+      this.onDialogClose(true);
     }, err => {
       this.isCreateError = true;
       this.errorMessage = err.statusText;
@@ -123,28 +118,20 @@ export class NotificationsComponent implements OnInit {
 
   textChanged(event: any) {
     this.groupModel.message = event;
-    this.enableorDisableSUbmit();
+    this.enableorDisableSubmit();
   }
   onFileUpload(event: any) {
     this.filedetails = event.files.length;
-    this.enableorDisableSUbmit();
+    this.enableorDisableSubmit();
   }
 
   onFileRmoved() {
     this.filedetails = 0;
-    this.enableorDisableSUbmit();
+    this.enableorDisableSubmit();
   }
   onGroupTypeSelect(event: any) {
     if (this.dataService.loginUser) {
-      // this.httpService.getOwnerGroups(this.dataService.loginUser, event.value).subscribe((groupsRes) =>{
-      //   this.groupsData = [];
-      //   if(groupsRes){
-      //     for(let group of groupsRes){
-      //       this.groupsData.push({label:group.groupName, value:group.groupId});
-      //     }
-      //   }
-      // });
-      this.httpService.getGroups().subscribe((res) => {
+      this.httpService.getOwnerGroups(this.dataService.loginUser).subscribe((res) => {
         if (res) {
           this.groupsData = [{ label: 'Select Group', value: null }];
           for (const groupData of res.filter(s => s.isPublic === event.value)) {
@@ -157,20 +144,21 @@ export class NotificationsComponent implements OnInit {
     }
   }
 
-  enableorDisableSUbmit() {
-    if ((this.groupModel.message && this.groupModel.message != '') || (this.filedetails && this.filedetails != 0)) {
+  enableorDisableSubmit() {
+    if (((this.groupModel.message && this.groupModel.message != '') || (this.filedetails && this.filedetails != 0)) && this.groupModel.groupId) {
       this.isButtonDisabled = false;
     } else {
       this.isButtonDisabled = true;
     }
   }
-  onDialogClose() {
+  onDialogClose(isData: boolean) {
     this.display = false;
     this.groupModel = new CreateGroupModel();
     this.groupTypes = [];
     this.isCreateError = false;
     this.errorMessage = '';
     this.isPublic = true;
+    if(isData)
     this.fetchGroups();
   }
 
@@ -182,6 +170,7 @@ export class NotificationsComponent implements OnInit {
     this.groupModel.groupId = event.groupId;
     this.isPublic = this.publicGroups.some(group => group.value === event.groupId);
     this.display = true;
+    this.enableorDisableSubmit();
   }
 
   onDeleteRow(event: any) {

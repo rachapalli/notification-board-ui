@@ -34,3 +34,17 @@ body {
     z-index: 999;
      background-color: #ffffff;
  }
+
+ .progress-spinner {
+   background-color: #0000001f;
+    position: absolute;
+    z-index: 10000;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    display: grid;
+    opacity: 2;
+}
