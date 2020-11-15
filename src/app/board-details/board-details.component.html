@@ -8,9 +8,9 @@
             <p-table [value]="publicGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width:8em">Group Name</th>
+                        <th style="width:8em">Board Name</th>
                         <th style="width:8em">Created Date</th>
-                        <th style="width:12em">Group Url</th>
+                        <th style="width:12em">Board Url</th>
                         <th style="width:2em">Action</th>
                     </tr>
                 </ng-template>
@@ -18,7 +18,7 @@
                     <tr>
                         <td style="width:8em">{{publicGroup.groupName}}</td>
                         <td style="width:8em">{{publicGroup.createdDate | date:'dd/MM/yyyy'}}</td>
-                        <td style="width:12em">{{localUrl}}{{publicGroup.groupName}}</td>
+                        <td style="width:12em; word-break: break-all">{{localUrl}}{{publicGroup.groupName}}</td>
                         <td style="width:2em">
                             <div class="p-field p-grid p-jc-center">
                                 <div class="p-col-6">
@@ -38,9 +38,9 @@
             <p-table [value]="privateGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width:8em">Group Name</th>
+                        <th style="width:8em">Board Name</th>
                         <th style="width:8em">Created Date</th>
-                        <th style="width:12em">Group Url</th>
+                        <th style="width:12em">Board Url</th>
                         <th style="width:2em">Action</th>
                     </tr>
                 </ng-template>
@@ -48,7 +48,7 @@
                     <tr>
                         <td style="width:8em">{{privateGroup.groupName}}</td>
                         <td style="width:8em">{{privateGroup.createdDate | date:'dd/MM/yyyy'}}</td>
-                        <td style="width:12em">{{localUrl}}{{privateGroup.groupName}}</td>
+                        <td style="width:12em; word-break: break-all">{{localUrl}}{{privateGroup.groupName}}</td>
                         <td style="width:2em">
                             <div class="p-field p-grid p-jc-center">
                                 <div class="p-col-6">
@@ -79,14 +79,14 @@
         </div>
         <form [formGroup]="form" (ngSubmit)="createGroup()">
             <div class="p-field p-grid p-jc-start">
-                <label class="p-col-3">Group Name</label>
+                <label class="p-col-3">Board Name</label>
                 <div class="p-col-9 p-md-9">
                     <input type="text" formControlName="groupName"  (ngModelChange)="onGroupNameChange()" [style]="{'width':'35vw'}"
                       pInputText class="p-inputtext-sm" [ngClass]="{ 'p-invalid': submitted && (f.groupName.errors) }" >
                 </div>
             </div>
             <div class="p-field p-grid p-jc-start">
-                <label class="p-col-3">Group Type</label>
+                <label class="p-col-3">Board Type</label>
                 <div class="p-col-9 p-md-9">
                     <p-dropdown class="form-control p-col-9" formControlName="groupType" [style]="{'width':'35vw'}"
                     [options]="groupTypes" (onChange)="onGroupTypeSelect()"

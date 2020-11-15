@@ -29,6 +29,9 @@ export class NotificationsComponent implements OnInit {
   publicGroups: any;
   privateGroups: any;
   userId: any;
+  isImage = false;
+  imageSrc: any;
+  
   constructor(private httpService: HttpServiceClient,public dataService: DataService) { }
 
   ngOnInit(): void {
@@ -39,7 +42,7 @@ export class NotificationsComponent implements OnInit {
     if (!this.dataService.loginUser) return;
     this.httpService.getOwnerGroups(this.dataService.loginUser).subscribe((res) => {
       if (res) {
-        this.totalGroups = [{ label: 'Select Group', value: null }];
+        this.totalGroups = [{ label: 'Select Board', value: null }];
         for (const groupData of res) {
           this.totalGroups.push({ label: groupData.groupName, value: groupData.groupId, ref: groupData.isPublic });
         }
@@ -129,11 +132,21 @@ export class NotificationsComponent implements OnInit {
     this.filedetails = 0;
     this.enableorDisableSubmit();
   }
+
+  onImageClick(event: any){
+    this.isImage = true;
+    this.imageSrc = event;
+  }
+
+  onImageDialogClose(){
+    this.isImage = false;
+    this.imageSrc = null;
+  }
   onGroupTypeSelect(event: any) {
     if (this.dataService.loginUser) {
       this.httpService.getOwnerGroups(this.dataService.loginUser).subscribe((res) => {
         if (res) {
-          this.groupsData = [{ label: 'Select Group', value: null }];
+          this.groupsData = [{ label: 'Select Board', value: null }];
           for (const groupData of res.filter(s => s.isPublic === event.value)) {
             this.groupsData.push({ label: groupData.groupName, value: groupData.groupId });
           }
