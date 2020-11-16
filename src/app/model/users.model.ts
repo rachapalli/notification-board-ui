@@ -16,3 +16,8 @@ export class Users {
         this.userType = userType;
     }
 }
+export class CurrentUser {
+    token?: string;
+    message: string;
+    results: any;
+}

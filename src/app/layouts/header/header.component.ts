@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { DataService } from 'src/app/data.service';
+import { AuthenticationService } from 'src/app/auth/authentication.service';
+
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,7 @@ export class HeaderComponent implements OnInit {
   isLoginSuccess = false;
   isLoginDialogOpen = false;
   isRegistrationDisplay = false;
-  constructor(private router: Router, public dataService: DataService, private messageService: MessageService) { }
+  constructor(private router: Router, public authService: AuthenticationService, private messageService: MessageService) { }
 
   ngOnInit(): void {
   }
@@ -24,8 +25,8 @@ export class HeaderComponent implements OnInit {
   }
 
   handleLogOut(){
-    this.dataService.setLoginData(false);
-    this.router.navigate(['*']);
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
   handleSignUp(){
     this.isRegistrationDisplay = true;

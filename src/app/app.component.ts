@@ -1,5 +1,4 @@
 import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, ViewChild } from '@angular/core';
-import { DataService } from './data.service';
 import { HttpServiceClient } from './http-service-client';
 
 @Component({
@@ -13,7 +12,7 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   headerOffsetHeight = 0;
   title = 'notification-board-ui';
   httpservice: any;
-  constructor(private readonly ngZone: NgZone, private dataService: DataService,
+  constructor(private readonly ngZone: NgZone,
     httpService: HttpServiceClient, private cdr: ChangeDetectorRef) {
   this.httpservice = httpService.loaderService;
   }

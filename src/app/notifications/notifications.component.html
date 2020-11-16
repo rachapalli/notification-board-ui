@@ -12,7 +12,7 @@
             </div>
             <div class="p-col-2">
                 <div class="box">
-                    <button pButton type="button" [disabled]="!dataService.loginUser" label="Add Notification" class="p-mb-2 p-mr-2 p-button-info"
+                    <button pButton type="button" [disabled]="!this.authService.currentUserValue" label="Add Notification" class="p-mb-2 p-mr-2 p-button-info"
                     (click)="showAddNotifyDialog()"></button>
                 </div>
             </div>

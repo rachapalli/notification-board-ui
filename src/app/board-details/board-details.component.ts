@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DataService } from '../data.service';
+import { AuthenticationService } from '../auth/authentication.service';
 import { HttpServiceClient } from '../http-service-client';
 import { Groups } from '../model/group.model';
 
@@ -26,7 +26,7 @@ export class BoardDetailsComponent implements OnInit {
   privateGroups: Groups[];
   localUrl = "";
   userId: number;
-  constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient, public dataService: DataService) { }
+  constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient, public authService: AuthenticationService) { }
 
   ngOnInit(): void {
    this.createForm();
@@ -57,8 +57,8 @@ export class BoardDetailsComponent implements OnInit {
     const groupReq = new Groups();
     groupReq.groupName = this.form.value.groupName;
     groupReq.isPublic = this.form.value.groupType;
-    if(this.dataService.userDetails){
-    groupReq.createdBy = this.dataService.userDetails.userId;
+    if(this.authService.currentUserValue && this.authService.currentUserValue.results){
+    groupReq.createdBy = this.authService.currentUserValue.results.id;
     }
     if(this.groupId !== 0){
       groupReq.groupId = this.groupId;
@@ -91,8 +91,8 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   fetchAllGroups(){
-    if (!this.dataService.loginUser) return;
-    this.httpService.getOwnerGroups(this.dataService.loginUser).subscribe((res) => {
+    if (!this.authService.currentUserValue) return;
+    this.httpService.getOwnerGroups(this.authService.currentUserValue.results.username).subscribe((res) => {
       if(res){
        this.publicGroups = res.filter(s => s.isPublic);
        this.privateGroups = res.filter(s => !s.isPublic);

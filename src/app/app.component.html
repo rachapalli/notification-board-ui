@@ -9,18 +9,7 @@
     </div>
    
   <div class="layout-main body" [style.paddingTop.px]="paddingTop">
-    <!-- <div class="card" *ngIf="!dataService.isLoginSuccess">
-      <h2>Public Notification</h2>
-      <div class="p-mb-3 p-text-left"><h4>Any one can utilize this application by registrating from board member</h4></div>
-      
-  
-      <h3>Avalible Services</h3>
-      <div class="p-mb-3 demo-container" style="width: 50rem"><h4>1. Water Board Registration</h4></div>
-      <div class="p-mb-3 demo-container" style="width: 50rem"><h4>2. Electricity Board Registration</h4></div>
-      <div class="p-mb-3 demo-container" style="width: 50rem"><h4>3. Gas Board Registration</h4></div>
-  
-     
-  </div> -->
+
     <div class="progress-spinner" *ngIf="httpservice.isLoading | async">
       <p-progressSpinner></p-progressSpinner>
   </div>

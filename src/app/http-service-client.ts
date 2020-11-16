@@ -1,58 +1,62 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DataService } from './data.service';
+import { environment } from 'src/environments/environment';
 import { LoaderService } from './loader.service';
 import { CreateGroupModel, Groups } from './model/group.model';
 import { Users } from './model/users.model';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpServiceClient {
-  url = 'https://notification-demo-app.azurewebsites.net';
-  constructor(private httpService: HttpClient, public loaderService: LoaderService) { }
+  constructor(private httpService: HttpClient, public loaderService: LoaderService) { 
+    
+  }
+  token: string;
 
+  
   getGroups(): any {
-    return this.httpService.get(this.url + "/group/getGroups");
+    return this.httpService.get(environment.apiUrl + "/group/getGroups");
   }
 
   authenticateUserLogin(userName: any, password: any): any {
-    return this.httpService.post(this.url + "/user/authenticate", { "username": userName, password: password });
+    return this.httpService.post(environment.apiUrl + "/user/authenticate", { "username": userName, password: password });
   }
 
   registerNewUser(userDetails: Users): any {
-    return this.httpService.post(this.url + "/user/register", userDetails);
+    return this.httpService.post(environment.apiUrl + "/user/register", userDetails);
   }
 
   getOwnerGroups(user: string): any {
-    return this.httpService.post(this.url + "/group/getOwnerGroups", { email: user });
+    return this.httpService.post(environment.apiUrl + "/group/getOwnerGroups", { email: user });
   }
 
   getUserTypes(): any {
-    return this.httpService.get(this.url + "/user/userTypes");
+    return this.httpService.get(environment.apiUrl + "/user/userTypes");
   }
 
   createGroup(req: Groups): any {
-    return this.httpService.post(this.url + "/group/create", req);
+    return this.httpService.post(environment.apiUrl + "/group/create", req);
   }
 
   createNotification(data: CreateGroupModel): any {
-    return this.httpService.post(this.url + "/notification/create", data);
+    return this.httpService.post(environment.apiUrl + "/notification/create", data);
   }
 
   getUserGRoupNotifications(email: string): any {
-    return this.httpService.post(this.url + "/notification/getUserGroupNotifications", { email: email });
+    return this.httpService.post(environment.apiUrl + "/notification/getUserGroupNotifications", { email: email });
   }
   getNotifications(groupName: string): any{
-    return this.httpService.get(this.url + "/notification/getNotifications/"+ groupName);
+    return this.httpService.get(environment.apiUrl + "/notification/getNotifications/"+ groupName);
   }
  
   getImageWithFileKey(fileKey: string): any{
-    return this.httpService.get(this.url + "/file/download?file="+fileKey);
+    return this.httpService.get(environment.apiUrl + "/file/download?file="+fileKey);
 
   }
 
   getUserDetailsWithEmail(email: any): any{
-    return this.httpService.get(this.url + "/user/"+email);
+    return this.httpService.get(environment.apiUrl + "/user/"+email);
   }
 }
