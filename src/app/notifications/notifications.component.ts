@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { DataService } from '../data.service';
+import { AuthenticationService } from '../auth/authentication.service';
 import { HttpServiceClient } from '../http-service-client';
 import { CreateGroupModel, GroupNotificationModel } from '../model/group.model';
 
@@ -32,15 +32,15 @@ export class NotificationsComponent implements OnInit {
   isImage = false;
   imageSrc: any;
   
-  constructor(private httpService: HttpServiceClient,public dataService: DataService) { }
+  constructor(private httpService: HttpServiceClient,public authService: AuthenticationService) { }
 
   ngOnInit(): void {
     this.fetchGroups();
   }
 
   fetchGroups() {
-    if (!this.dataService.loginUser) return;
-    this.httpService.getOwnerGroups(this.dataService.loginUser).subscribe((res) => {
+    if (!this.authService.currentUserValue) return;
+    this.httpService.getOwnerGroups(this.authService.currentUserValue.results.username).subscribe((res) => {
       if (res) {
         this.totalGroups = [{ label: 'Select Board', value: null }];
         for (const groupData of res) {
@@ -61,7 +61,7 @@ export class NotificationsComponent implements OnInit {
       this.fetchUserGroupNotifications();
       return;
     }
-    this.httpService.getUserGRoupNotifications(this.dataService.loginUser).subscribe((res) => {
+    this.httpService.getUserGRoupNotifications(this.authService.currentUserValue.results.username).subscribe((res) => {
       if (res) {
         let isPublicRef = null;
         if (this.totalGroups && event.value) {
@@ -85,7 +85,7 @@ export class NotificationsComponent implements OnInit {
     });
   }
   fetchUserGroupNotifications() {
-    this.httpService.getUserGRoupNotifications(this.dataService.loginUser).subscribe((res) => {
+    this.httpService.getUserGRoupNotifications(this.authService.currentUserValue.results.username).subscribe((res) => {
       if (res) {
         this.isPublicSelect = true;
         
@@ -108,8 +108,8 @@ export class NotificationsComponent implements OnInit {
   }
   addNotification() {
     this.enableorDisableSubmit();
-    if(this.dataService.userDetails){
-    this.groupModel.createdBy = this.dataService.userDetails.userId;
+    if(this.authService.currentUserValue){
+    this.groupModel.createdBy = this.authService.currentUserValue.results.id;
     }
     this.httpService.createNotification(this.groupModel).subscribe((res) => {
       this.onDialogClose(true);
@@ -143,8 +143,8 @@ export class NotificationsComponent implements OnInit {
     this.imageSrc = null;
   }
   onGroupTypeSelect(event: any) {
-    if (this.dataService.loginUser) {
-      this.httpService.getOwnerGroups(this.dataService.loginUser).subscribe((res) => {
+    if (this.authService.currentUserValue) {
+      this.httpService.getOwnerGroups(this.authService.currentUserValue.results.username).subscribe((res) => {
         if (res) {
           this.groupsData = [{ label: 'Select Board', value: null }];
           for (const groupData of res.filter(s => s.isPublic === event.value)) {

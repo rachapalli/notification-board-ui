@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuardService } from './auth/auth-guard.service';
 import { BoardmemberComponent } from './boardmember/boardmember.component';
 import { HeaderComponent } from './layouts/header/header.component';
 import { LoginComponent } from './login/login.component';
@@ -8,7 +9,7 @@ import { RegistrationComponent } from './registration/registration.component';
 
 const routes: Routes = [
   {
-    path: 'boardMember', component: BoardmemberComponent
+    path: 'boardMember', component: BoardmemberComponent,  canActivate: [AuthGuardService]
   },
   { path: 'notification/getNotifications',  component: NotificationByGroupNameComponent,
   children: [

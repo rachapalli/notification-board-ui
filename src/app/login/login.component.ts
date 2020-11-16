@@ -1,9 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DataService } from '../data.service';
-import { HttpServiceClient } from '../http-service-client';
-
+import { first } from 'rxjs/operators';
+import { AuthenticationService } from '../auth/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +20,12 @@ export class LoginComponent implements OnInit {
   @Output()
   onClose = new EventEmitter();
 
-  constructor(private formBuilder: FormBuilder,private httpService: HttpServiceClient, private router: Router, private dataService: DataService) { }
+  constructor(private formBuilder: FormBuilder,private authService: AuthenticationService, private router: Router) { 
+    if (this.authService.currentUserValue) { 
+      this.router.navigate(['/']);
+      this.router.navigate(['/boardMember']);
+  }
+  }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -39,9 +43,9 @@ export class LoginComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    this.httpService.authenticateUserLogin(this.form.value.username,this.form.value.password).subscribe((res) =>{
-      this.dataService.setLoginData(true);
-      this.dataService.setLoginUser(this.form.value.username);
+    this.authService.login(this.form.value.username,this.form.value.password)
+    .pipe(first())
+    .subscribe((res) =>{
       this.loading = true;
       this.router.navigate(['/boardMember']);
       this.closeLogin();
