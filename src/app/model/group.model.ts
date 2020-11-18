@@ -21,4 +21,5 @@ export class CreateGroupModel {
     groupId: number;
     message: string;
     createdBy: number;
+    notificationId: number;
 }

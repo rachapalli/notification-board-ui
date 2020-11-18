@@ -30,8 +30,8 @@ export class RegistrationComponent implements OnInit {
       userName: ['', Validators.required],
       password: ['', Validators.required],
       userType: ['', Validators.required],
-      email: ['', Validators.required],
-      altEmail: ['', Validators.required],
+      email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+      altEmail: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
       mobile: ['', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]],
 
     });

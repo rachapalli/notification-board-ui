@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div>
     <div class="p-fluid">
         <div class="p-grid p-jc-between">
@@ -34,15 +35,15 @@
                     <tr>
                         <td style="width:8em">{{publicNotification.groupName}}</td>
                         <td style="width:8em">{{publicNotification.message}}</td>
-                        <td style="width:12em" ><img alt="No Image" (click)="onImageClick('assets/Logo.jpg')" src="assets/Logo.jpg" width="60%"
+                        <td style="width:12em" ><img class="hoverPointer" alt="No Image" (click)="onImageClick('assets/Logo.jpg')" src="assets/Logo.jpg" width="60%"
                                 style="vertical-align: middle" /></td>
                         <td style="width:2em">
                             <div class="p-field p-grid p-jc-center">
                                 <div class="p-col-6">
-                                    <i class="pi pi-pencil" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(publicNotification)"></i>
+                                    <i class="pi pi-pencil hoverPointer" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(publicNotification)"></i>
                                 </div>
                                 <div class="p-col-6">
-                                    <i class="pi pi-trash" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(publicNotification)"></i>
+                                    <i class="pi pi-trash hoverPointer" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(publicNotification)"></i>
                                 </div>
                             </div>
                         </td>
@@ -65,15 +66,15 @@
                     <tr>
                          <td style="width:8em">{{privateNotification.groupName}}</td>
                         <td>{{privateNotification.message}}</td>
-                        <td><img [alt]="privateNotification.fileKey" src="{{privateNotification.fileKey}}" width="32"
+                        <td><img [alt]="privateNotification.fileKey" class="hoverPointer" src="{{privateNotification.fileKey}}" width="32"
                                 style="vertical-align: middle" /></td>
                         <td>
                             <div class="p-field p-grid p-jc-center">
                                 <div class="p-col-6">
-                                    <i class="pi pi-pencil" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(privateNotification)"></i>
+                                    <i class="pi pi-pencil hoverPointer" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(privateNotification)"></i>
                                 </div>
                                 <div class="p-col-6">
-                                    <i class="pi pi-trash" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(privateNotification)"></i>
+                                    <i class="pi pi-trash hoverPointer" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(privateNotification)"></i>
                                 </div>
                             </div>
                         </td>
