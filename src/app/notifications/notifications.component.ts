@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectItem } from 'primeng/api';
+import { MessageService, SelectItem } from 'primeng/api';
 import { AuthenticationService } from '../auth/authentication.service';
 import { HttpServiceClient } from '../http-service-client';
 import { CreateGroupModel, GroupNotificationModel } from '../model/group.model';
@@ -31,8 +31,9 @@ export class NotificationsComponent implements OnInit {
   userId: any;
   isImage = false;
   imageSrc: any;
+  notificationId: number;
   
-  constructor(private httpService: HttpServiceClient,public authService: AuthenticationService) { }
+  constructor(private httpService: HttpServiceClient,public authService: AuthenticationService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.fetchGroups();
@@ -42,7 +43,7 @@ export class NotificationsComponent implements OnInit {
     if (!this.authService.currentUserValue) return;
     this.httpService.getOwnerGroups(this.authService.currentUserValue.results.username).subscribe((res) => {
       if (res) {
-        this.totalGroups = [{ label: 'Select Board', value: null }];
+        this.totalGroups = [{ label: 'All', value: null }];
         for (const groupData of res) {
           this.totalGroups.push({ label: groupData.groupName, value: groupData.groupId, ref: groupData.isPublic });
         }
@@ -108,14 +109,28 @@ export class NotificationsComponent implements OnInit {
   }
   addNotification() {
     this.enableorDisableSubmit();
+    let message = '';
     if(this.authService.currentUserValue){
     this.groupModel.createdBy = this.authService.currentUserValue.results.id;
     }
+    if(this.notificationId !== 0){
+      this.groupModel.notificationId = this.notificationId;
+      message  = 'Notification details updated successfully';
+    }else{
+      message  = 'Notification added successfully';
+    }
     this.httpService.createNotification(this.groupModel).subscribe((res) => {
       this.onDialogClose(true);
+      this.messageService.add({severity:'success', summary: 'Success', detail: message});
     }, err => {
+      let errMessage = '';
+      if(this.notificationId !== 0){
+        errMessage = 'Error occured while updating notification details.';
+      } else {
+        errMessage = 'Error occured while adding notification';
+      }
+      this.messageService.add({severity:'error', summary: 'Error', detail: errMessage});
       this.isCreateError = true;
-      this.errorMessage = err.statusText;
     });
   }
 
@@ -173,6 +188,7 @@ export class NotificationsComponent implements OnInit {
     this.isPublic = true;
     if(isData)
     this.fetchGroups();
+    this.notificationId = 0;
   }
 
   onEditRow(event: any) {
@@ -184,6 +200,7 @@ export class NotificationsComponent implements OnInit {
     this.isPublic = this.publicGroups.some(group => group.value === event.groupId);
     this.display = true;
     this.enableorDisableSubmit();
+    this.notificationId = event.notificationId;
   }
 
   onDeleteRow(event: any) {

@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, ViewChild } from '@angular/core';
+import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, ViewChild } from '@angular/core';
 import { HttpServiceClient } from './http-service-client';
 
 @Component({
@@ -6,7 +6,7 @@ import { HttpServiceClient } from './http-service-client';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewChecked, AfterViewInit {
+export class AppComponent implements AfterViewChecked, AfterContentChecked {
   @ViewChild('headerDiv', { static: true }) divView: ElementRef;
   paddingTop = 120;
   headerOffsetHeight = 0;
@@ -17,9 +17,9 @@ export class AppComponent implements AfterViewChecked, AfterViewInit {
   this.httpservice = httpService.loaderService;
   }
 
-  ngAfterViewInit() {
+  ngAfterContentChecked() : void {
     this.cdr.detectChanges();
-  }
+}
 
   ngAfterViewChecked() {
     this.ngZone.runOutsideAngular(() => {

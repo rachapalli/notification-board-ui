@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { AuthenticationService } from '../auth/authentication.service';
 import { HttpServiceClient } from '../http-service-client';
 import { Groups } from '../model/group.model';
@@ -26,7 +27,8 @@ export class BoardDetailsComponent implements OnInit {
   privateGroups: Groups[];
   localUrl = "";
   userId: number;
-  constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient, public authService: AuthenticationService) { }
+  constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient,
+    private messageService: MessageService, public authService: AuthenticationService) { }
 
   ngOnInit(): void {
    this.createForm();
@@ -40,7 +42,7 @@ export class BoardDetailsComponent implements OnInit {
 
   createForm(){
     this.form = this.formBuilder.group({
-      groupName: ['', Validators.required],
+      groupName: ['',  [Validators.required, Validators.minLength(3)]],
       groupType: [true, Validators.required]
     });
   }
@@ -51,9 +53,18 @@ export class BoardDetailsComponent implements OnInit {
   }
   createGroup() {
     this.submitted = true;
+    this.isCreateError = false;
+    this.errorMessage = '';
     if (this.form.invalid) {
+      if(this.form.controls.groupName.errors && this.form.controls.groupName.errors.minlength &&
+        this.form.controls.groupName.errors.minlength.actualLength < 4){
+        this.errorMessage = 'Board name should be minimum 3 characters';
+      }
+      this.isCreateError = true;
       return;
     }
+    let message = '';
+    let errMsg = '';
     const groupReq = new Groups();
     groupReq.groupName = this.form.value.groupName;
     groupReq.isPublic = this.form.value.groupType;
@@ -62,10 +73,17 @@ export class BoardDetailsComponent implements OnInit {
     }
     if(this.groupId !== 0){
       groupReq.groupId = this.groupId;
+      message = 'Board detais updated successfully';
+      errMsg = 'Error occured while updating board details';
+    } else {
+      message = 'New Board added successfully';
+      errMsg = 'Error occured while adding board details';
     }
     this.httpService.createGroup(groupReq).subscribe((res) =>{
       this.onDialogClose(true);
+      this.messageService.add({severity:'success', summary: 'Success', detail: message});
     },error => {
+      this.messageService.add({severity:'error', summary: 'Error', detail: errMsg});
      this.isCreateError = true;
      this.errorMessage = error.error.error;
     });
@@ -75,6 +93,10 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   onGroupNameChange(){
+    if(!this.form.controls.groupName.errors){
+      this.errorMessage = '';
+      this.isCreateError = true;
+    }
     this.enableorDisableSubmit();
   }
 
@@ -116,7 +138,7 @@ export class BoardDetailsComponent implements OnInit {
     let groupType = null;
     event.isPublic ? groupType = true : groupType = false;
     this.form = this.formBuilder.group({
-      groupName: [event.groupName, Validators.required],
+      groupName: [event.groupName, [Validators.required, Validators.minLength(3)]],
       groupType: [groupType, Validators.required]
     });
     this.groupId = event.groupId;
