@@ -50,6 +50,9 @@ export class RegistrationComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    if(this.form.controls.altEmail.value === this.form.controls.email.value){
+      return;
+    }
     this.isRegistrationClicked = true;
     this.prepareModelFromForm();
     this.httpService.registerNewUser(this.model).subscribe((res) => {
@@ -58,8 +61,11 @@ export class RegistrationComponent implements OnInit {
       this.isRegistrationClicked = false;
     },error => {
       console.log(error);
-      this.onClose.emit({isRegistrationSuccess: false});
+      if(error.error && error.error.message){
+        this.onResponseMessages.emit({severity:'error', summary: 'Registration Error', detail: error.error.message});
+      } else{
       this.onResponseMessages.emit({severity:'error', summary: 'Registration Error', detail: 'Error occured while registring details'});
+      }
       this.isRegistrationClicked = false;
     });
   }

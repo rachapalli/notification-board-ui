@@ -20,6 +20,9 @@
             <div *ngIf="f.password.errors.required">Password is required
             </div>
         </div>
+        <div *ngIf="submitted && form.controls.username.errors && form.controls.username.errors.pattern" class="p-invalid">
+            Please enter valid email.
+        </div>
     </div>
     <form [formGroup]="form" (ngSubmit)="processLogin()">
         <div class="p-field p-grid p-jc-center">
@@ -29,7 +32,7 @@
                     <input type="text" pInputText formControlName="username" class="form-control p-inputtext"
                         (ngModelChange)="onChange()"
                         [ngClass]="{ 'p-invalid': (submitted && f.username.errors) || isLoginError }"
-                        placeholder="User Name" />
+                        placeholder="Email" />
                 </div>
             </div>
         </div>

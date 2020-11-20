@@ -129,6 +129,9 @@ export class NotificationsComponent implements OnInit {
       } else {
         errMessage = 'Error occured while adding notification';
       }
+      // if(err.error && err.error.message){ // commented because sql query is coming as a part of error message
+      //   errMessage = err.error.message;
+      // }
       this.messageService.add({severity:'error', summary: 'Error', detail: errMessage});
       this.isCreateError = true;
     });
