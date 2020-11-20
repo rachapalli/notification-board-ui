@@ -56,12 +56,17 @@ export class BoardDetailsComponent implements OnInit {
     this.isCreateError = false;
     this.errorMessage = '';
     if (this.form.invalid) {
+      this.isCreateError = true;
+      if(this.form.controls.groupName.errors.required){
+        this.errorMessage = 'Board name required.';
+        return;
+      } 
       if(this.form.controls.groupName.errors && this.form.controls.groupName.errors.minlength &&
         this.form.controls.groupName.errors.minlength.actualLength < 4){
         this.errorMessage = 'Board name should be minimum 3 characters';
+        return;
       }
-      this.isCreateError = true;
-      return;
+      
     }
     let message = '';
     let errMsg = '';
@@ -83,9 +88,12 @@ export class BoardDetailsComponent implements OnInit {
       this.onDialogClose(true);
       this.messageService.add({severity:'success', summary: 'Success', detail: message});
     },error => {
-      this.messageService.add({severity:'error', summary: 'Error', detail: errMsg});
+      if(error.error && error.error.message){
+        this.messageService.add({severity:'error', summary: 'Error', detail: error.error.message});
+      }else{
+        this.messageService.add({severity:'error', summary: 'Error', detail: errMsg});
+      }
      this.isCreateError = true;
-     this.errorMessage = error.error.error;
     });
   }
   onGroupTypeSelect(){
