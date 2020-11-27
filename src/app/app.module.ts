@@ -24,6 +24,7 @@ import {TableModule} from 'primeng/table';
 import {ToastModule} from 'primeng/toast';
 import {TooltipModule} from 'primeng/tooltip';
 import {MultiSelectModule} from 'primeng/multiselect';
+import {InputMaskModule} from 'primeng/inputmask';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RegistrationComponent } from './registration/registration.component';
@@ -63,6 +64,7 @@ import { LoaderInterceptorService } from './loader-interceptor.service';
     CardModule,
     TabViewModule,
     AccordionModule,
+    InputMaskModule,
     DialogModule,
     FileUploadModule,
     InputTextareaModule,

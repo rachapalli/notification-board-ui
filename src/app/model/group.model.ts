@@ -22,4 +22,6 @@ export class CreateGroupModel {
     message: string;
     createdBy: number;
     notificationId: number;
+    fileKey: string;
+    fileId: number;
 }

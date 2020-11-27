@@ -55,7 +55,22 @@
             <div class="p-col-12  p-md-10">
                 <input type="text"  formControlName="email" 
                 [ngClass]="{ 'is-invalid': formSubmitted && f.email.errors }"
-                 pInputText class="p-inputtext-sm" placeholder="Email Address">
+                 pInputText class="p-inputtext-sm" placeholder="Email">
+            </div>
+        </div>
+        <div class="p-field p-grid p-jc-center">
+            <div *ngIf="formSubmitted && form.controls.confEmail" class="p-col-12 p-md-10 p-invalid">
+                <div *ngIf="form.controls.email.value === '' && form.controls.confEmail.errors && form.controls.confEmail.errors.required" >
+                    Confirm Email required.
+                </div>
+                <div *ngIf="form.controls.email.value !== form.controls.confEmail.value" >
+                    Email and Confirm email must be same.
+                </div>
+                </div>
+            <div class="p-col-12  p-md-10">
+                <input type="text"  formControlName="confEmail" 
+                [ngClass]="{ 'is-invalid': formSubmitted && f.confEmail.errors }"
+                 pInputText class="p-inputtext-sm" placeholder="Confirm Email">
             </div>
         </div>
         <div class="p-field p-grid p-jc-center">
@@ -75,6 +90,21 @@
             [ngClass]="{ 'p-invalid': (formSubmitted && f.altEmail.errors)}" pInputText class="p-inputtext-sm" placeholder="Alternate Email">
         </div>
     </div>
+    <div class="p-field p-grid p-jc-center">
+        <div *ngIf="formSubmitted && form.controls.confAltEmail" class="p-col-12 p-md-10 p-invalid">
+            <div *ngIf="form.controls.altEmail.value === '' && form.controls.confAltEmail.errors && form.controls.confEmail.errors.required" >
+                Confirm Alternate Email required.
+            </div>
+            <div *ngIf="form.controls.altEmail.value !== form.controls.confAltEmail.value" >
+                Alternate Email and Confirm Alternate Email must be same.
+            </div>
+            </div>
+        <div class="p-col-12  p-md-10">
+            <input type="text"  formControlName="confAltEmail" 
+            [ngClass]="{ 'is-invalid': formSubmitted && f.confAltEmail.errors }"
+             pInputText class="p-inputtext-sm" placeholder="Confirm Alternate Email">
+        </div>
+    </div>
         <div class="p-field p-grid p-jc-center">
             <div *ngIf="formSubmitted && f.mobile.errors" class="p-col-12 p-md-10 p-invalid">
                 <div *ngIf="f.mobile.errors.required" >
@@ -85,11 +115,10 @@
                 </div>
                 </div>
             <div class="p-col-12 p-md-10">
-                <span class="p-input-icon-left">
-                <i class="pi">+44</i>
-                <input type="text"  formControlName="mobile" 
-                [ngClass]="{ 'p-invalid': (formSubmitted && f.mobile.errors)}" pInputText class="p-inputtext-sm" placeholder="Mobile Number">
-                </span>
+                <p-inputMask mask="+449999999999"   formControlName="mobile" 
+                [ngClass]="{ 'p-invalid': (formSubmitted && f.mobile.errors)}"  placeholder="Mobile Number"></p-inputMask>
+                <!-- <input type="text"  formControlName="mobile" 
+                [ngClass]="{ 'p-invalid': (formSubmitted && f.mobile.errors)}" pInputText class="p-inputtext-sm" placeholder="Mobile Number"> -->
             </div>
         </div>
 

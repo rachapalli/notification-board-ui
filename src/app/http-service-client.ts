@@ -59,4 +59,8 @@ export class HttpServiceClient {
   getUserDetailsWithEmail(email: any): any{
     return this.httpService.get(environment.apiUrl + "/user/"+email);
   }
+
+  uploadFile(file: any): any {
+    return this.httpService.post(environment.apiUrl + "/file/upload", file);
+  }
 }

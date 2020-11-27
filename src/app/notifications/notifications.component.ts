@@ -32,6 +32,7 @@ export class NotificationsComponent implements OnInit {
   isImage = false;
   imageSrc: any;
   notificationId: number;
+  uploadFileVal: FormData;
   
   constructor(private httpService: HttpServiceClient,public authService: AuthenticationService, private messageService: MessageService) { }
 
@@ -107,6 +108,15 @@ export class NotificationsComponent implements OnInit {
     this.onGroupTypeSelect({ value: true });
     this.enableorDisableSubmit();
   }
+  uploadFile(){
+    this.httpService.uploadFile(this.uploadFileVal).subscribe((res) =>{
+      this.groupModel.fileKey = res.fileKey;
+      this.groupModel.fileId = res.fileId;
+      this.addNotification();
+    }, err => {
+      this.messageService.add({severity:'error', summary: 'Error', detail: 'Error occured while uploading file.'});
+    });
+  }
   addNotification() {
     this.enableorDisableSubmit();
     let message = '';
@@ -144,6 +154,13 @@ export class NotificationsComponent implements OnInit {
   onFileUpload(event: any) {
     this.filedetails = event.files.length;
     this.enableorDisableSubmit();
+    const fileList: FileList = event.files;
+        if (fileList.length > 0) {
+            const file = fileList[0];
+            this.uploadFileVal = new FormData();
+            this.uploadFileVal.append('file', file, file.name);
+        }
+
   }
 
   onFileRmoved() {
