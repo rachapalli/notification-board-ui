@@ -31,8 +31,10 @@ export class RegistrationComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8)]],
       userType: ['', Validators.required],
       email: ['', [Validators.required, Validators.pattern(/^.{3,}@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
+      confEmail:  ['', [Validators.required, Validators.pattern(/^.{3,}@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
       altEmail: ['', [Validators.required, Validators.pattern(/^.{3,}@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
-      mobile: ['', [Validators.required, Validators.pattern("^((\\+44-?)|0)?[0-9]{10}$")]],
+      confAltEmail: ['', [Validators.required, Validators.pattern(/^.{3,}@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
+      mobile: ['', [Validators.required, Validators.pattern("^((\\+44?)|0)?[0-9]{10}$")]],
 
     });
     this.userTypes = [{label:'User Type', value:null}];
@@ -51,6 +53,12 @@ export class RegistrationComponent implements OnInit {
       return;
     }
     if(this.form.controls.altEmail.value === this.form.controls.email.value){
+      return;
+    }
+    if(this.form.controls.confEmail.value !== this.form.controls.email.value){
+      return;
+    }
+    if(this.form.controls.altEmail.value !== this.form.controls.confAltEmail.value){
       return;
     }
     this.isRegistrationClicked = true;
@@ -72,7 +80,7 @@ export class RegistrationComponent implements OnInit {
 
   prepareModelFromForm(){
     const formRef= this.form.value;
-    this.model = new Users(null, formRef.userName,formRef.password,formRef.email,formRef.altEmail,('+44'+formRef.mobile),formRef.userType);
+    this.model = new Users(null, formRef.userName,formRef.password,formRef.email,formRef.altEmail,formRef.mobile,formRef.userType);
   }
   closeSignUp(){
     this.formSubmitted = false;
