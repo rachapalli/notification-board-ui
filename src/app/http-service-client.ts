@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoaderService } from './loader.service';
-import { CreateGroupModel, Groups } from './model/group.model';
+import { CreateGroupModel, GroupNotificationModel, Groups } from './model/group.model';
 import { Users } from './model/users.model';
 
 
@@ -40,19 +41,44 @@ export class HttpServiceClient {
     return this.httpService.post(environment.apiUrl + "/group/create", req);
   }
 
+  createorUpdateNotification(req: CreateGroupModel): any{
+    if(req && req.notification.notificationId){
+     return this.updateNotification(req.notification);
+    }else{
+      return this.createNotification(req);
+    }
+  }
   createNotification(data: CreateGroupModel): any {
     return this.httpService.post(environment.apiUrl + "/notification/create", data);
   }
 
-  getUserGRoupNotifications(email: string): any {
+  updateNotification(data: GroupNotificationModel): any {
+    return this.httpService.post(environment.apiUrl + "/notification/update", data);
+  }
+
+  deleteNotification(data: CreateGroupModel): any {
+    return this.httpService.post(environment.apiUrl + "/notification/delete", data);
+  }
+
+  
+
+  getUserGRoupNotifications(email: string, groupName: string): any {
+    // if(groupName){
+    //   return this.getNotifications(groupName);
+    // }else{
+    return this.getUserGRoupNotificationByEmail(email);
+    // }
+  }
+
+  getUserGRoupNotificationByEmail(email: string): any {
     return this.httpService.post(environment.apiUrl + "/notification/getUserGroupNotifications", { email: email });
   }
   getNotifications(groupName: string): any{
     return this.httpService.get(environment.apiUrl + "/notification/getNotifications/"+ groupName);
   }
  
-  getImageWithFileKey(fileKey: string): any{
-    return this.httpService.get(environment.apiUrl + "/file/download?file="+fileKey);
+  getImageWithFileKey(fileKey: string): Observable<Blob>{
+    return this.httpService.get(environment.apiUrl + "/file/download?file="+fileKey, { responseType: 'blob' });
 
   }
 
