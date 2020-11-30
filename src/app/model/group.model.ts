@@ -10,11 +10,23 @@ export class GroupNotificationModel{
     groupId: number;
     groupName: string;
     notificationId: number
-    message: string;
+    message = new MessageCls();
     notificationType: string;
-    fileId: number;
+    file = new File();
     createdBy: number;
     createdDate: Date;
+    description: string;
+}
+
+export class MessageCls{
+    message: string;
+    messageId: number;
+}
+
+export class File{
+    fileId: number;
+    fileKey: string;
+    name: string;
 }
 
 export class CreateGroupModel {
@@ -24,4 +36,6 @@ export class CreateGroupModel {
     notificationId: number;
     fileKey: string;
     fileId: number;
+    updatedBy: number;
+    notification = new GroupNotificationModel();
 }

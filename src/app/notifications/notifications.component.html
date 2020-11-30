@@ -8,9 +8,10 @@
                     <p-dropdown [options]="totalGroups" (onChange)="onGroupSelect($event)" [(ngModel)]="mainGroupModel.groupId"></p-dropdown>
                 </div>
             </div>
-            <div class="p-col-6">
-                <div class="box"></div>
-            </div>
+           
+                    <div class="p-col-4 p-md-4">
+                        <p-dropdown [options]="notificationTypeSelect"  (onChange)="fetchUserGroupNotifications()" [(ngModel)]="globalNotificationType"></p-dropdown>
+                    </div>
             <div class="p-col-2">
                 <div class="box">
                     <button pButton type="button" [disabled]="!this.authService.currentUserValue" label="Add Notification" class="p-mb-2 p-mr-2 p-button-info"
@@ -26,16 +27,18 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:8em">Board Name</th>
-                        <th style="width:8em">Notification Text</th>
-                        <th style="width:12em">Notification File</th>
+                        <th style="width:8em">Description</th>
+                        <th style="width:12em">Notification</th>
                         <th style="width:2em">Action</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-publicNotification>
-                    <tr>
+                    <tr [style.background-color]="publicNotification.isActive ? 'white' : '#dddddd'">
                         <td style="width:8em">{{publicNotification.groupName}}</td>
-                        <td style="width:8em">{{publicNotification.message}}</td>
-                        <td style="width:12em" ><img class="hoverPointer" alt="No Image" (click)="onImageClick('assets/Logo.jpg')" src="assets/Logo.jpg" width="60%"
+                        <td style="width:8em">{{publicNotification.notification.description}}</td>
+                        <td style="width:12em" *ngIf="publicNotification.notification.notificationType === 'TEXT'">
+                            {{publicNotification.notification.message.message}}</td>
+                        <td style="width:12em" *ngIf="publicNotification.notification.notificationType === 'FILE'"><img class="hoverPointer" alt="No Image" (click)="onImageClick('assets/Logo.jpg')" src="assets/Logo.jpg" width="60%"
                                 style="vertical-align: middle" /></td>
                         <td style="width:2em">
                             <div class="p-field p-grid p-jc-center">
@@ -43,7 +46,8 @@
                                     <i class="pi pi-pencil hoverPointer" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(publicNotification)"></i>
                                 </div>
                                 <div class="p-col-6">
-                                    <i class="pi pi-trash hoverPointer" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(publicNotification)"></i>
+                                    <i class="pi pi-trash hoverPointer" *ngIf="publicNotification.isActive" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(publicNotification)"></i>
+                                    <i class="pi pi-trash hoverPointer" *ngIf="!publicNotification.isActive"></i>
                                 </div>
                             </div>
                         </td>
@@ -57,16 +61,18 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:8em">Board Name</th>
-                        <th style="width:8em">Notification Text</th>
-                        <th  style="width:12em">Notification File</th>
+                        <th style="width:8em">Description</th>
+                        <th style="width:12em">Notification</th>
                         <th style="width:2em">Action</th>
                     </tr>
                 </ng-template>
                 <!-- <ng-template pTemplate="body" let-privateNotification>
-                    <tr>
-                         <td style="width:8em">{{privateNotification.groupName}}</td>
-                        <td>{{privateNotification.message}}</td>
-                        <td><img [alt]="privateNotification.fileKey" class="hoverPointer" src="{{privateNotification.fileKey}}" width="32"
+                    <tr [style.background-color]="privateNotification.isActive ? 'white' : '#dddddd'">
+                        <td style="width:8em">{{privateNotification.groupName}}</td>
+                        <td style="width:8em">{{privateNotification.notification.description}}</td>
+                        <td style="width:12em" *ngIf="privateNotification.notification.notificationType === 'TEXT'">
+                            {{privateNotification.notification.message.message}}</td>
+                        <td style="width:12em" *ngIf="privateNotification.notification.notificationType === 'FILE'"><img class="hoverPointer" alt="No Image" (click)="onImageClick('assets/Logo.jpg')" src="assets/Logo.jpg" width="60%"
                                 style="vertical-align: middle" /></td>
                         <td>
                             <div class="p-field p-grid p-jc-center">
@@ -74,7 +80,8 @@
                                     <i class="pi pi-pencil hoverPointer" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(privateNotification)"></i>
                                 </div>
                                 <div class="p-col-6">
-                                    <i class="pi pi-trash hoverPointer" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(privateNotification)"></i>
+                                    <i class="pi pi-trash hoverPointer" *ngIf="privateNotification.isActive" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(privateNotification)"></i>
+                                    <i class="pi pi-trash hoverPointer" *ngIf="!privateNotification.isActive"></i>
                                 </div>
                             </div>
                         </td>
@@ -91,23 +98,35 @@
         <div class="p-fluid">
             <div class="p-field p-grid">
                 <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Group type:</label>
-                <div class="p-col-6 p-md-5">
+                <div class="p-col-6 p-md-4">
                     <p-dropdown [options]="groupTypes" (onChange)="onGroupTypeSelect($event)" [(ngModel)]="isPublic">
                     </p-dropdown>
                 </div>
-                <div class="p-col-6 p-md-5">
+                <div class="p-col-3 p-md-2">
                     <p-dropdown [options]="groupsData" (onChange)="enableorDisableSubmit()" [(ngModel)]="groupModel.groupId"></p-dropdown>
-                    <!-- <p-multiSelect [options]="groupsData" [(ngModel)]="groupModel.groupId"></p-multiSelect> -->
+                </div>
+                <label class="p-col-2 p-md-2 p-jc-end">Notification type:</label>
+                <div class="p-col-3 p-md-2">
+                    <p-dropdown [options]="notificationTypeOpt"  (onChange)="onNotificationSelect()" [(ngModel)]="groupModel.notification.notificationType"></p-dropdown>
+                </div>
+               
+            </div>
+            <div class="p-field p-grid p-jc-center" >
+                <label for="details" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Description</label>
+                <div class="p-col-12 p-md-10">
+                    <input type="text"   [(ngModel)]="groupModel.notification.description"
+                     pInputText class="p-inputtext-sm" >
                 </div>
             </div>
-            <div class="p-field p-grid p-jc-center">
+            <div class="p-field p-grid p-jc-center" *ngIf="groupModel.notification.notificationType === 'TEXT'">
                 <label for="details" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Details</label>
                 <div class="p-col-12 p-md-10">
-                    <textarea [rows]="5" [cols]="60" pInputTextarea [(ngModel)]="groupModel.message"
+                    <textarea [rows]="5" [cols]="60" pInputTextarea [(ngModel)]=" this.groupModel.notification.message.message"
                         (ngModelChange)="textChanged($event)" aria-describedby="username-help"></textarea>
                 </div>
             </div>
-            <div class="p-field p-grid">
+           
+            <div class="p-field p-grid" *ngIf="groupModel.notification.notificationType === 'FILE'">
                 <label for="files" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Choose file</label>
                 <div class="p-col-12 p-md-10">
                     <p-fileUpload name="files" [showUploadButton]="false" [showCancelButton]="false"

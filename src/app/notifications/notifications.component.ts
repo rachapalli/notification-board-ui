@@ -1,8 +1,9 @@
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, OnInit } from '@angular/core';
 import { MessageService, SelectItem } from 'primeng/api';
 import { AuthenticationService } from '../auth/authentication.service';
 import { HttpServiceClient } from '../http-service-client';
-import { CreateGroupModel, GroupNotificationModel } from '../model/group.model';
+import { CreateGroupModel, File, GroupNotificationModel, MessageCls } from '../model/group.model';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { CreateGroupModel, GroupNotificationModel } from '../model/group.model';
   styleUrls: ['./notifications.component.css']
 })
 export class NotificationsComponent implements OnInit {
-
+  globalNotificationType = null;
   display: boolean = false;
   filedetails: any;
   isButtonDisabled = true;
@@ -22,10 +23,12 @@ export class NotificationsComponent implements OnInit {
   groupTypes: SelectItem[];
   groupsData: SelectItem[];
   totalGroups: any[];
+  notificationTypeOpt: any[];
+  notificationTypeSelect: any[];
   mainGroupModel = new CreateGroupModel();
   groupModel = new CreateGroupModel();
-  publicNotifications: GroupNotificationModel[];
-  privateNotifications: GroupNotificationModel[];
+  publicNotifications: CreateGroupModel[];
+  privateNotifications: CreateGroupModel[];
   publicGroups: any;
   privateGroups: any;
   userId: any;
@@ -38,6 +41,11 @@ export class NotificationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchGroups();
+    this.groupModel.notification.notificationType = 'TEXT';
+    this.globalNotificationType = null;
+    this.groupModel.notification.message = new MessageCls();
+    this.notificationTypeOpt = [{ label: 'Text', value: 'TEXT' },{ label: 'File', value: 'FILE' }];
+    this.notificationTypeSelect = [{ label: 'Select Notificatoin Type', value: null },{ label: 'Text', value: 'TEXT' },{ label: 'File', value: 'FILE' }];
   }
 
   fetchGroups() {
@@ -49,7 +57,7 @@ export class NotificationsComponent implements OnInit {
           this.totalGroups.push({ label: groupData.groupName, value: groupData.groupId, ref: groupData.isPublic });
         }
         this.publicGroups = this.totalGroups.filter(t => t.ref);
-        // this.privateGroups = this.totalGroups.filter(t => !t.ref);
+        this.privateGroups = this.totalGroups.filter(t => !t.ref);
         this.fetchUserGroupNotifications();
       }
     }, error => {
@@ -57,13 +65,26 @@ export class NotificationsComponent implements OnInit {
     });
 
   }
-
+  filterNotifications(){
+    if(this.globalNotificationType === 'TEXT'){
+      this.privateNotifications = this.privateNotifications.filter(r1 => r1.notification.notificationType === 'TEXT');
+      this.publicNotifications = this.publicNotifications.filter(r1 => r1.notification.notificationType === 'TEXT');
+    }else if(this.globalNotificationType === 'FILE'){
+      this.privateNotifications = this.privateNotifications.filter(r1 => r1.notification.notificationType === 'FILE');
+      this.publicNotifications = this.publicNotifications.filter(r1 => r1.notification.notificationType === 'FILE');
+    }
+  }
   onGroupSelect(event: any) {
     if (!event.value) {
       this.fetchUserGroupNotifications();
       return;
     }
-    this.httpService.getUserGRoupNotifications(this.authService.currentUserValue.results.username).subscribe((res) => {
+    let groupName = null;
+    if(this.totalGroups && this.mainGroupModel.groupId){
+      const group = this.totalGroups.filter(t => t.value === this.mainGroupModel.groupId);
+      groupName = group[0].label;
+    }
+    this.httpService.getUserGRoupNotifications(this.authService.currentUserValue.results.username, groupName).subscribe((res) => {
       if (res) {
         let isPublicRef = null;
         if (this.totalGroups && event.value) {
@@ -81,21 +102,31 @@ export class NotificationsComponent implements OnInit {
           this.publicNotifications = [];
           this.privateNotifications = res.filter(s => s.groupId === event.value);
         }
+        this.filterNotifications();
       }
     }, error => {
       console.log(error);
     });
   }
   fetchUserGroupNotifications() {
-    this.httpService.getUserGRoupNotifications(this.authService.currentUserValue.results.username).subscribe((res) => {
+    let groupName = null;
+    if(this.totalGroups && this.mainGroupModel.groupId){
+      const group = this.totalGroups.filter(t => t.value === this.mainGroupModel.groupId);
+      groupName = group[0].label;
+    }
+    this.httpService.getUserGRoupNotifications(this.authService.currentUserValue.results.username, groupName).subscribe((res) => {
       if (res) {
         this.isPublicSelect = true;
-        
         this.publicNotifications = res.filter(r1 => this.publicGroups.some(r2 => r1.groupId === r2.value));
+        this.privateNotifications = res.filter(r1 => this.privateGroups.some(r2 => r1.groupId === r2.value));
         if(this.mainGroupModel.groupId){
           this.publicNotifications = this.publicNotifications.filter(s => s.groupId === this.mainGroupModel.groupId);
+          this.privateNotifications = this.privateNotifications.filter(s => s.groupId === this.mainGroupModel.groupId);
         }
-        // this.privateNotifications = res.filter(r1 => this.privateGroups.some(r2 => r1.groupId === r2.value));
+        if(this.publicNotifications && this.publicNotifications.length === 0 && this.privateNotifications && this.privateNotifications.length > 0){
+          this.isPublicSelect = false;
+        }
+        this.filterNotifications();
       }
     }, error => {
       console.log(error);
@@ -110,14 +141,24 @@ export class NotificationsComponent implements OnInit {
   }
   uploadFile(){
     this.httpService.uploadFile(this.uploadFileVal).subscribe((res) =>{
-      this.groupModel.fileKey = res.fileKey;
-      this.groupModel.fileId = res.fileId;
-      this.addNotification();
+      this.groupModel.notification.file.name = res.name;
+      this.groupModel.notification.file.fileId  = res.fileId;
+      this.saveNotification();
     }, err => {
       this.messageService.add({severity:'error', summary: 'Error', detail: 'Error occured while uploading file.'});
     });
   }
-  addNotification() {
+
+  addNotification(){
+    if(this.groupModel.notification.notificationType === 'FILE'){
+      this.groupModel.notification.message = null;
+      this.uploadFile();
+    } else{
+      this.groupModel.notification.file = null;
+      this.saveNotification();
+    }
+  }
+  saveNotification() {
     this.enableorDisableSubmit();
     let message = '';
     if(this.authService.currentUserValue){
@@ -129,20 +170,29 @@ export class NotificationsComponent implements OnInit {
     }else{
       message  = 'Notification added successfully';
     }
-    this.httpService.createNotification(this.groupModel).subscribe((res) => {
+    this.httpService.createorUpdateNotification(this.groupModel).subscribe((res) => {
       this.onDialogClose(true);
       this.messageService.add({severity:'success', summary: 'Success', detail: message});
     }, err => {
       let errMessage = '';
+      let error = '';
+      if(err.error && err.error.message ){
+        error = err.error.message;
+       if(err.error.details && err.error.details[0]){
+        errMessage =  err.error.details[0];
+        this.messageService.add({severity:'error', summary: error, detail: errMessage});
+      }else{
+        this.messageService.add({severity:'error', summary: 'Error', detail: error});
+      }
+    } else {
       if(this.notificationId !== 0){
         errMessage = 'Error occured while updating notification details.';
       } else {
         errMessage = 'Error occured while adding notification';
       }
-      // if(err.error && err.error.message){ // commented because sql query is coming as a part of error message
-      //   errMessage = err.error.message;
-      // }
       this.messageService.add({severity:'error', summary: 'Error', detail: errMessage});
+    }
+   
       this.isCreateError = true;
     });
   }
@@ -193,7 +243,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   enableorDisableSubmit() {
-    if (((this.groupModel.message && this.groupModel.message != '') || (this.filedetails && this.filedetails != 0)) && this.groupModel.groupId) {
+    if (((this.groupModel.notification.message && this.groupModel.notification.message.message && this.groupModel.notification.message.message != '') || (this.filedetails && this.filedetails != 0)) && this.groupModel.groupId) {
       this.isButtonDisabled = false;
     } else {
       this.isButtonDisabled = true;
@@ -202,6 +252,7 @@ export class NotificationsComponent implements OnInit {
   onDialogClose(isData: boolean) {
     this.display = false;
     this.groupModel = new CreateGroupModel();
+    this.groupModel.notification.notificationType = 'TEXT';
     this.groupTypes = [];
     this.isCreateError = false;
     this.errorMessage = '';
@@ -213,18 +264,52 @@ export class NotificationsComponent implements OnInit {
 
   onEditRow(event: any) {
     this.groupModel = new CreateGroupModel();
+    let req = new GroupNotificationModel();
+    req.notificationType = event.notification.notificationType;
+    req.notificationId = event.notification.notificationId;
+    req.description = event.notification.description;
     this.groupTypes = [{ label: 'Public', value: true }, { label: 'Private', value: false }];
-    this.groupsData = this.publicGroups;
-    this.groupModel.message = event.message;
-    this.groupModel.groupId = event.groupId;
+    
+    
     this.isPublic = this.publicGroups.some(group => group.value === event.groupId);
+    if(this.isPublic){
+      this.groupsData = this.publicGroups;
+    } else{
+      this.groupsData = this.privateGroups;
+    }
+    this.groupModel.groupId = event.groupId;
     this.display = true;
-    this.enableorDisableSubmit();
     this.notificationId = event.notificationId;
+    if(event.notification.message){
+      req.message.message = event.notification.message.message;
+    req.message.messageId = event.notification.message.messageId;
+    }
+    if(event.notification.file){
+      req.file.fileId = event.notification.file.fileId;
+    req.file.fileKey= event.notification.file.fileKey;
+    }
+    this.groupModel.notification = req;
+    this.enableorDisableSubmit();
   }
 
   onDeleteRow(event: any) {
-    console.log(event);
+    if(!event.isActive)return;
+    let req = new CreateGroupModel();
+    req.groupId = event.groupId;
+    req.notificationId = event.notification.notificationId;
+    req.updatedBy = event.notification.updatedBy;
+    this.httpService.deleteNotification(req).subscribe(res =>{
+      this.messageService.add({severity:'success', summary: 'Success', detail: res.message});
+      this.fetchUserGroupNotifications();
+    },err => {
+        this.messageService.add({severity:'error', summary: 'Error', detail: 'Error occured while deleting.'});
+    });
+  }
+
+  onNotificationSelect(){
+    if(this.groupModel.notification.notificationType === 'TEXT'){
+      this.groupModel.notification.message.message = '';
+    }
   }
 
 }
