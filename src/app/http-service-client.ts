@@ -37,9 +37,22 @@ export class HttpServiceClient {
     return this.httpService.get(environment.apiUrl + "/user/userTypes");
   }
 
-  createGroup(req: Groups): any {
-    return this.httpService.post(environment.apiUrl + "/group/create", req);
+  createBoard(req: Groups): any {
+    if(req && req.groupId){
+      return this.updateBoard(req);
+    }else {
+      return this.httpService.post(environment.apiUrl + "/group/create", req);
+    }
   }
+
+  updateBoard(req: Groups): any {
+    return this.httpService.post(environment.apiUrl + "/group/update", req);
+  }
+
+  deleteBoard(req: Groups){
+    return this.httpService.post(environment.apiUrl + "/group/delete", req);
+  }
+  
 
   createorUpdateNotification(req: CreateGroupModel): any{
     if(req && req.notification.notificationId){
@@ -88,5 +101,10 @@ export class HttpServiceClient {
 
   uploadFile(file: any): any {
     return this.httpService.post(environment.apiUrl + "/file/upload", file);
+  }
+
+  getAllInvitations(){
+    return this.httpService.get(environment.apiUrl + "/invitation/list");
+    
   }
 }

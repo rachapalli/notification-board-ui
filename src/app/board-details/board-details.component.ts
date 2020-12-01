@@ -84,7 +84,7 @@ export class BoardDetailsComponent implements OnInit {
       message = 'New Board added successfully';
       errMsg = 'Error occured while adding board details';
     }
-    this.httpService.createGroup(groupReq).subscribe((res) =>{
+    this.httpService.createBoard(groupReq).subscribe((res) =>{
       this.onDialogClose(true);
       this.messageService.add({severity:'success', summary: 'Success', detail: message});
     },error => {
@@ -153,7 +153,16 @@ export class BoardDetailsComponent implements OnInit {
   }
 
   onDeleteRow(event: any){
-    console.log(event);
+    const req = new Groups();
+    req.groupId  = event.groupId;
+    this.httpService.deleteBoard(req).subscribe((res) =>{
+      this.messageService.add({severity:'success', summary: 'Success', detail: 'Board deleted successfully;'});
+      this.fetchAllGroups();
+    }, error => {
+      if(error.error && error.error.message){
+        this.messageService.add({severity:'error', summary: 'Error', detail: error.error.message});
+      }
+    });
   }
 
 }

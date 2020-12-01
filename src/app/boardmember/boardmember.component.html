@@ -3,7 +3,7 @@
     <app-board-details *ngIf="index === 0"></app-board-details>
   </p-tabPanel>
   <p-tabPanel header="Invite Members" leftIcon="pi pi-arrow-down">
-    Invite Members Content
+   <app-invitemembers *ngIf="index === 1"></app-invitemembers>
   </p-tabPanel>
   <p-tabPanel header="Notifications" leftIcon="pi pi-bell">
     <app-notifications  *ngIf="index === 2"></app-notifications>

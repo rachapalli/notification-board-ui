@@ -1,16 +1,31 @@
 <p-toast></p-toast>
+<div class="p-fluid">
+    <div class="p-grid p-jc-start">
+        <div class="p-col-12 p-md-12"></div>
+    </div>
+    <div class="p-grid p-jc-start">
+<div class="p-col-4 p-md-4">
+    <p-dropdown [options]="notificationTypeSelect"  (onChange)="fetchUserGroupNotifications()" [(ngModel)]="globalNotificationType"></p-dropdown>
+</div>
+</div>
+</div>
 <p-table [value]="publicNotifications" styleClass="p-datatable-gridlines">
     <ng-template pTemplate="header">
         <tr>
-            <th>Notification Text</th>
-            <th>Notification File</th>
+            <th>Description</th>
+            <th>Notification</th>
             
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-publicNotification>
         <tr>
-            <td>{{publicNotification.message}}</td>
-            <td><img [alt]="'No Image'" src="{{publicNotification.fileKey}}" width="32" style="vertical-align: middle" /></td>
+             <td>{{publicNotification.notification.description}}</td>
+            <!--<td><img [alt]="'No Image'" src="{{publicNotification.fileKey}}" width="32" style="vertical-align: middle" /></td> -->
+
+            <td style="width:12em" *ngIf="publicNotification.notification.notificationType === 'TEXT'">
+                {{publicNotification.notification.message.message}}</td>
+            <td  *ngIf="publicNotification.notification.notificationType === 'FILE'"><img width="60%"  alt="No Image"  style="vertical-align: middle" [src]="publicNotification.notification.file.fileKey" 
+                   /></td>
         </tr>
     </ng-template>
 </p-table>
