@@ -1,12 +1,12 @@
 <p-toast></p-toast>
 <div>
     <div class="p-d-flex  p-jc-end">
-        <button pButton type="button" [disabled]="!authService.currentUserValue" label="Add Boards" class="p-mb-2 p-mr-2 p-button-info"
-            (click)="showAddBoardDialog()"></button>
+        <button pButton type="button" [disabled]="!authService.currentUserValue" label="Invite Members"
+            class="p-mb-2 p-mr-2 p-button-info" (click)="showInvitationDialog()"></button>
     </div>
     <p-accordion>
         <p-accordionTab header="Public" [selected]="true">
-            <p-table [value]="publicGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
+            <!-- <p-table [value]="publicGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:8em">Board Name</th>
@@ -39,11 +39,11 @@
                         </td>
                     </tr>
                 </ng-template>
-            </p-table>
+            </p-table> -->
 
         </p-accordionTab>
         <p-accordionTab header="Private">
-            <p-table [value]="privateGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
+            <!-- <p-table [value]="privateGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:8em">Board Name</th>
@@ -75,69 +75,54 @@
                         </td>
                     </tr>
                 </ng-template>
-            </p-table>
+            </p-table> -->
         </p-accordionTab>
     </p-accordion>
-    <p-dialog header="Add Board" modal="false" draggable="false"[(visible)]="display" [style]="{width: '50vw'}" (onHide)="onDialogClose(false)">
-
-        <div class="p-grid  vertical-container">
-            <div class="p-col p-as-start">
-                <div class="box"></div>
-            </div>
-        </div>
-
-        <div class="p-grid p-fluid p-jc-center">
-            <div *ngIf="isCreateError" class="p-invalid">
-                {{errorMessage}}
-            </div>
-        </div>
-        <form [formGroup]="form" (ngSubmit)="createGroup()">
-
-            <div class="p-fluid">
-                <div class="p-field p-grid">
-                    <label class="p-col-2 p-mb-2 p-md-2 p-mb-md-0">Name</label>
-                    <div class="p-col-10 p-md-10">
-                        <input type="text" formControlName="groupName"  (ngModelChange)="onGroupNameChange()" [style]="{'width':'35vw'}"
-                        pInputText class="p-inputtext-sm" [ngClass]="{ 'p-invalid': submitted && (f.groupName.errors) }" >
-                    </div>
+    <p-dialog header="Invite Members" modal="false" [(visible)]="display" [style]="{width: '80vw'}"
+        (onHide)="onDialogClose()">
+        <div class="p-fluid">
+            <div class="p-field p-grid p-jc-center">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Group type</label>
+                <div class="p-col-6 p-md-4">
+                    <p-dropdown [options]="groupTypes" (onChange)="onGroupTypeSelect($event)" [(ngModel)]="isPublic">
+                    </p-dropdown>
                 </div>
-                <div class="p-field p-grid p-jc-center">
-                    <label for="groupType" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Type</label>
-                    <div class="p-col-12 p-md-10">
-                        <p-dropdown class="form-control p-col-9" formControlName="groupType" [style]="{'width':'35vw'}"
-                        [options]="groupTypes" (onChange)="onGroupTypeSelect()"
-                        [ngClass]="{ 'p-invalid': submitted && (f.groupType.errors) }"></p-dropdown>
-                    </div>
+                <div class="p-col-6 p-md-6">
+                    <p-dropdown [options]="groupsData" (onChange)="onBoardSelect()" [(ngModel)]="boardName">
+                    </p-dropdown>
                 </div>
             </div>
-
-
-            <!-- <div class="p-field p-grid p-jc-start">
-                <label class="p-col-3">Board Name</label>
-                <div class="p-col-9 p-md-9">
-                    <input type="text" formControlName="groupName"  (ngModelChange)="onGroupNameChange()" [style]="{'width':'35vw'}"
-                      pInputText class="p-inputtext-sm" [ngClass]="{ 'p-invalid': submitted && (f.groupName.errors) }" >
+            <div class="p-field p-grid p-jc-center">
+                <label class="p-col-2 p-md-2">To</label>
+                <div class="p-col-10 p-md-10">
+                    <p-chips [(ngModel)]="invationModel.email" addOnTab="true" separator=";"
+                        [allowDuplicate]="allowDuplicateEmail" (onAdd)="onEmailAdd($event)"></p-chips>
                 </div>
             </div>
-            <div class="p-field p-grid p-jc-start">
-                <label class="p-col-3">Group Type</label>
-                <div class="p-col-9 p-md-9">
-                    <p-dropdown class="form-control p-col-9" formControlName="groupType" [style]="{'width':'35vw'}"
-                    [options]="groupTypes" (onChange)="onGroupTypeSelect()"
-                    [ngClass]="{ 'p-invalid': submitted && (f.groupType.errors) }"></p-dropdown>
+            <div class="p-field p-grid p-jc-center">
+                <label for="details" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Subject</label>
+                <div class="p-col-12 p-md-10">
+                    <input type="text" [(ngModel)]="invationModel.subject" pInputText class="p-inputtext-sm">
                 </div>
-            </div> -->
+
+            </div>
+            <div class="p-field p-grid p-jc-center">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Message</label>
+                <div class="p-col-12 p-md-10">
+                    <!-- <input type="text" [(ngModel)]="invationModel.message" pInputText class="p-inputtext-sm"> -->
+                    <p-editor [(ngModel)]="invationModel.message" [style]="{'height':'200px'}"></p-editor>
+                </div>
+            </div>
             <div class="p-field p-grid p-jc-end">
-                <div class="p-col-4 p-md-2">
-                    <button pButton type="button"  label="Submit" class="p-button-info"  styleClass="p-button-sm" (click)="createGroup()"></button>
+                <div class="p-col-2 p-md-2">
+                    <button pButton type="button" [disabled]="isButtonDisabled" label="Send" class="p-button-info"
+                        styleClass="p-button-sm" (click)="sendInvitation()"></button>
                 </div>
-                <div class="p-col-4 p-md-2">
-                <button pButton type="button" label="Close"  class="p-button-info" (click)="onDialogClose(false)" styleClass="p-button-sm">
-                </button>
+                <div class="p-col-2 p-md-2">
+                    <button pButton type="button" label="Close" class="p-button-info" (click)="onDialogClose()"
+                        styleClass="p-button-sm">
+                    </button>
+                </div>
             </div>
-            </div>
-
-        </form>
+        </div>
     </p-dialog>
-
-</div>

@@ -4,6 +4,7 @@ export class Groups {
     isPublic: boolean
     createdBy: number;
     createdDate: Date;
+    isActive: boolean;
 }
 
 export class GroupNotificationModel{

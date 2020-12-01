@@ -26,6 +26,8 @@ import {TooltipModule} from 'primeng/tooltip';
 import {MultiSelectModule} from 'primeng/multiselect';
 import {InputMaskModule} from 'primeng/inputmask';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {ChipsModule} from 'primeng/chips';
+import {EditorModule} from 'primeng/editor';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RegistrationComponent } from './registration/registration.component';
 import { GenericdialogComponent } from './genericdialog/genericdialog.component';
@@ -35,6 +37,7 @@ import { MessageService } from 'primeng/api';
 import { NotificationByGroupNameComponent } from './notification-by-group-name/notification-by-group-name.component';
 import { LoaderService } from './loader.service';
 import { LoaderInterceptorService } from './loader-interceptor.service';
+import { InvitemembersComponent } from './invitemembers/invitemembers.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +51,8 @@ import { LoaderInterceptorService } from './loader-interceptor.service';
     GenericdialogComponent,
     BoardDetailsComponent,
     FooterComponent,
-    NotificationByGroupNameComponent
+    NotificationByGroupNameComponent,
+    InvitemembersComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +77,9 @@ import { LoaderInterceptorService } from './loader-interceptor.service';
     TableModule,
     ToastModule,
     ProgressSpinnerModule,
-    TooltipModule
+    TooltipModule,
+    ChipsModule,
+    EditorModule
   ],
   providers: [{provide: LocationStrategy, useClass: HashLocationStrategy},
      MessageService,
