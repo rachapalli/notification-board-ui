@@ -35,6 +35,7 @@ export class NotificationByGroupNameComponent implements OnInit {
         }else if(this.globalNotificationType === 'FILE'){
           this.fetchFiles( res.filter(r1 => r1.notification.notificationType === 'FILE'));
       }else{
+        this.publicNotifications = res;
         this.fetchFiles(res);
       }
       }
@@ -73,6 +74,7 @@ export class NotificationByGroupNameComponent implements OnInit {
  }
 
  fetchUserGroupNotifications(){
+  this.publicNotifications = [new CreateGroupModel()];
     this.fetchNotifications();
  }
 }
