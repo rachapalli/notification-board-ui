@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoaderService } from './loader.service';
 import { CreateGroupModel, GroupNotificationModel, Groups } from './model/group.model';
+import { BoardInvitation } from './model/invitation.model';
 import { Users } from './model/users.model';
 
 
@@ -103,8 +104,11 @@ export class HttpServiceClient {
     return this.httpService.post(environment.apiUrl + "/file/upload", file);
   }
 
-  getAllInvitations(){
+  getAllInvitations(): any{
     return this.httpService.get(environment.apiUrl + "/invitation/list");
-    
+  }
+
+  sendInvitation(req: BoardInvitation){
+    return this.httpService.post(environment.apiUrl + "/invitation/sendBoardInvitation", req);
   }
 }

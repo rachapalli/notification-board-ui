@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService, SelectItem } from 'primeng/api';
+import { subscribeOn } from 'rxjs/operators';
 import { AuthenticationService } from '../auth/authentication.service';
 import { HttpServiceClient } from '../http-service-client';
-import { Invitation } from '../model/invitation.model';
+import { BoardInvitation, Invitation } from '../model/invitation.model';
 
 @Component({
   selector: 'app-invitemembers',
@@ -21,7 +22,7 @@ export class InvitemembersComponent implements OnInit {
   groupsData: SelectItem[];
   boardName: any;
   localUrl = "";
-  invationModel = new Invitation();
+  invitationModel = new BoardInvitation();
   display: boolean;
   allowDuplicateEmail = false;
 
@@ -63,8 +64,8 @@ export class InvitemembersComponent implements OnInit {
   }
 
   onGroupTypeSelect(event: any) {
-    if (this.invationModel) {
-      this.invationModel.message = '';
+    if (this.invitationModel) {
+      this.invitationModel.emailBody = '';
     }
     if (this.authService.currentUserValue) {
       this.httpService.getOwnerGroups(this.authService.currentUserValue.results.username).subscribe((res) => {
@@ -82,16 +83,17 @@ export class InvitemembersComponent implements OnInit {
 
   onBoardSelect() {
     if (this.boardName) {
-      this.invationModel.message = `${this.localUrl + this.boardName}`;
-      // this.invationModel.message =  "<a target='_blank' href='"+ this.localUrl + this.boardName + "'>";
+      this.invitationModel.emailBody = `${this.localUrl + this.boardName}`;
+      // this.invitationModel.message =  "<a target='_blank' href='"+ this.localUrl + this.boardName + "'>";
     } else {
-      this.invationModel.message = '';
+      this.invitationModel.emailBody = '';
     }
+    this.enableorDisableSendButton();
   }
   showInvitationDialog() {
     this.isButtonDisabled = true;
     this.groupTypes = [{ label: 'Public', value: true }, { label: 'Private', value: false }];
-    this.invationModel = new Invitation();
+    this.invitationModel = new BoardInvitation();
     this.display = true;
     this.onGroupTypeSelect(true);
   }
@@ -99,14 +101,34 @@ export class InvitemembersComponent implements OnInit {
   onEmailAdd(event: any) {
     const regularExpression = /^.{3,}@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!regularExpression.test(String(event.value).toLowerCase())) {
-      let index = this.invationModel.email.findIndex(d => d === event.value); //find index in your array
-      this.invationModel.email.splice(index, 1);
+      let index = this.invitationModel.emailIdList.findIndex(d => d === event.value); //find index in your array
+      this.invitationModel.emailIdList.splice(index, 1);
       this.messageService.add({ severity: 'warn', detail: 'Please enter correct email.' });
     }
+    this.enableorDisableSendButton();
   }
-
+  
+  enableorDisableSendButton(){
+    if(this.boardName && this.invitationModel && this.invitationModel.emailIdList && this.invitationModel.emailBody){
+      this.isButtonDisabled = false;
+    }else {
+      this.isButtonDisabled = true;
+    }
+  }
   sendInvitation() {
-
+  if(this.authService.currentUserValue){
+    this.invitationModel.createdBy = this.authService.currentUserValue.results.id;
+    }
+  this.httpService.sendInvitation(this.invitationModel).subscribe( res => {
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Invitations sent successfully.' });
+    this.onDialogClose();
+  }, error => {
+    if(error.error && (error.error.message || error.error.detials)){
+      this.messageService.add({ severity: 'error', summary: error.error.message, detail: error.error.details[0] });
+    }else{
+    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to send invitations.' });
+    }
+  });
   }
 
   onDialogClose() {

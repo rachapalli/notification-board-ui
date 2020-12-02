@@ -95,22 +95,22 @@
             <div class="p-field p-grid p-jc-center">
                 <label class="p-col-2 p-md-2">To</label>
                 <div class="p-col-10 p-md-10">
-                    <p-chips [(ngModel)]="invationModel.email" addOnTab="true" separator=";"
+                    <p-chips [(ngModel)]="invitationModel.emailIdList" addOnTab="true" separator=";"
                         [allowDuplicate]="allowDuplicateEmail" (onAdd)="onEmailAdd($event)"></p-chips>
                 </div>
             </div>
             <div class="p-field p-grid p-jc-center">
                 <label for="details" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Subject</label>
                 <div class="p-col-12 p-md-10">
-                    <input type="text" [(ngModel)]="invationModel.subject" pInputText class="p-inputtext-sm">
+                    <input type="text" [(ngModel)]="invitationModel.emailSubject" (ngModelChange)="enableorDisableSendButton()" pInputText class="p-inputtext-sm">
                 </div>
 
             </div>
             <div class="p-field p-grid p-jc-center">
                 <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Message</label>
                 <div class="p-col-12 p-md-10">
-                    <!-- <input type="text" [(ngModel)]="invationModel.message" pInputText class="p-inputtext-sm"> -->
-                    <p-editor [(ngModel)]="invationModel.message" [style]="{'height':'200px'}"></p-editor>
+                    <!-- <input type="text" [(ngModel)]="invitationModel.emailBody" pInputText class="p-inputtext-sm"> -->
+                    <p-editor [(ngModel)]="invitationModel.emailBody" (ngModelChange)="enableorDisableSendButton()" [style]="{'height':'200px'}"></p-editor>
                 </div>
             </div>
             <div class="p-field p-grid p-jc-end">
