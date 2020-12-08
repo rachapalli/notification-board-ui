@@ -3,29 +3,63 @@
     <div class="p-grid p-jc-start">
         <div class="p-col-12 p-md-12"></div>
     </div>
-    <div class="p-grid p-jc-start">
-<div class="p-col-4 p-md-4">
-    <p-dropdown [options]="notificationTypeSelect"  (onChange)="fetchUserGroupNotifications()" [(ngModel)]="globalNotificationType"></p-dropdown>
-</div>
-</div>
+    <div class="p-field p-grid">
+        <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0  p-jc-end">Select Notification Type: </label>
+        <div class="p-col-4 p-md-4 p-jc-start">
+             <p-dropdown [options]="notificationTypeSelect" (onChange)="fetchUserGroupNotifications()"
+                [(ngModel)]="globalNotificationType"></p-dropdown>
+        </div>
+    </div>
 </div>
 <p-table [value]="publicNotifications" styleClass="p-datatable-gridlines">
     <ng-template pTemplate="header">
         <tr>
             <th>Description</th>
             <th>Notification</th>
-            
+
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-publicNotification>
         <tr>
-             <td>{{publicNotification.notification.description}}</td>
+            <td>{{publicNotification.notification.description}}</td>
             <!--<td><img [alt]="'No Image'" src="{{publicNotification.fileKey}}" width="32" style="vertical-align: middle" /></td> -->
 
             <td style="width:12em" *ngIf="publicNotification.notification.notificationType === 'TEXT'">
                 {{publicNotification.notification.message.message}}</td>
-            <td  *ngIf="publicNotification.notification.notificationType === 'FILE'"><img width="60%"  alt="No Image"  style="vertical-align: middle" [src]="publicNotification.notification.file.fileKey" 
-                   /></td>
+            <td
+                *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat !== 'pdf' && publicNotification.fileFormat !== 'excel'">
+                <img width="60vw" alt="No Image" style="vertical-align: middle"  (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"
+                    [src]="publicNotification.notification.file.fileKey" /></td>
+            <td
+                *ngIf="publicNotification.notification.notificationType === 'FILE'  && publicNotification.fileFormat === 'pdf'">
+                <img width="10%" alt="No Image" style="vertical-align: middle" src="assets/pdfIcon.png"
+                    (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)" />
+            </td>
+            <td
+                *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat === 'excel'">
+                <img width="20%" alt="No Image" style="vertical-align: middle" src="assets/excelIcon.png" /></td>
+
         </tr>
     </ng-template>
 </p-table>
+
+<p-dialog header="Notification" modal="false" [(visible)]="isImage" [style]="{width: '90vw', height: '90vh'}" (onHide)="onImageDialogClose()">
+
+    <div class="p-grid p-jc-center">
+        <div class="p-col-12 p-jc-center">
+            <img alt="No Image" *ngIf="imageSrc" [src]="imageSrc" width="70%"
+                style="vertical-align: middle;padding-left: '30%'" />
+            <iframe *ngIf="urlSafe" [style]="{width: '80vw', height: '60vh'}" frameBorder="0" [src]="urlSafe"></iframe>
+        </div>
+    </div>
+
+    <div class="p-grid p-jc-end">
+        <div class="p-col-1">
+            <div class="box">
+                <button pButton type="button" label="Close" class="p-button-info" (click)="onImageDialogClose()"
+                    styleClass="p-button-sm">
+                </button>
+            </div>
+        </div>
+    </div>
+</p-dialog>
