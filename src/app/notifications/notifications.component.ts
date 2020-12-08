@@ -1,5 +1,6 @@
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MessageService, SelectItem } from 'primeng/api';
 import { AuthenticationService } from '../auth/authentication.service';
 import { HttpServiceClient } from '../http-service-client';
@@ -36,8 +37,8 @@ export class NotificationsComponent implements OnInit {
   imageSrc: any;
   notificationId: number;
   uploadFileVal: FormData;
-  
-  constructor(private httpService: HttpServiceClient,public authService: AuthenticationService, private messageService: MessageService) { }
+  urlSafe: SafeResourceUrl;
+  constructor(private httpService: HttpServiceClient,public authService: AuthenticationService, private messageService: MessageService, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.fetchGroups();
@@ -45,7 +46,7 @@ export class NotificationsComponent implements OnInit {
     this.globalNotificationType = null;
     this.groupModel.notification.message = new MessageCls();
     this.notificationTypeOpt = [{ label: 'Text', value: 'TEXT' },{ label: 'File', value: 'FILE' }];
-    this.notificationTypeSelect = [{ label: 'Select Notificatoin Type', value: null },{ label: 'Text', value: 'TEXT' },{ label: 'File', value: 'FILE' }];
+    this.notificationTypeSelect = [{ label: 'All', value: null },{ label: 'Text', value: 'TEXT' },{ label: 'File', value: 'FILE' }];
   }
 
   fetchGroups() {
@@ -70,8 +71,11 @@ export class NotificationsComponent implements OnInit {
       this.privateNotifications = this.privateNotifications.filter(r1 => r1.notification.notificationType === 'TEXT');
       this.publicNotifications = this.publicNotifications.filter(r1 => r1.notification.notificationType === 'TEXT');
     }else if(this.globalNotificationType === 'FILE'){
-      this.privateNotifications = this.privateNotifications.filter(r1 => r1.notification.notificationType === 'FILE');
-      this.publicNotifications = this.publicNotifications.filter(r1 => r1.notification.notificationType === 'FILE');
+      this.fetchFiles(this.privateNotifications.filter(r1 => r1.notification.notificationType === 'FILE'), false);
+      this.fetchFiles(this.publicNotifications.filter(r1 => r1.notification.notificationType === 'FILE'), true);
+    } else{
+      this.fetchFiles(this.privateNotifications, false);
+      this.fetchFiles(this.publicNotifications, true);
     }
   }
   onGroupSelect(event: any) {
@@ -133,9 +137,56 @@ export class NotificationsComponent implements OnInit {
     });
 
   }
+
+  async fetchFiles(res: any, isPublic: boolean){
+    if(!res)return;
+    for(let i = 0; i < res.length; i++){
+      let fileKeyObj = res[i];
+      if(fileKeyObj.notification && fileKeyObj.notification.notificationType === 'FILE' && fileKeyObj.notification.file &&
+      fileKeyObj.notification.file.fileKey){
+          let response = null;
+          const format = fileKeyObj.notification.file.fileKey.split('.');
+          if(format){
+            fileKeyObj.fileFormat = format[format.length - 1].toLowerCase();
+          }
+            response = await this.httpService.getImageWithFileKey(fileKeyObj.notification.file.fileKey).catch( e => 
+              console.log(e.message));
+            console.log(fileKeyObj.notification.file.fileKey);
+        this.createImageFromBlob(response, fileKeyObj);
+        if(i === res.length - 1){
+          if(isPublic) this.publicNotifications = res;
+          if(!isPublic) this.privateNotifications = res;
+        }
+
+    }
+    }
+  }
+
+  createImageFromBlob(image: any, fileObj: any) {
+    if(!image || image === 'error') return;
+    let reader = new FileReader();
+    reader.onload = (e: any) => {
+       let res = reader.result;
+       
+       if(fileObj.fileFormat === 'pdf'){
+       let url = window.URL.createObjectURL(image);
+       fileObj.notification.file.fileKey = image;// this.sanitizer.bypassSecurityTrustUrl(url);
+       }else if(fileObj.fileFormat === 'excel'){
+        // let url = window.URL.createObjectURL(image);
+        // fileObj.notification.file.fileKey = this.sanitizer.bypassSecurityTrustUrl(url);
+        } else if(res && res.toString().includes('data:application/octet-stream;base64')){
+          fileObj.notification.file.fileKey = reader.result.toString().replace('data:application/octet-stream;base64', 'data:image/jpeg;base64');
+         }
+    };
+ 
+    if (image) {
+       reader.readAsDataURL(image);
+    }
+ }
+
   showAddNotifyDialog() {
     this.display = true;
-    this.groupTypes = [{ label: 'Public', value: true }];// , { label: 'Private', value: false }
+    this.groupTypes = [{ label: 'Public', value: true}, { label: 'Private', value: false }]; 
     this.onGroupTypeSelect({ value: true });
     this.enableorDisableSubmit();
   }
@@ -218,14 +269,24 @@ export class NotificationsComponent implements OnInit {
     this.enableorDisableSubmit();
   }
 
-  onImageClick(event: any){
+  onImageClick(event: any, format: string){
+    if(event.length < 1000 || event.size < 1000)return;
     this.isImage = true;
-    this.imageSrc = event;
+    if(format === 'pdf'){
+      const blobTest =  new Blob([event], { type: 'application/pdf' });
+      const fileUrl = URL.createObjectURL(blobTest );
+      this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
+    } else if(format === 'excel'){
+      this.imageSrc = event;
+    }else{
+      this.imageSrc = event;
+    }
   }
 
   onImageDialogClose(){
     this.isImage = false;
     this.imageSrc = null;
+    this.urlSafe = null;
   }
   onGroupTypeSelect(event: any) {
     if (this.authService.currentUserValue) {

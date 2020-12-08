@@ -91,8 +91,8 @@ export class HttpServiceClient {
     return this.httpService.get(environment.apiUrl + "/notification/getNotifications/"+ groupName);
   }
  
-  getImageWithFileKey(fileKey: string): Observable<Blob>{
-    return this.httpService.get(environment.apiUrl + "/file/download?file="+fileKey, { responseType: 'blob' });
+  getImageWithFileKey(fileKey: string): any{
+    return this.httpService.get(environment.apiUrl + "/file/download?file="+fileKey, { responseType: 'blob' }).toPromise();
 
   }
 

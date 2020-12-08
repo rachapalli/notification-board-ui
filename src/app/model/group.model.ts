@@ -39,4 +39,5 @@ export class CreateGroupModel {
     fileId: number;
     updatedBy: number;
     notification = new GroupNotificationModel();
+    fileFormat: string;
 }

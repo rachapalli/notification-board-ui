@@ -33,7 +33,6 @@
                                 <div class="p-col-6">
                                     
                                     <i class="pi pi-trash hoverPointer" *ngIf="publicGroup.isActive" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(publicGroup)"></i>
-                                    <i class="pi pi-trash hoverPointer" *ngIf="!publicGroup.isActive" ></i>
                                 </div>
                             </div>
                         </td>
@@ -69,7 +68,6 @@
                                 </div>
                                 <div class="p-col-6">
                                     <i class="pi pi-trash hoverPointer" *ngIf="privateGroup.isActive" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(privateGroup)"></i>
-                                    <i class="pi pi-trash hoverPointer" *ngIf="!privateGroup.isActive" ></i>
                                 </div>
                             </div>
                         </td>
