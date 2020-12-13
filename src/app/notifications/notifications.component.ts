@@ -38,15 +38,26 @@ export class NotificationsComponent implements OnInit {
   notificationId: number;
   uploadFileVal: FormData;
   urlSafe: SafeResourceUrl;
-  constructor(private httpService: HttpServiceClient,public authService: AuthenticationService, private messageService: MessageService, private sanitizer: DomSanitizer) { }
+  excelUrlSafe: SafeResourceUrl;
+  localImage = 'assets/image.png';
+  isNotificationCreate = false;
+  isNotificationEdit = false;
+  isNotificationDelete = false;
+  constructor(private httpService: HttpServiceClient, public authService: AuthenticationService, private messageService: MessageService, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.fetchGroups();
     this.groupModel.notification.notificationType = 'TEXT';
     this.globalNotificationType = null;
     this.groupModel.notification.message = new MessageCls();
-    this.notificationTypeOpt = [{ label: 'Text', value: 'TEXT' },{ label: 'File', value: 'FILE' }];
-    this.notificationTypeSelect = [{ label: 'All', value: null },{ label: 'Text', value: 'TEXT' },{ label: 'File', value: 'FILE' }];
+    this.notificationTypeOpt = [{ label: 'Text', value: 'TEXT' }, { label: 'File', value: 'FILE' }];
+    this.notificationTypeSelect = [{ label: 'All', value: null }, { label: 'Text', value: 'TEXT' }, { label: 'File', value: 'FILE' }];
+    const board = JSON.parse(localStorage.getItem("permission")).filter(e => e.name === 'NOTIFICATIONS');
+    if(board && board.length > 0){
+      this.isNotificationCreate = board[0].isCreate;
+      this.isNotificationEdit = board[0].isEdit;
+      this.isNotificationDelete = board[0].isDelete;
+    }
   }
 
   fetchGroups() {
@@ -66,14 +77,16 @@ export class NotificationsComponent implements OnInit {
     });
 
   }
-  filterNotifications(){
-    if(this.globalNotificationType === 'TEXT'){
+  filterNotifications() {
+    if (this.globalNotificationType === 'TEXT') {
       this.privateNotifications = this.privateNotifications.filter(r1 => r1.notification.notificationType === 'TEXT');
       this.publicNotifications = this.publicNotifications.filter(r1 => r1.notification.notificationType === 'TEXT');
-    }else if(this.globalNotificationType === 'FILE'){
-      this.fetchFiles(this.privateNotifications.filter(r1 => r1.notification.notificationType === 'FILE'), false);
-      this.fetchFiles(this.publicNotifications.filter(r1 => r1.notification.notificationType === 'FILE'), true);
-    } else{
+    } else if (this.globalNotificationType === 'FILE') {
+      this.privateNotifications = this.privateNotifications.filter(r1 => r1.notification.notificationType === 'FILE');
+      this.publicNotifications = this.publicNotifications.filter(r1 => r1.notification.notificationType === 'FILE');
+      this.fetchFiles(this.privateNotifications, false);
+      this.fetchFiles(this.publicNotifications, true);
+    } else {
       this.fetchFiles(this.privateNotifications, false);
       this.fetchFiles(this.publicNotifications, true);
     }
@@ -84,12 +97,13 @@ export class NotificationsComponent implements OnInit {
       return;
     }
     let groupName = null;
-    if(this.totalGroups && this.mainGroupModel.groupId){
+    if (this.totalGroups && this.mainGroupModel.groupId) {
       const group = this.totalGroups.filter(t => t.value === this.mainGroupModel.groupId);
       groupName = group[0].label;
     }
     this.httpService.getUserGRoupNotifications(this.authService.currentUserValue.results.username, groupName).subscribe((res) => {
       if (res) {
+
         let isPublicRef = null;
         if (this.totalGroups && event.value) {
           const refRes = this.totalGroups.filter(s => s.value === event.value)
@@ -114,7 +128,7 @@ export class NotificationsComponent implements OnInit {
   }
   fetchUserGroupNotifications() {
     let groupName = null;
-    if(this.totalGroups && this.mainGroupModel.groupId){
+    if (this.totalGroups && this.mainGroupModel.groupId) {
       const group = this.totalGroups.filter(t => t.value === this.mainGroupModel.groupId);
       groupName = group[0].label;
     }
@@ -123,11 +137,11 @@ export class NotificationsComponent implements OnInit {
         this.isPublicSelect = true;
         this.publicNotifications = res.filter(r1 => this.publicGroups.some(r2 => r1.groupId === r2.value));
         this.privateNotifications = res.filter(r1 => this.privateGroups.some(r2 => r1.groupId === r2.value));
-        if(this.mainGroupModel.groupId){
+        if (this.mainGroupModel.groupId) {
           this.publicNotifications = this.publicNotifications.filter(s => s.groupId === this.mainGroupModel.groupId);
           this.privateNotifications = this.privateNotifications.filter(s => s.groupId === this.mainGroupModel.groupId);
         }
-        if(this.publicNotifications && this.publicNotifications.length === 0 && this.privateNotifications && this.privateNotifications.length > 0){
+        if (this.publicNotifications && this.publicNotifications.length === 0 && this.privateNotifications && this.privateNotifications.length > 0) {
           this.isPublicSelect = false;
         }
         this.filterNotifications();
@@ -138,73 +152,73 @@ export class NotificationsComponent implements OnInit {
 
   }
 
-  async fetchFiles(res: any, isPublic: boolean){
-    if(!res)return;
-    for(let i = 0; i < res.length; i++){
+  async fetchFiles(res: any, isPublic: boolean) {
+    if (!res) return;
+    for (let i = 0; i < res.length; i++) {
       let fileKeyObj = res[i];
-      if(fileKeyObj.notification && fileKeyObj.notification.notificationType === 'FILE' && fileKeyObj.notification.file &&
-      fileKeyObj.notification.file.fileKey){
-          let response = null;
-          const format = fileKeyObj.notification.file.fileKey.split('.');
-          if(format){
-            fileKeyObj.fileFormat = format[format.length - 1].toLowerCase();
-          }
-            response = await this.httpService.getImageWithFileKey(fileKeyObj.notification.file.fileKey).catch( e => 
-              console.log(e.message));
-            console.log(fileKeyObj.notification.file.fileKey);
-        this.createImageFromBlob(response, fileKeyObj);
-        if(i === res.length - 1){
-          if(isPublic) this.publicNotifications = res;
-          if(!isPublic) this.privateNotifications = res;
+      if (fileKeyObj.notification && fileKeyObj.notification.notificationType === 'FILE' && fileKeyObj.notification.file &&
+        fileKeyObj.notification.file.fileKey) {
+        let response = null;
+        const format = fileKeyObj.notification.file.fileKey.split('.');
+        if (format) {
+          fileKeyObj.fileFormat = format[format.length - 1].toLowerCase();
+        }
+        if (fileKeyObj.fileFormat !== 'pdf' && fileKeyObj.fileFormat !== 'xlsx') {
+          response = await this.httpService.getImageWithFileKey(fileKeyObj.notification.file.fileKey).catch(e =>
+            console.log(e.message));
+          console.log(fileKeyObj.notification.file.fileKey);
+          this.createImageFromBlob(response, fileKeyObj);
+        }
+        if (i === res.length - 1) {
+          if (isPublic) this.publicNotifications = res;
+          if (!isPublic) this.privateNotifications = res;
         }
 
-    }
+      }
     }
   }
 
   createImageFromBlob(image: any, fileObj: any) {
-    if(!image || image === 'error') return;
+    if (!image || image === 'error') return;
     let reader = new FileReader();
     reader.onload = (e: any) => {
-       let res = reader.result;
-       
-       if(fileObj.fileFormat === 'pdf'){
-       let url = window.URL.createObjectURL(image);
-       fileObj.notification.file.fileKey = image;// this.sanitizer.bypassSecurityTrustUrl(url);
-       }else if(fileObj.fileFormat === 'excel'){
-        // let url = window.URL.createObjectURL(image);
-        // fileObj.notification.file.fileKey = this.sanitizer.bypassSecurityTrustUrl(url);
-        } else if(res && res.toString().includes('data:application/octet-stream;base64')){
-          fileObj.notification.file.fileKey = reader.result.toString().replace('data:application/octet-stream;base64', 'data:image/jpeg;base64');
-         }
+      let res = reader.result;
+
+      if (fileObj.fileFormat === 'pdf') {
+        fileObj.notification.file.fileKey = image;
+      } else if (fileObj.fileFormat === 'xlsx') {
+        fileObj.notification.file.fileKey = image;
+      } else if (res && res.toString().includes('data:application/octet-stream;base64')) {
+        fileObj.notification.file.fileKey = reader.result.toString().replace('data:application/octet-stream;base64', 'data:image/jpeg;base64');
+      }
     };
- 
+
     if (image) {
-       reader.readAsDataURL(image);
+      reader.readAsDataURL(image);
     }
- }
+  }
 
   showAddNotifyDialog() {
     this.display = true;
-    this.groupTypes = [{ label: 'Public', value: true}, { label: 'Private', value: false }]; 
+    this.groupTypes = [{ label: 'Public', value: true }, { label: 'Private', value: false }];
     this.onGroupTypeSelect({ value: true });
     this.enableorDisableSubmit();
   }
-  uploadFile(){
-    this.httpService.uploadFile(this.uploadFileVal).subscribe((res) =>{
+  uploadFile() {
+    this.httpService.uploadFile(this.uploadFileVal).subscribe((res) => {
       this.groupModel.notification.file.name = res.name;
-      this.groupModel.notification.file.fileId  = res.fileId;
+      this.groupModel.notification.file.fileId = res.fileId;
       this.saveNotification();
     }, err => {
-      this.messageService.add({severity:'error', summary: 'Error', detail: 'Error occured while uploading file.'});
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while uploading file.' });
     });
   }
 
-  addNotification(){
-    if(this.groupModel.notification.notificationType === 'FILE'){
+  addNotification() {
+    if (this.groupModel.notification.notificationType === 'FILE') {
       this.groupModel.notification.message = null;
       this.uploadFile();
-    } else{
+    } else {
       this.groupModel.notification.file = null;
       this.saveNotification();
     }
@@ -212,38 +226,38 @@ export class NotificationsComponent implements OnInit {
   saveNotification() {
     this.enableorDisableSubmit();
     let message = '';
-    if(this.authService.currentUserValue){
-    this.groupModel.createdBy = this.authService.currentUserValue.results.id;
+    if (this.authService.currentUserValue) {
+      this.groupModel.createdBy = this.authService.currentUserValue.results.id;
     }
-    if(this.notificationId !== 0){
+    if (this.notificationId !== 0) {
       this.groupModel.notificationId = this.notificationId;
-      message  = 'Notification details updated successfully';
-    }else{
-      message  = 'Notification added successfully';
+      message = 'Notification details updated successfully';
+    } else {
+      message = 'Notification added successfully';
     }
     this.httpService.createorUpdateNotification(this.groupModel).subscribe((res) => {
       this.onDialogClose(true);
-      this.messageService.add({severity:'success', summary: 'Success', detail: message});
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: message });
     }, err => {
       let errMessage = '';
       let error = '';
-      if(err.error && err.error.message ){
+      if (err.error && err.error.message) {
         error = err.error.message;
-       if(err.error.details && err.error.details[0]){
-        errMessage =  err.error.details[0];
-        this.messageService.add({severity:'error', summary: error, detail: errMessage});
-      }else{
-        this.messageService.add({severity:'error', summary: 'Error', detail: error});
-      }
-    } else {
-      if(this.notificationId !== 0){
-        errMessage = 'Error occured while updating notification details.';
+        if (err.error.details && err.error.details[0]) {
+          errMessage = err.error.details[0];
+          this.messageService.add({ severity: 'error', summary: error, detail: errMessage });
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: error });
+        }
       } else {
-        errMessage = 'Error occured while adding notification';
+        if (this.notificationId !== 0) {
+          errMessage = 'Error occured while updating notification details.';
+        } else {
+          errMessage = 'Error occured while adding notification';
+        }
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: errMessage });
       }
-      this.messageService.add({severity:'error', summary: 'Error', detail: errMessage});
-    }
-   
+
       this.isCreateError = true;
     });
   }
@@ -256,11 +270,11 @@ export class NotificationsComponent implements OnInit {
     this.filedetails = event.files.length;
     this.enableorDisableSubmit();
     const fileList: FileList = event.files;
-        if (fileList.length > 0) {
-            const file = fileList[0];
-            this.uploadFileVal = new FormData();
-            this.uploadFileVal.append('file', file, file.name);
-        }
+    if (fileList.length > 0) {
+      const file = fileList[0];
+      this.uploadFileVal = new FormData();
+      this.uploadFileVal.append('file', file, file.name);
+    }
 
   }
 
@@ -269,24 +283,54 @@ export class NotificationsComponent implements OnInit {
     this.enableorDisableSubmit();
   }
 
-  onImageClick(event: any, format: string){
-    if(event.length < 1000 || event.size < 1000)return;
-    this.isImage = true;
-    if(format === 'pdf'){
-      const blobTest =  new Blob([event], { type: 'application/pdf' });
-      const fileUrl = URL.createObjectURL(blobTest );
-      this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
-    } else if(format === 'excel'){
+  onImageClick(event: any, format: string) {
+    let createdFile = null;
+    if (event.length > 1000 || event.size > 1000) {
       this.imageSrc = event;
-    }else{
-      this.imageSrc = event;
+      this.isImage = true;
+      return;
     }
+    if(format !== 'pdf' && format !== 'xlsx'){
+      this.messageService.add({ severity: 'warn',  detail: 'No Image Found' });
+      return;
+    }
+    
+    let reader = new FileReader();
+    this.httpService.getImageWithFileKeyObserver(event).subscribe(response => {
+      // this.createImageFromBlob(response, createdFile);
+
+      reader.onload = (e: any) => {
+          if (format === 'pdf') {
+          let result = reader.result;
+          result = result.toString().replace('application/octet-stream', 'application/pdf');
+          this.isImage = true;
+            this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(result.toString());
+        }
+        else if (format === 'xlsx') {
+          this.isImage = true;
+          let result = reader.result;
+          result = result.toString().replace('application/octet-stream', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            this.excelUrlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(result.toString());
+            setTimeout(() => {
+              this.isImage = false;
+            },1);
+        };
+      }
+      if (response) {
+        reader.readAsDataURL(response);
+      }
+    }, err => {
+      this.messageService.add({ severity: 'warn',  detail: 'No File Found' });
+    });
+
+
   }
 
-  onImageDialogClose(){
+  onImageDialogClose() {
     this.isImage = false;
     this.imageSrc = null;
     this.urlSafe = null;
+    this.excelUrlSafe = null;
   }
   onGroupTypeSelect(event: any) {
     if (this.authService.currentUserValue) {
@@ -318,8 +362,8 @@ export class NotificationsComponent implements OnInit {
     this.isCreateError = false;
     this.errorMessage = '';
     this.isPublic = true;
-    if(isData)
-    this.fetchGroups();
+    if (isData)
+      this.fetchGroups();
     this.notificationId = 0;
   }
 
@@ -330,45 +374,45 @@ export class NotificationsComponent implements OnInit {
     req.notificationId = event.notification.notificationId;
     req.description = event.notification.description;
     this.groupTypes = [{ label: 'Public', value: true }, { label: 'Private', value: false }];
-    
-    
+
+
     this.isPublic = this.publicGroups.some(group => group.value === event.groupId);
-    if(this.isPublic){
+    if (this.isPublic) {
       this.groupsData = this.publicGroups;
-    } else{
+    } else {
       this.groupsData = this.privateGroups;
     }
     this.groupModel.groupId = event.groupId;
     this.display = true;
     this.notificationId = event.notificationId;
-    if(event.notification.message){
+    if (event.notification.message) {
       req.message.message = event.notification.message.message;
-    req.message.messageId = event.notification.message.messageId;
+      req.message.messageId = event.notification.message.messageId;
     }
-    if(event.notification.file){
+    if (event.notification.file) {
       req.file.fileId = event.notification.file.fileId;
-    req.file.fileKey= event.notification.file.fileKey;
+      req.file.fileKey = event.notification.file.fileKey;
     }
     this.groupModel.notification = req;
     this.enableorDisableSubmit();
   }
 
   onDeleteRow(event: any) {
-    if(!event.isActive)return;
+    if (!event.isActive) return;
     let req = new CreateGroupModel();
     req.groupId = event.groupId;
     req.notificationId = event.notification.notificationId;
     req.updatedBy = event.notification.updatedBy;
-    this.httpService.deleteNotification(req).subscribe(res =>{
-      this.messageService.add({severity:'success', summary: 'Success', detail: res.message});
+    this.httpService.deleteNotification(req).subscribe(res => {
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: res.message });
       this.fetchUserGroupNotifications();
-    },err => {
-        this.messageService.add({severity:'error', summary: 'Error', detail: 'Error occured while deleting.'});
+    }, err => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error occured while deleting.' });
     });
   }
 
-  onNotificationSelect(){
-    if(this.groupModel.notification.notificationType === 'TEXT'){
+  onNotificationSelect() {
+    if (this.groupModel.notification.notificationType === 'TEXT') {
       this.groupModel.notification.message.message = '';
     }
   }

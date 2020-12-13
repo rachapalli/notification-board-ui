@@ -27,6 +27,9 @@ export class BoardDetailsComponent implements OnInit {
   privateGroups: Groups[];
   localUrl = "";
   userId: number;
+  isBoardCreate = false;
+  isBoardEdit = false;
+  isBoardDelete = false;
   constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient,
     private messageService: MessageService, public authService: AuthenticationService) { }
 
@@ -34,10 +37,16 @@ export class BoardDetailsComponent implements OnInit {
    this.createForm();
    const hrefUrl = document.location.href.split('#');
    if(hrefUrl){
-     this.localUrl = hrefUrl[0]+'#/notification/getNotifications/';
+     this.localUrl = hrefUrl[0]+'#/getNotifications?groupName=';
    }
     this.groupTypes = [{label:'Public', value:true},{label:'Private', value:false}];
     this.fetchAllGroups();
+    const board = JSON.parse(localStorage.getItem("permission")).filter(e => e.name === 'BOARD');
+    if(board && board.length > 0){
+      this.isBoardCreate = board[0].isCreate;
+      this.isBoardEdit = board[0].isEdit;
+      this.isBoardDelete = board[0].isDelete;
+    }
   }
 
   createForm(){

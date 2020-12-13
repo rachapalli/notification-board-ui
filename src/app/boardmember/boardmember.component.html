@@ -1,11 +1,20 @@
-<p-tabView (onChange)="handleChange($event)">
-  <p-tabPanel header="Boards" >
-    <app-board-details *ngIf="index === 0"></app-board-details>
+<p-tabView #mainTab [activeIndex]="selectedIndex" (onChange)="handleChange($event)">
+  <p-tabPanel header="Boards" *ngIf="isBoardView">
+    <app-board-details *ngIf="header === 'Boards'"></app-board-details>
   </p-tabPanel>
-  <p-tabPanel header="Invite Members" leftIcon="pi pi-arrow-down">
-   <app-invitemembers *ngIf="index === 1"></app-invitemembers>
+  <p-tabPanel header="Invite Members" leftIcon="pi pi-arrow-down" *ngIf="isInviteView">
+    <p-tabView #innerTab (onChange)="handleInnerTabChange($event)" [activeIndex]="selectedInnerTabIndex">
+      <p-tabPanel header="Invitations" >
+        <app-invitemembers *ngIf="innerHeader === 'Invitations'"></app-invitemembers>
+      </p-tabPanel>
+      <p-tabPanel header="Register Approvals">
+        <app-registrationapprove *ngIf="innerHeader === 'Register Approvals'"></app-registrationapprove>
+      </p-tabPanel>
+      
+    </p-tabView>
+   
   </p-tabPanel>
-  <p-tabPanel header="Notifications" leftIcon="pi pi-bell">
-    <app-notifications  *ngIf="index === 2"></app-notifications>
+  <p-tabPanel header="Notifications" leftIcon="pi pi-bell" *ngIf="isNotificationView">
+    <app-notifications  *ngIf="header === 'Notifications'"></app-notifications>
   </p-tabPanel>
 </p-tabView>

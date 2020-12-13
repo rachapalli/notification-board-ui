@@ -3,6 +3,7 @@ export class BoardInvitation {
     emailBody: string;
     emailSubject: string;
     createdBy: number;
+    groupName: string;
 }
 
 export class Invitation {

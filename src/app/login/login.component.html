@@ -6,7 +6,8 @@
     </div>
     <div class="p-grid p-fluid p-jc-center">
         <div *ngIf="isLoginError" class="p-invalid">
-            Invalid Username And/or Password
+           
+            {{errorMessage}}
         </div>
         <div *ngIf="submitted && f.username.errors && f.password.errors" class="p-invalid">
             <div *ngIf="f.username.errors.required">Username and Passwords are required

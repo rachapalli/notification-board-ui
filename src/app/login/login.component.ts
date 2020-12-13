@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   loginDisplay = false;
   isLoginError = false;
+  errorMessage = 'Invalid Username And/or Password';
   @Output()
   onClose = new EventEmitter();
 
@@ -39,6 +40,7 @@ export class LoginComponent implements OnInit {
     console.log("Login clicked");
     this.isLoginError = false;
     this.submitted = true;
+    this.errorMessage = 'Invalid Username And/or Password';
     if (this.form.invalid) {
       return;
     }
@@ -50,6 +52,8 @@ export class LoginComponent implements OnInit {
       this.closeLogin();
     }, (error) =>{
       this.isLoginError = true;
+      if(error && error.error)
+      this.errorMessage = error.error.message;
       console.log(error);
     });
     

@@ -1,6 +1,6 @@
 <p-toast></p-toast>
 <div>
-    <div class="p-d-flex  p-jc-end">
+    <div class="p-d-flex  p-jc-end" *ngIf="isBoardCreate">
         <button pButton type="button" [disabled]="!authService.currentUserValue" label="Add Boards" class="p-mb-2 p-mr-2 p-button-info"
             (click)="showAddBoardDialog()"></button>
     </div>
@@ -12,7 +12,7 @@
                         <th style="width:8em">Board Name</th>
                         <th style="width:8em">Created Date</th>
                         <th style="width:12em">Board Url</th>
-                        <th style="width:2em">Action</th>
+                        <th style="width:2em" *ngIf="isBoardEdit">Action</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-publicGroup>
@@ -25,12 +25,12 @@
                             {{localUrl}}{{publicGroup.groupName}}
                         </a>
                         </td>
-                        <td style="width:2em">
+                        <td style="width:2em" *ngIf="isBoardEdit">
                             <div class="p-field p-grid p-jc-center">
-                                <div class="p-col-6">
+                                <div class="p-col-6" *ngIf="isBoardEdit">
                                     <i class="pi pi-pencil hoverPointer" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(publicGroup)"></i>
                                 </div>
-                                <div class="p-col-6">
+                                <div class="p-col-6" *ngIf="isBoardDelete">
                                     
                                     <i class="pi pi-trash hoverPointer" *ngIf="publicGroup.isActive" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(publicGroup)"></i>
                                 </div>
@@ -48,7 +48,7 @@
                         <th style="width:8em">Board Name</th>
                         <th style="width:8em">Created Date</th>
                         <th style="width:12em">Board Url</th>
-                        <th style="width:2em">Action</th>
+                        <th style="width:2em" *ngIf="isBoardEdit">Action</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-privateGroup>
@@ -61,12 +61,12 @@
                             {{localUrl}}{{privateGroup.groupName}}
                         </a> 
                         </td>
-                        <td style="width:2em">
+                        <td style="width:2em" *ngIf="isBoardEdit">
                             <div class="p-field p-grid p-jc-center">
-                                <div class="p-col-6">
+                                <div class="p-col-6" *ngIf="isBoardEdit">
                                     <i class="pi pi-pencil hoverPointer" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(privateGroup)"></i>
                                 </div>
-                                <div class="p-col-6">
+                                <div class="p-col-6" *ngIf="isBoardDelete">
                                     <i class="pi pi-trash hoverPointer" *ngIf="privateGroup.isActive" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(privateGroup)"></i>
                                 </div>
                             </div>

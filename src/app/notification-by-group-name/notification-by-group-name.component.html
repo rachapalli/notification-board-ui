@@ -27,7 +27,7 @@
             <td style="width:12em" *ngIf="publicNotification.notification.notificationType === 'TEXT'">
                 {{publicNotification.notification.message.message}}</td>
             <td
-                *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat !== 'pdf' && publicNotification.fileFormat !== 'excel'">
+                *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat !== 'pdf' && publicNotification.fileFormat !== 'xlsx'">
                 <img width="60vw" alt="No Image" style="vertical-align: middle"  (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"
                     [src]="publicNotification.notification.file.fileKey" /></td>
             <td
@@ -36,8 +36,8 @@
                     (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)" />
             </td>
             <td
-                *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat === 'excel'">
-                <img width="20%" alt="No Image" style="vertical-align: middle" src="assets/excelIcon.png" /></td>
+                *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat === 'xlsx'">
+                <img width="10%" alt="No Image" style="vertical-align: middle" src="assets/excelIcon.png" (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"  /></td>
 
         </tr>
     </ng-template>
@@ -50,6 +50,7 @@
             <img alt="No Image" *ngIf="imageSrc" [src]="imageSrc" width="70%"
                 style="vertical-align: middle;padding-left: '30%'" />
             <iframe *ngIf="urlSafe" [style]="{width: '80vw', height: '60vh'}" frameBorder="0" [src]="urlSafe"></iframe>
+            <iframe *ngIf="excelUrlSafe" [style]="{width: '80vw', height: '60vh'}" frameBorder="0" [src]="excelUrlSafe"></iframe>
         </div>
     </div>
 
