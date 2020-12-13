@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { LoaderService } from './loader.service';
 import { CreateGroupModel, GroupNotificationModel, Groups } from './model/group.model';
 import { BoardInvitation } from './model/invitation.model';
-import { Users } from './model/users.model';
+import { Users, UserStatus } from './model/users.model';
 
 
 @Injectable({
@@ -96,6 +96,11 @@ export class HttpServiceClient {
 
   }
 
+  getImageWithFileKeyObserver(fileKey: string): any{
+    return this.httpService.get(environment.apiUrl + "/file/download?file="+fileKey, { responseType: 'blob' });
+
+  }
+
   getUserDetailsWithEmail(email: any): any{
     return this.httpService.get(environment.apiUrl + "/user/"+email);
   }
@@ -108,7 +113,20 @@ export class HttpServiceClient {
     return this.httpService.get(environment.apiUrl + "/invitation/list");
   }
 
+  getUserInvitations(req: string): any{
+    return this.httpService.post(environment.apiUrl + "/invitation/user-invitations",{email: req});
+  }
+
   sendInvitation(req: BoardInvitation){
     return this.httpService.post(environment.apiUrl + "/invitation/sendBoardInvitation", req);
   }
+
+  getOwnerGroupUsers(req: any): any{
+    return this.httpService.post(environment.apiUrl + "/group/getOwnerGroupUsers", {email: req});
+  }
+
+  authenticateAndUpdateUser(req: UserStatus): any{
+    return this.httpService.post(environment.apiUrl + "/user/group/approve", req);
+  }
+  
 }

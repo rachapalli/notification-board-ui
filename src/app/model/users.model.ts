@@ -21,3 +21,10 @@ export class CurrentUser {
     message: string;
     results: any;
 }
+
+export class UserStatus {
+    userEmail: string;
+    userName: string;
+    groupName: string;
+    isActive: boolean;
+}

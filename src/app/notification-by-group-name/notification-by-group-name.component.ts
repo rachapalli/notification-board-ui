@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { AuthenticationService } from '../auth/authentication.service';
 import { HttpServiceClient } from '../http-service-client';
 import { CreateGroupModel, GroupNotificationModel } from '../model/group.model';
 
@@ -11,27 +12,29 @@ import { CreateGroupModel, GroupNotificationModel } from '../model/group.model';
   styleUrls: ['./notification-by-group-name.component.css']
 })
 export class NotificationByGroupNameComponent implements OnInit {
-  currentRoute: string;
+  routerRef: any;
   groupName: string;
   imageToShow: any;
   isImage: boolean;
   imageSrc: any;
   urlSafe: SafeResourceUrl;
+  excelUrlSafe: SafeResourceUrl;
   notificationTypeSelect: any[];
   globalNotificationType: string;
   publicNotifications: CreateGroupModel[];
-  constructor(private router: Router, private service: HttpServiceClient,private messageService: MessageService,  private sanitizer: DomSanitizer) {
-        this.currentRoute = this.router.url;
-        const routeArr =  this.router.url.split('/notification/getNotifications/');
-        if(routeArr){
-          this.groupName = routeArr[1];     
-        }
+  constructor(private router: Router,private route: ActivatedRoute, public authService: AuthenticationService, private service: HttpServiceClient,private messageService: MessageService,  private sanitizer: DomSanitizer) {
+        
+          this.routerRef =  this.route.queryParams.subscribe(params => {
+            this.groupName = params['groupName'];
+        });  
 }
   ngOnInit(): void {
     this.notificationTypeSelect = [{ label: 'All', value: null },{ label: 'Text', value: 'TEXT' },{ label: 'File', value: 'FILE' }];
    this.fetchNotifications();
   }
   fetchNotifications(){
+    this.publicNotifications = [];
+    if(!this.groupName) this.router.navigate(['/login']);
     this.service.getNotifications(this.groupName).subscribe( res => {
       if(res){
         if(this.globalNotificationType === 'TEXT'){
@@ -39,12 +42,16 @@ export class NotificationByGroupNameComponent implements OnInit {
         }else if(this.globalNotificationType === 'FILE'){
           this.fetchFiles( res.filter(r1 => r1.notification.notificationType === 'FILE'));
       }else{
-        
+        // this.publicNotifications = res.filter(r1 => r1.notification.notificationType === 'TEXT');
         this.fetchFiles(res);
       }
       }
-    }, () => {
-      this.messageService.add({severity:'error', summary:'Error', detail: 'Error Occured While Fetching details with ' + this.groupName});
+    }, err => {
+      if(err && err.status === 401){
+        this.routerRef.unsubscribe();
+        this.router.navigate(['/']);
+      }
+      // this.messageService.add({severity:'error', summary:'Error', detail: 'Error Occured While Fetching details with ' + this.groupName});
     });
   }
 
@@ -63,7 +70,7 @@ export class NotificationByGroupNameComponent implements OnInit {
             console.log(fileKeyObj.notification.file.fileKey);
         this.createImageFromBlob(response, fileKeyObj);
         if(i === res.length - 1){
-          this.publicNotifications = res;
+          this.publicNotifications = [...this.publicNotifications, ...res];
         }
     }
     }
@@ -75,11 +82,9 @@ export class NotificationByGroupNameComponent implements OnInit {
        let res = reader.result;
        
        if(fileObj.fileFormat === 'pdf'){
-       let url = window.URL.createObjectURL(image);
-       fileObj.notification.file.fileKey = image;// this.sanitizer.bypassSecurityTrustUrl(url);
-       }else if(fileObj.fileFormat === 'excel'){
-        // let url = window.URL.createObjectURL(image);
-        // fileObj.notification.file.fileKey = this.sanitizer.bypassSecurityTrustUrl(url);
+           fileObj.notification.file.fileKey = image;// this.sanitizer.bypassSecurityTrustUrl(url);
+       }else if(fileObj.fileFormat === 'xlsx'){
+           fileObj.notification.file.fileKey = image;
         } else if(res && res.toString().includes('data:application/octet-stream;base64')){
           fileObj.notification.file.fileKey = reader.result.toString().replace('data:application/octet-stream;base64', 'data:image/jpeg;base64');
          }
@@ -91,16 +96,17 @@ export class NotificationByGroupNameComponent implements OnInit {
  }
 
  onImageClick(event: any, format: string){
-    console.log(event);
-    // this.imageSrc = null;
-    // this.urlSafe = null;
+    if(event.length < 1000 || event.size < 1000)return;
     this.isImage = true;
     if(format === 'pdf'){
       const blobTest =  new Blob([event], { type: 'application/pdf' });
       const fileUrl = URL.createObjectURL(blobTest );
       this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
-    } else if(format === 'excel'){
-      this.imageSrc = event;
+    } else if(format === 'xlsx'){
+      
+      const blobTest =  new Blob([event], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const fileUrl = URL.createObjectURL(blobTest );
+      this.excelUrlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
     }else{
       this.imageSrc = event;
     }
@@ -114,6 +120,7 @@ export class NotificationByGroupNameComponent implements OnInit {
  onImageDialogClose(){
   this.imageSrc = null;
   this.urlSafe = null;
+  this.excelUrlSafe = null;
   this.isImage = false;
  }
 }

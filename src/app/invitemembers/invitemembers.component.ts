@@ -20,20 +20,23 @@ export class InvitemembersComponent implements OnInit {
   totalGroups: any;
   isPublic = true;
   groupsData: SelectItem[];
-  boardName: any;
   localUrl = "";
   invitationModel = new BoardInvitation();
   display: boolean;
   allowDuplicateEmail = false;
-
-  constructor(private httpService: HttpServiceClient,
+  isInviteCreate = false;
+   constructor(private httpService: HttpServiceClient,
     private messageService: MessageService, public authService: AuthenticationService) { }
 
   ngOnInit(): void {
     this.fetchAllInvitations();
     const hrefUrl = document.location.href.split('#');
     if (hrefUrl) {
-      this.localUrl = hrefUrl[0] + '#/notification/getNotifications/';
+      this.localUrl = hrefUrl[0] + '#/getNotifications/';
+    }
+    const invite = JSON.parse(localStorage.getItem("permission")).filter(e => e.name === 'INVITATION_LIST');
+    if(invite && invite.length > 0){
+      this.isInviteCreate = invite[0].isCreate;
     }
   }
 
@@ -56,8 +59,11 @@ export class InvitemembersComponent implements OnInit {
   }
 
   fetchAllInvitations() {
-    this.httpService.getAllInvitations().subscribe(res => {
-      this.invitations = res;
+    if (!this.authService.currentUserValue) return;
+    
+    this.httpService.getUserInvitations(this.authService.currentUserValue.results.username).subscribe(res => {
+      this.publicGroups = res.filter(s => s.isPublic);
+      this.privateGroups = res.filter(s => !s.isPublic);
     }, error => {
 
     });
@@ -71,7 +77,7 @@ export class InvitemembersComponent implements OnInit {
       this.httpService.getOwnerGroups(this.authService.currentUserValue.results.username).subscribe((res) => {
         if (res) {
           this.groupsData = [{ label: 'Select Board', value: null }];
-          for (const groupData of res.filter(s => s.isPublic === event)) {
+          for (const groupData of res.filter(s => s.isPublic === event.value)) {
             this.groupsData.push({ label: groupData.groupName, value: groupData.groupName });
           }
         }
@@ -82,9 +88,8 @@ export class InvitemembersComponent implements OnInit {
   }
 
   onBoardSelect() {
-    if (this.boardName) {
-      this.invitationModel.emailBody = `${this.localUrl + this.boardName}`;
-      // this.invitationModel.message =  "<a target='_blank' href='"+ this.localUrl + this.boardName + "'>";
+    if (this.invitationModel.groupName) {
+      this.invitationModel.emailBody = `${this.localUrl + this.invitationModel.groupName}`;
     } else {
       this.invitationModel.emailBody = '';
     }
@@ -95,7 +100,7 @@ export class InvitemembersComponent implements OnInit {
     this.groupTypes = [{ label: 'Public', value: true }, { label: 'Private', value: false }];
     this.invitationModel = new BoardInvitation();
     this.display = true;
-    this.onGroupTypeSelect(true);
+    this.onGroupTypeSelect({value: true});
   }
 
   onEmailAdd(event: any) {
@@ -109,7 +114,7 @@ export class InvitemembersComponent implements OnInit {
   }
   
   enableorDisableSendButton(){
-    if(this.boardName && this.invitationModel && this.invitationModel.emailIdList && this.invitationModel.emailBody){
+    if(this.invitationModel && this.invitationModel.groupName && this.invitationModel.emailIdList && this.invitationModel.emailIdList.length > 0 && this.invitationModel.emailBody){
       this.isButtonDisabled = false;
     }else {
       this.isButtonDisabled = true;
@@ -133,6 +138,7 @@ export class InvitemembersComponent implements OnInit {
 
   onDialogClose() {
     this.display = false;
+    this.invitationModel = new BoardInvitation();
     this.isButtonDisabled = true;
 
   }

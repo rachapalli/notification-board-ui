@@ -11,11 +11,7 @@ const routes: Routes = [
   {
     path: 'boardMember', component: BoardmemberComponent,  canActivate: [AuthGuardService]
   },
-  { path: 'notification/getNotifications',  component: NotificationByGroupNameComponent,
-  children: [
-    { path: '**', component: NotificationByGroupNameComponent}
-  ]
-},
+  { path: 'getNotifications',  component: NotificationByGroupNameComponent},
   {
     path: '**', redirectTo: '/'
   },

@@ -1,81 +1,66 @@
 <p-toast></p-toast>
 <div>
-    <div class="p-d-flex  p-jc-end">
+    <div class="p-d-flex  p-jc-end" *ngIf="isInviteCreate">
         <button pButton type="button" [disabled]="!authService.currentUserValue" label="Invite Members"
             class="p-mb-2 p-mr-2 p-button-info" (click)="showInvitationDialog()"></button>
     </div>
     <p-accordion>
         <p-accordionTab header="Public" [selected]="true">
-            <!-- <p-table [value]="publicGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
+             <p-table [value]="publicGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width:8em">Board Name</th>
-                        <th style="width:8em">Created Date</th>
-                        <th style="width:12em">Board Url</th>
-                        <th style="width:2em">Action</th>
+                        <th style="width:6em">Board Name</th>
+                        <th style="width:6em">Subject</th>
+                        <th style="width:12em">Message</th>
+                        <th style="width:4em">Created Date</th>
+                        <th style="width:2em">Status</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-publicGroup>
-                    <tr [style.background-color]="publicGroup.isActive ? 'white' : '#dddddd'">
-                        <td style="width:8em">{{publicGroup.groupName}}</td>
-                        <td style="width:8em">{{publicGroup.createdDate | date:'dd/MM/yyyy'}}</td>
-                        <td style="width:12em; word-break: break-all">
-                            <a target="_blank" 
-                            href={{localUrl}}{{publicGroup.groupName}}> 
-                            {{localUrl}}{{publicGroup.groupName}}
-                        </a>
+                    <tr >
+                        <td style="width:6em">{{publicGroup.groupName}}</td>
+                        <td style="width:6em; word-break: break-all">
+                          {{publicGroup.subject}}
                         </td>
+                        <td style="width:12em; word-wrap:break-word;">
+                            <span innerHTML="{{ publicGroup.message }}"></span>
+                        </td>
+                        <td style="width:4em">{{publicGroup.createdDate | date:'dd/MM/yyyy'}}</td>
                         <td style="width:2em">
-                            <div class="p-field p-grid p-jc-center">
-                                <div class="p-col-6">
-                                    <i class="pi pi-pencil hoverPointer" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(publicGroup)"></i>
-                                </div>
-                                <div class="p-col-6">
-                                    
-                                    <i class="pi pi-trash hoverPointer" *ngIf="publicGroup.isActive" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(publicGroup)"></i>
-                                    <i class="pi pi-trash hoverPointer" *ngIf="!publicGroup.isActive" ></i>
-                                </div>
-                            </div>
+                            {{publicGroup.status}}
                         </td>
                     </tr>
                 </ng-template>
-            </p-table> -->
+            </p-table> 
 
         </p-accordionTab>
         <p-accordionTab header="Private">
-            <!-- <p-table [value]="privateGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
+            <p-table [value]="privateGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width:8em">Board Name</th>
-                        <th style="width:8em">Created Date</th>
-                        <th style="width:12em">Board Url</th>
-                        <th style="width:2em">Action</th>
+                        <th style="width:6em">Board Name</th>
+                        <th style="width:6em">Subject</th>
+                        <th style="width:12em">Message</th>
+                        <th style="width:4em">Created Date</th>
+                        <th style="width:2em">Status</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-privateGroup>
-                    <tr [style.background-color]="privateGroup.isActive ? 'white' : '#dddddd'">
-                        <td style="width:8em">{{privateGroup.groupName}}</td>
-                        <td style="width:8em">{{privateGroup.createdDate | date:'dd/MM/yyyy'}}</td>
-                        <td style="width:12em; word-break: break-all">
-                            <a target="_blank" 
-                            href={{localUrl}}{{privateGroup.groupName}}> 
-                            {{localUrl}}{{privateGroup.groupName}}
-                        </a> 
+                    <tr >
+                        <td style="width:6em">{{privateGroup.groupName}}</td>
+                        <td style="width:6em; word-break: break-all">
+                          {{privateGroup.subject}}
                         </td>
+                        <td style="width:12em; word-wrap:break-word;">
+                            <span innerHTML="{{ privateGroup.message }}"></span>
+                        </td>
+                        <td style="width:4em">{{privateGroup.createdDate | date:'dd/MM/yyyy'}}</td>
                         <td style="width:2em">
-                            <div class="p-field p-grid p-jc-center">
-                                <div class="p-col-6">
-                                    <i class="pi pi-pencil hoverPointer" pTooltip="Edit" tooltipPosition="top" (click)="onEditRow(privateGroup)"></i>
-                                </div>
-                                <div class="p-col-6">
-                                    <i class="pi pi-trash hoverPointer" *ngIf="privateGroup.isActive" pTooltip="Delete" tooltipPosition="top" (click)="onDeleteRow(privateGroup)"></i>
-                                    <i class="pi pi-trash hoverPointer" *ngIf="!privateGroup.isActive" ></i>
-                                </div>
-                            </div>
+                            {{privateGroup.status}}
                         </td>
                     </tr>
                 </ng-template>
-            </p-table> -->
+            </p-table>
         </p-accordionTab>
     </p-accordion>
     <p-dialog header="Invite Members" modal="false" [(visible)]="display" [style]="{width: '80vw'}"
@@ -88,7 +73,7 @@
                     </p-dropdown>
                 </div>
                 <div class="p-col-6 p-md-6">
-                    <p-dropdown [options]="groupsData" (onChange)="onBoardSelect()" [(ngModel)]="boardName">
+                    <p-dropdown [options]="groupsData" (onChange)="onBoardSelect()" [(ngModel)]="invitationModel.groupName">
                     </p-dropdown>
                 </div>
             </div>

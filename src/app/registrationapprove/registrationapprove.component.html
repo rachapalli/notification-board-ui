@@ -1,0 +1,26 @@
+<p-table [value]="userDetails" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width:8em">Email</th>
+            <th style="width:8em">User Name</th>
+            <th style="width:12em">Group Name</th>
+            <th style="width:2em">Action</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+        <tr >
+            <td style="width:8em">{{user.userEmail}}</td>
+            <td style="width:8em">{{user.userName}}</td>
+            <td style="width:12em">{{user.groupName}}</td>
+            <td style="width:2em">
+                <div class="p-field p-grid p-jc-center" *ngIf="isapprovEdit">
+                    <div class="p-col-6">
+                        <i class="pi pi-check-circle hoverPointer" *ngIf="!user.isActive" pTooltip="Approve" tooltipPosition="top" (click)="onApproveOrReject(user, true)"></i>
+                    
+                        <i class="pi pi-times hoverPointer" *ngIf="user.isActive" pTooltip="Reject" tooltipPosition="top" (click)="onApproveOrReject(user, false)"></i>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

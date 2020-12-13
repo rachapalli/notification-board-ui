@@ -14,7 +14,7 @@
                 <p-dropdown [options]="notificationTypeSelect" (onChange)="fetchUserGroupNotifications()"
                     [(ngModel)]="globalNotificationType"></p-dropdown>
             </div>
-            <div class="p-col-2 p-jc-end">
+            <div class="p-col-2 p-jc-end" *ngIf="isNotificationCreate">
                 <div class="box">
                     <button pButton type="button" [disabled]="!this.authService.currentUserValue"
                         label="Add Notification" class="p-mb-2 p-mr-2 p-button-info"
@@ -33,7 +33,7 @@
                         <th style="width:8em">Board Name</th>
                         <th style="width:8em">Description</th>
                         <th style="width:12em">Notification</th>
-                        <th style="width:2em">Action</th>
+                        <th style="width:2em" *ngIf="isNotificationEdit">Action</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-publicNotification>
@@ -45,27 +45,27 @@
                         <!-- <td style="width:12em" *ngIf="publicNotification.notification.notificationType === 'FILE'"><img class="hoverPointer" alt="No Image" (click)="onImageClick('assets/Logo.jpg')" src="assets/Logo.jpg" width="60%"
                                 style="vertical-align: middle" /></td> -->
                         <td style="width:12em" 
-                            *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat !== 'pdf' && publicNotification.fileFormat !== 'excel'">
-                            <img width="60vw" alt="No Image" style="vertical-align: middle"
+                            *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat !== 'pdf' && publicNotification.fileFormat !== 'xlsx'">
+                            <img width="60vw" alt="No Image" class="hoverPointer" style="vertical-align: middle"
                                 (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"
-                                [src]="publicNotification.notification.file.fileKey" /></td>
+                                [src]="publicNotification.notification && publicNotification.notification.file.fileKey.length > 1000 ? publicNotification.notification.file.fileKey : localImage" /></td>
                         <td style="width:12em" 
                             *ngIf="publicNotification.notification.notificationType === 'FILE'  && publicNotification.fileFormat === 'pdf'">
-                            <img width="10%" alt="No Image" style="vertical-align: middle" src="assets/pdfIcon.png"
+                            <img width="10%" alt="No Image" class="hoverPointer" style="vertical-align: middle" src="assets/pdfIcon.png"
                                 (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)" />
                         </td>
                         <td style="width:12em" 
-                            *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat === 'excel'">
-                            <img width="20%" alt="No Image" style="vertical-align: middle" src="assets/excelIcon.png" />
+                            *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat === 'xlsx'">
+                            <img width="10%" alt="No Image" class="hoverPointer" (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"  style="vertical-align: middle" src="assets/excelIcon.png" />
                         </td>
 
-                        <td style="width:2em">
+                        <td style="width:2em" *ngIf="isNotificationEdit">
                             <div class="p-field p-grid p-jc-center">
-                                <div class="p-col-6">
+                                <div class="p-col-6" >
                                     <i class="pi pi-pencil hoverPointer" pTooltip="Edit" tooltipPosition="top"
                                         (click)="onEditRow(publicNotification)"></i>
                                 </div>
-                                <div class="p-col-6">
+                                <div class="p-col-6" *ngIf="isNotificationDelete">
                                     <i class="pi pi-trash hoverPointer" *ngIf="publicNotification.isActive"
                                         pTooltip="Delete" tooltipPosition="top"
                                         (click)="onDeleteRow(publicNotification)"></i>
@@ -84,7 +84,7 @@
                         <th style="width:8em">Board Name</th>
                         <th style="width:8em">Description</th>
                         <th style="width:12em">Notification</th>
-                        <th style="width:2em">Action</th>
+                        <th style="width:2em" *ngIf="isNotificationEdit">Action</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-privateNotification>
@@ -96,30 +96,30 @@
                         <!-- <td style="width:12em" *ngIf="privateNotification.notification.notificationType === 'FILE'"><img class="hoverPointer" alt="No Image" (click)="onImageClick('assets/Logo.jpg')" src="assets/Logo.jpg" width="60%"
                                 style="vertical-align: middle" /></td> -->
                         <td
-                            *ngIf="privateNotification.notification.notificationType === 'FILE' && privateNotification.fileFormat !== 'pdf' && privateNotification.fileFormat !== 'excel'">
-                            <img width="60vw" alt="No Image" style="vertical-align: middle" *ngIf="privateNotification.notification.file.fileKey.length > 1000 "
+                            *ngIf="privateNotification.notification.notificationType === 'FILE' && privateNotification.fileFormat !== 'pdf' && privateNotification.fileFormat !== 'xlsx'">
+                            <img width="60vw" alt="No Image" style="vertical-align: middle" *ngIf="privateNotification.notification.file.fileKey.length > 1000 " class="hoverPointer"
                                 (click)="onImageClick(privateNotification.notification.file.fileKey, privateNotification.fileFormat)"
-                                [src]="privateNotification.notification.file.fileKey" />
+                                [src]="privateNotification.notification.file.fileKey.length > 1000 ? privateNotification.notification.file.fileKey : assets/image.png" />
                         <!-- <img class="hoverPointer" alt="No Image" (click)="onImageClick('assets/Logo.jpg')"
                             [src]="privateNotification.notification.file.fileKey" width="60%" /> -->
                         </td>
                         <td
                             *ngIf="privateNotification.notification.notificationType === 'FILE'  && privateNotification.fileFormat === 'pdf'">
-                            <img width="10%" alt="No Image" style="vertical-align: middle" src="assets/pdfIcon.png"
+                            <img width="10%" alt="No Image" style="vertical-align: middle" src="assets/pdfIcon.png" class="hoverPointer"
                                 (click)="onImageClick(privateNotification.notification.file.fileKey, privateNotification.fileFormat)" />
                         </td>
                         <td
-                            *ngIf="privateNotification.notification.notificationType === 'FILE' && privateNotification.fileFormat === 'excel'">
-                            <img width="20%" alt="No Image" style="vertical-align: middle" src="assets/excelIcon.png" />
+                            *ngIf="privateNotification.notification.notificationType === 'FILE' && privateNotification.fileFormat === 'xlsx'">
+                            <img width="10%" class="hoverPointer" alt="No Image" style="vertical-align: middle"  (click)="onImageClick(privateNotification.notification.file.fileKey, privateNotification.fileFormat)" src="assets/excelIcon.png" />
                         </td>
 
-                        <td>
+                        <td *ngIf="isNotificationEdit">
                             <div class="p-field p-grid p-jc-center">
-                                <div class="p-col-6">
+                                <div class="p-col-6"  >
                                     <i class="pi pi-pencil hoverPointer" pTooltip="Edit" tooltipPosition="top"
                                         (click)="onEditRow(privateNotification)"></i>
                                 </div>
-                                <div class="p-col-6">
+                                <div class="p-col-6" *ngIf="isNotificationDelete">
                                     <i class="pi pi-trash hoverPointer" *ngIf="privateNotification.isActive"
                                         pTooltip="Delete" tooltipPosition="top"
                                         (click)="onDeleteRow(privateNotification)"></i>
@@ -197,6 +197,7 @@
             <div class="p-col-12 p-jc-center">
                 <img alt="No Image" *ngIf="imageSrc"[src]="imageSrc" width="70%" style="vertical-align: middle;padding-left: '30%'" />
                 <iframe *ngIf="urlSafe"  [style]="{width: '80vw', height: '60vh'}" frameBorder="0" [src]="urlSafe"></iframe>
+                <iframe *ngIf="excelUrlSafe"  [style]="{width: '80vw', height: '60vh'}" frameBorder="0" [src]="excelUrlSafe"></iframe>
             </div>
         </div>
 

@@ -38,6 +38,7 @@ import { NotificationByGroupNameComponent } from './notification-by-group-name/n
 import { LoaderService } from './loader.service';
 import { LoaderInterceptorService } from './loader-interceptor.service';
 import { InvitemembersComponent } from './invitemembers/invitemembers.component';
+import { RegistrationapproveComponent } from './registrationapprove/registrationapprove.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { InvitemembersComponent } from './invitemembers/invitemembers.component'
     BoardDetailsComponent,
     FooterComponent,
     NotificationByGroupNameComponent,
-    InvitemembersComponent
+    InvitemembersComponent,
+    RegistrationapproveComponent
   ],
   imports: [
     BrowserModule,
