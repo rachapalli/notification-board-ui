@@ -55,7 +55,7 @@ export class LoaderInterceptorService  implements HttpInterceptor {
         },
         err => { this.removeRequest(req); observer.error(err); 
         if(err.status === 401){
-          // this.authenticationService.logout();
+          localStorage.setItem('prevUrl', location.href);
           this.router.navigate(['/']);
         }
         },
