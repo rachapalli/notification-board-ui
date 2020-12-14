@@ -22,6 +22,7 @@ export class NotificationByGroupNameComponent implements OnInit {
   notificationTypeSelect: any[];
   globalNotificationType: string;
   publicNotifications: CreateGroupModel[];
+  notificationLabel = 'Select Notification Type:';
   constructor(private router: Router,private route: ActivatedRoute, public authService: AuthenticationService, private service: HttpServiceClient,private messageService: MessageService,  private sanitizer: DomSanitizer) {
         
           this.routerRef =  this.route.queryParams.subscribe(params => {
@@ -30,11 +31,11 @@ export class NotificationByGroupNameComponent implements OnInit {
 }
   ngOnInit(): void {
     this.notificationTypeSelect = [{ label: 'All', value: null },{ label: 'Text', value: 'TEXT' },{ label: 'File', value: 'FILE' }];
-   this.fetchNotifications();
+    this.fetchNotifications();
   }
   fetchNotifications(){
     this.publicNotifications = [];
-    if(!this.groupName) this.router.navigate(['/login']);
+    // if(!this.groupName) this.router.navigate(['/login']);
     this.service.getNotifications(this.groupName).subscribe( res => {
       if(res){
         if(this.globalNotificationType === 'TEXT'){
@@ -48,10 +49,10 @@ export class NotificationByGroupNameComponent implements OnInit {
       }
     }, err => {
       if(err && err.status === 401){
-        this.routerRef.unsubscribe();
-        this.router.navigate(['/']);
+        this.messageService.add({severity:'error', summary:'Error', detail: 'Please login to get details of ' + this.groupName + ' board.'});
+      }else{
+      this.messageService.add({severity:'error', summary:'Error', detail: 'Error Occured While Fetching details with ' + this.groupName});
       }
-      // this.messageService.add({severity:'error', summary:'Error', detail: 'Error Occured While Fetching details with ' + this.groupName});
     });
   }
 
@@ -65,10 +66,11 @@ export class NotificationByGroupNameComponent implements OnInit {
           if(format){
             fileKeyObj.fileFormat = format[1].toLowerCase();
           }
-            response = await this.service.getImageWithFileKey(fileKeyObj.notification.file.fileKey).catch( e => 
+          if (fileKeyObj.fileFormat !== 'pdf' && fileKeyObj.fileFormat !== 'xlsx') {
+            response = await this.service.getImageWithFileKey(fileKeyObj.notification.file.fileKey).catch(e =>
               console.log(e.message));
-            console.log(fileKeyObj.notification.file.fileKey);
-        this.createImageFromBlob(response, fileKeyObj);
+            this.createImageFromBlob(response, fileKeyObj);
+          }
         if(i === res.length - 1){
           this.publicNotifications = [...this.publicNotifications, ...res];
         }
@@ -95,23 +97,47 @@ export class NotificationByGroupNameComponent implements OnInit {
     }
  }
 
- onImageClick(event: any, format: string){
-    if(event.length < 1000 || event.size < 1000)return;
+ onImageClick(event: any, format: string) {
+  let createdFile = null;
+  if (event.length > 1000 || event.size > 1000) {
+    this.imageSrc = event;
     this.isImage = true;
-    if(format === 'pdf'){
-      const blobTest =  new Blob([event], { type: 'application/pdf' });
-      const fileUrl = URL.createObjectURL(blobTest );
-      this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
-    } else if(format === 'xlsx'){
-      
-      const blobTest =  new Blob([event], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const fileUrl = URL.createObjectURL(blobTest );
-      this.excelUrlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(fileUrl);
-    }else{
-      this.imageSrc = event;
+    return;
+  }
+  if(format !== 'pdf' && format !== 'xlsx'){
+    this.messageService.add({ severity: 'warn',  detail: 'No Image Found' });
+    return;
+  }
+  
+  let reader = new FileReader();
+  this.service.getImageWithFileKeyObserver(event).subscribe(response => {
+    // this.createImageFromBlob(response, createdFile);
+
+    reader.onload = (e: any) => {
+        if (format === 'pdf') {
+        let result = reader.result;
+        result = result.toString().replace('application/octet-stream', 'application/pdf');
+        this.isImage = true;
+          this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(result.toString());
+      }
+      else if (format === 'xlsx') {
+        this.isImage = true;
+        let result = reader.result;
+        result = result.toString().replace('application/octet-stream', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+          this.excelUrlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(result.toString());
+          setTimeout(() => {
+            this.isImage = false;
+          },1);
+      };
     }
-   
- }
+    if (response) {
+      reader.readAsDataURL(response);
+    }
+  }, err => {
+    this.messageService.add({ severity: 'warn',  detail: 'No File Found' });
+  });
+}
+
  fetchUserGroupNotifications(){
   this.publicNotifications = [new CreateGroupModel()];
     this.fetchNotifications();

@@ -4,13 +4,14 @@
         <div class="p-col-12 p-md-12"></div>
     </div>
     <div class="p-field p-grid">
-        <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0  p-jc-end">Select Notification Type: </label>
+        <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0  p-jc-end" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">{{notificationLabel}}</label>
         <div class="p-col-4 p-md-4 p-jc-start">
              <p-dropdown [options]="notificationTypeSelect" (onChange)="fetchUserGroupNotifications()"
                 [(ngModel)]="globalNotificationType"></p-dropdown>
         </div>
     </div>
 </div>
+
 <p-table [value]="publicNotifications" styleClass="p-datatable-gridlines">
     <ng-template pTemplate="header">
         <tr>
@@ -19,7 +20,7 @@
 
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-publicNotification>
+    <ng-template pTemplate="body" let-publicNotification> 
         <tr>
             <td>{{publicNotification.notification.description}}</td>
             <!--<td><img [alt]="'No Image'" src="{{publicNotification.fileKey}}" width="32" style="vertical-align: middle" /></td> -->
@@ -28,16 +29,16 @@
                 {{publicNotification.notification.message.message}}</td>
             <td
                 *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat !== 'pdf' && publicNotification.fileFormat !== 'xlsx'">
-                <img width="60vw" alt="No Image" style="vertical-align: middle"  (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"
-                    [src]="publicNotification.notification.file.fileKey" /></td>
+                <img width="60vw" alt="No Image" class="hoverPointer" style="vertical-align: middle"  (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"
+                [src]="publicNotification.notification && publicNotification.notification.file.fileKey.length > 1000 ? publicNotification.notification.file.fileKey : localImage" /></td>
             <td
                 *ngIf="publicNotification.notification.notificationType === 'FILE'  && publicNotification.fileFormat === 'pdf'">
-                <img width="10%" alt="No Image" style="vertical-align: middle" src="assets/pdfIcon.png"
+                <img width="10%" alt="No Image" class="hoverPointer" style="vertical-align: middle" src="assets/pdfIcon.png"
                     (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)" />
             </td>
             <td
                 *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat === 'xlsx'">
-                <img width="10%" alt="No Image" style="vertical-align: middle" src="assets/excelIcon.png" (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"  /></td>
+                <img width="10%" alt="No Image" class="hoverPointer" style="vertical-align: middle" src="assets/excelIcon.png" (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"  /></td>
 
         </tr>
     </ng-template>
