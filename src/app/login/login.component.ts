@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,private authService: AuthenticationService, private router: Router) { 
     if (this.authService.currentUserValue) { 
-      this.router.navigate(['/boardMember']);
+       this.router.navigate(['/boardMember']);
   }
   }
 
@@ -48,7 +48,12 @@ export class LoginComponent implements OnInit {
     .pipe(first())
     .subscribe((res) =>{
       this.loading = true;
+      if(localStorage.getItem('prevUrl')){
+        location.href = localStorage.getItem('prevUrl');
+        localStorage.removeItem('prevUrl');
+       }else {
       this.router.navigate(['/boardMember']);
+       }
       this.closeLogin();
     }, (error) =>{
       this.isLoginError = true;
