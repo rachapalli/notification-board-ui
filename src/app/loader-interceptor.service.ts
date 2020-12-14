@@ -1,5 +1,6 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -13,7 +14,7 @@ export class LoaderInterceptorService  implements HttpInterceptor {
 
   private requests: HttpRequest<any>[] = [];
 
-  constructor(private loaderService: LoaderService, private authenticationService: AuthenticationService) { }
+  constructor(private loaderService: LoaderService,private router: Router, private authenticationService: AuthenticationService) { }
 
   removeRequest(req: HttpRequest<any>) {
     const i = this.requests.indexOf(req);
@@ -55,7 +56,7 @@ export class LoaderInterceptorService  implements HttpInterceptor {
         err => { this.removeRequest(req); observer.error(err); 
         if(err.status === 401){
           // this.authenticationService.logout();
-          window.location.reload();
+          this.router.navigate(['/']);
         }
         },
         () => { this.removeRequest(req); observer.complete(); });
