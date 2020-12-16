@@ -56,6 +56,7 @@ export class LoginComponent implements OnInit {
        }
       this.closeLogin();
     }, (error) =>{
+      localStorage.removeItem('prevUrl');
       this.isLoginError = true;
       if(error && error.error)
       this.errorMessage = error.error.message;

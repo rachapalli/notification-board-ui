@@ -39,6 +39,7 @@ export class NotificationsComponent implements OnInit {
   uploadFileVal: FormData;
   urlSafe: SafeResourceUrl;
   excelUrlSafe: SafeResourceUrl;
+  docurlSafe: SafeResourceUrl;
   localImage = 'assets/image.png';
   isNotificationCreate = false;
   isNotificationEdit = false;
@@ -65,7 +66,8 @@ export class NotificationsComponent implements OnInit {
     this.httpService.getOwnerGroups(this.authService.currentUserValue.results.username).subscribe((res) => {
       if (res) {
         this.totalGroups = [{ label: 'All', value: null }];
-        for (const groupData of res) {
+        const activeGroups = res.filter(e => e.isActive)
+        for (const groupData of activeGroups) {
           this.totalGroups.push({ label: groupData.groupName, value: groupData.groupId, ref: groupData.isPublic });
         }
         this.publicGroups = this.totalGroups.filter(t => t.ref);
@@ -163,18 +165,18 @@ export class NotificationsComponent implements OnInit {
         if (format) {
           fileKeyObj.fileFormat = format[format.length - 1].toLowerCase();
         }
-        if (fileKeyObj.fileFormat !== 'pdf' && fileKeyObj.fileFormat !== 'xlsx') {
+        if (fileKeyObj.fileFormat !== 'pdf' && fileKeyObj.fileFormat !== 'xlsx' && fileKeyObj.fileFormat !== 'docx') {
           response = await this.httpService.getImageWithFileKey(fileKeyObj.notification.file.fileKey).catch(e =>
             console.log(e.message));
           console.log(fileKeyObj.notification.file.fileKey);
           this.createImageFromBlob(response, fileKeyObj);
         }
-        if (i === res.length - 1) {
-          if (isPublic) this.publicNotifications = res;
-          if (!isPublic) this.privateNotifications = res;
-        }
-
+        
       }
+          if (i === res.length - 1) {
+            if (isPublic) this.publicNotifications = res;
+            if (!isPublic) this.privateNotifications = res;
+          }
     }
   }
 
@@ -184,9 +186,7 @@ export class NotificationsComponent implements OnInit {
     reader.onload = (e: any) => {
       let res = reader.result;
 
-      if (fileObj.fileFormat === 'pdf') {
-        fileObj.notification.file.fileKey = image;
-      } else if (fileObj.fileFormat === 'xlsx') {
+      if (fileObj.fileFormat === 'pdf' || fileObj.fileFormat === 'docx' || fileObj.fileFormat === 'xlsx') {
         fileObj.notification.file.fileKey = image;
       } else if (res && res.toString().includes('data:application/octet-stream;base64')) {
         fileObj.notification.file.fileKey = reader.result.toString().replace('data:application/octet-stream;base64', 'data:image/jpeg;base64');
@@ -217,7 +217,11 @@ export class NotificationsComponent implements OnInit {
   addNotification() {
     if (this.groupModel.notification.notificationType === 'FILE') {
       this.groupModel.notification.message = null;
+      if(this.groupModel.notification.file.fileId){
+        this.saveNotification();
+      }else{
       this.uploadFile();
+      }
     } else {
       this.groupModel.notification.file = null;
       this.saveNotification();
@@ -285,12 +289,12 @@ export class NotificationsComponent implements OnInit {
 
   onImageClick(event: any, format: string) {
     let createdFile = null;
-    if (event.length > 1000 || event.size > 1000) {
+    if (event.length > 1000) {
       this.imageSrc = event;
       this.isImage = true;
       return;
     }
-    if(format !== 'pdf' && format !== 'xlsx'){
+    if(format !== 'pdf' && format !== 'xlsx' && format !== 'docx'){
       this.messageService.add({ severity: 'warn',  detail: 'No Image Found' });
       return;
     }
@@ -300,21 +304,27 @@ export class NotificationsComponent implements OnInit {
       // this.createImageFromBlob(response, createdFile);
 
       reader.onload = (e: any) => {
+        let result = reader.result;
           if (format === 'pdf') {
-          let result = reader.result;
           result = result.toString().replace('application/octet-stream', 'application/pdf');
           this.isImage = true;
             this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(result.toString());
-        }
+        } else if (format === 'docx') {
+          result = result.toString().replace('application/octet-stream', ' application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+          this.isImage = true;
+            this.docurlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(result.toString());
+            setTimeout(() => {
+              this.isImage = false;
+            },1);
+        } 
         else if (format === 'xlsx') {
           this.isImage = true;
-          let result = reader.result;
           result = result.toString().replace('application/octet-stream', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             this.excelUrlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(result.toString());
             setTimeout(() => {
               this.isImage = false;
             },1);
-        };
+        }
       }
       if (response) {
         reader.readAsDataURL(response);
@@ -331,6 +341,7 @@ export class NotificationsComponent implements OnInit {
     this.imageSrc = null;
     this.urlSafe = null;
     this.excelUrlSafe = null;
+    this.docurlSafe = null;
   }
   onGroupTypeSelect(event: any) {
     if (this.authService.currentUserValue) {
@@ -338,7 +349,9 @@ export class NotificationsComponent implements OnInit {
         if (res) {
           this.groupsData = [{ label: 'Select Board', value: null }];
           for (const groupData of res.filter(s => s.isPublic === event.value)) {
-            this.groupsData.push({ label: groupData.groupName, value: groupData.groupId });
+            if(groupData.isActive){
+              this.groupsData.push({ label: groupData.groupName, value: groupData.groupId });
+            }
           }
         }
       }, error => {

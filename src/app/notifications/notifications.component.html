@@ -42,10 +42,8 @@
                         <td style="width:8em">{{publicNotification.notification.description}}</td>
                         <td style="width:12em" *ngIf="publicNotification.notification.notificationType === 'TEXT'">
                             {{publicNotification.notification.message.message}}</td>
-                        <!-- <td style="width:12em" *ngIf="publicNotification.notification.notificationType === 'FILE'"><img class="hoverPointer" alt="No Image" (click)="onImageClick('assets/Logo.jpg')" src="assets/Logo.jpg" width="60%"
-                                style="vertical-align: middle" /></td> -->
                         <td style="width:12em" 
-                            *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat !== 'pdf' && publicNotification.fileFormat !== 'xlsx'">
+                            *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat !== 'pdf' && publicNotification.fileFormat !== 'xlsx'  && publicNotification.fileFormat !== 'docx'">
                             <img width="60vw" alt="No Image" class="hoverPointer" style="vertical-align: middle"
                                 (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"
                                 [src]="publicNotification.notification && publicNotification.notification.file.fileKey.length > 1000 ? publicNotification.notification.file.fileKey : localImage" /></td>
@@ -58,6 +56,10 @@
                             *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat === 'xlsx'">
                             <img width="10%" alt="No Image" class="hoverPointer" (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"  style="vertical-align: middle" src="assets/excelIcon.png" />
                         </td>
+                        <td style="width:12em" 
+                        *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat === 'docx'">
+                        <img width="10%" alt="No Image" class="hoverPointer" (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"  style="vertical-align: middle" src="assets/docIcon.png" />
+                    </td>
 
                         <td style="width:2em" *ngIf="isNotificationEdit">
                             <div class="p-field p-grid p-jc-center">
@@ -174,7 +176,7 @@
             <div class="p-field p-grid" *ngIf="groupModel.notification.notificationType === 'FILE'">
                 <label for="files" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Choose file</label>
                 <div class="p-col-12 p-md-10">
-                    <p-fileUpload name="files" [showUploadButton]="false" [showCancelButton]="false"
+                    <p-fileUpload name="files" [showUploadButton]="false" [showCancelButton]="false" accept=".pdf,.xlsx,.docx,.jpeg,.jpg,.png"
                         (onSelect)="onFileUpload($event)" (onRemove)="onFileRmoved()"></p-fileUpload>
                 </div>
             </div>
@@ -198,6 +200,8 @@
                 <img alt="No Image" *ngIf="imageSrc"[src]="imageSrc" width="70%" style="vertical-align: middle;padding-left: '30%'" />
                 <iframe *ngIf="urlSafe"  [style]="{width: '80vw', height: '60vh'}" frameBorder="0" [src]="urlSafe"></iframe>
                 <iframe *ngIf="excelUrlSafe"  [style]="{width: '80vw', height: '60vh'}" frameBorder="0" [src]="excelUrlSafe"></iframe>
+                <iframe *ngIf="docurlSafe"  [style]="{width: '80vw', height: '60vh'}" frameBorder="0" [src]="docurlSafe"></iframe>
+                
             </div>
         </div>
 

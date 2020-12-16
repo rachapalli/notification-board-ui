@@ -18,6 +18,7 @@ export class NotificationByGroupNameComponent implements OnInit {
   isImage: boolean;
   imageSrc: any;
   urlSafe: SafeResourceUrl;
+  docurlSafe: SafeResourceUrl;
   excelUrlSafe: SafeResourceUrl;
   notificationTypeSelect: any[];
   globalNotificationType: string;
@@ -66,15 +67,15 @@ export class NotificationByGroupNameComponent implements OnInit {
           if(format){
             fileKeyObj.fileFormat = format[1].toLowerCase();
           }
-          if (fileKeyObj.fileFormat !== 'pdf' && fileKeyObj.fileFormat !== 'xlsx') {
+          if (fileKeyObj.fileFormat !== 'pdf' && fileKeyObj.fileFormat !== 'xlsx' && fileKeyObj.fileFormat !== 'docx') {
             response = await this.service.getImageWithFileKey(fileKeyObj.notification.file.fileKey).catch(e =>
               console.log(e.message));
             this.createImageFromBlob(response, fileKeyObj);
           }
-        if(i === res.length - 1){
-          this.publicNotifications = [...this.publicNotifications, ...res];
         }
-    }
+          if(i === res.length - 1){
+            this.publicNotifications = [...this.publicNotifications, ...res];
+          }
     }
   }
   createImageFromBlob(image: Blob, fileObj: any) {
@@ -83,11 +84,9 @@ export class NotificationByGroupNameComponent implements OnInit {
     reader.onload = (e: any) => {
        let res = reader.result;
        
-       if(fileObj.fileFormat === 'pdf'){
-           fileObj.notification.file.fileKey = image;// this.sanitizer.bypassSecurityTrustUrl(url);
-       }else if(fileObj.fileFormat === 'xlsx'){
+       if(fileObj.fileFormat === 'pdf' ||  fileObj.fileFormat === 'docx' || fileObj.fileFormat === 'xlsx'){
            fileObj.notification.file.fileKey = image;
-        } else if(res && res.toString().includes('data:application/octet-stream;base64')){
+       } else if(res && res.toString().includes('data:application/octet-stream;base64')){
           fileObj.notification.file.fileKey = reader.result.toString().replace('data:application/octet-stream;base64', 'data:image/jpeg;base64');
          }
     };
@@ -99,12 +98,12 @@ export class NotificationByGroupNameComponent implements OnInit {
 
  onImageClick(event: any, format: string) {
   let createdFile = null;
-  if (event.length > 1000 || event.size > 1000) {
+  if (event.length > 1000) {
     this.imageSrc = event;
     this.isImage = true;
     return;
   }
-  if(format !== 'pdf' && format !== 'xlsx'){
+  if(format !== 'pdf' && format !== 'xlsx' && format !== 'docx'){
     this.messageService.add({ severity: 'warn',  detail: 'No Image Found' });
     return;
   }
@@ -114,15 +113,21 @@ export class NotificationByGroupNameComponent implements OnInit {
     // this.createImageFromBlob(response, createdFile);
 
     reader.onload = (e: any) => {
+      let result = reader.result;
         if (format === 'pdf') {
-        let result = reader.result;
         result = result.toString().replace('application/octet-stream', 'application/pdf');
         this.isImage = true;
           this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(result.toString());
+      } else if (format === 'docx') {
+        result = result.toString().replace('application/octet-stream', ' application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        this.isImage = true;
+          this.docurlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(result.toString());
+          setTimeout(() => {
+            this.isImage = false;
+          },1);
       }
       else if (format === 'xlsx') {
         this.isImage = true;
-        let result = reader.result;
         result = result.toString().replace('application/octet-stream', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
           this.excelUrlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(result.toString());
           setTimeout(() => {
@@ -148,6 +153,7 @@ export class NotificationByGroupNameComponent implements OnInit {
   this.urlSafe = null;
   this.excelUrlSafe = null;
   this.isImage = false;
+  this.docurlSafe = null;
  }
 }
 
