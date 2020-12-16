@@ -1,6 +1,6 @@
 export class BoardInvitation {
     emailIdList: any[];
-    emailBody: string;
+    emailBody: any;
     emailSubject: string;
     createdBy: number;
     groupName: string;

@@ -32,7 +32,7 @@ export class InvitemembersComponent implements OnInit {
     this.fetchAllInvitations();
     const hrefUrl = document.location.href.split('#');
     if (hrefUrl) {
-      this.localUrl = hrefUrl[0] + '#/getNotifications/';
+      this.localUrl = hrefUrl[0]+'#/getNotifications?groupName=';
     }
     const invite = JSON.parse(localStorage.getItem("permission")).filter(e => e.name === 'INVITATION_LIST');
     if(invite && invite.length > 0){
@@ -78,7 +78,9 @@ export class InvitemembersComponent implements OnInit {
         if (res) {
           this.groupsData = [{ label: 'Select Board', value: null }];
           for (const groupData of res.filter(s => s.isPublic === event.value)) {
+            if(groupData.isActive){
             this.groupsData.push({ label: groupData.groupName, value: groupData.groupName });
+            }
           }
         }
       }, error => {
@@ -124,9 +126,13 @@ export class InvitemembersComponent implements OnInit {
   if(this.authService.currentUserValue){
     this.invitationModel.createdBy = this.authService.currentUserValue.results.id;
     }
+    if(this.invitationModel.emailBody){
+      this.invitationModel.emailBody = this.invitationModel.emailBody.replaceAll('<p><br></p>','');
+    }
   this.httpService.sendInvitation(this.invitationModel).subscribe( res => {
     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Invitations sent successfully.' });
     this.onDialogClose();
+    this.fetchAllInvitations();
   }, error => {
     if(error.error && (error.error.message || error.error.detials)){
       this.messageService.add({ severity: 'error', summary: error.error.message, detail: error.error.details[0] });
