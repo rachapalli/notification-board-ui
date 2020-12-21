@@ -31,6 +31,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:8em">Board Name</th>
+                        <th style="width:8em">Created Date</th>
                         <th style="width:8em">Description</th>
                         <th style="width:12em">Notification</th>
                         <th style="width:2em" *ngIf="isNotificationEdit">Action</th>
@@ -39,6 +40,7 @@
                 <ng-template pTemplate="body" let-publicNotification>
                     <tr [style.background-color]="publicNotification.isActive ? 'white' : '#dddddd'">
                         <td style="width:8em">{{publicNotification.groupName}}</td>
+                        <td style="width:8em">{{publicNotification.createdDate | date:'dd/MM/yyyy'}}</td>
                         <td style="width:8em">{{publicNotification.notification.description}}</td>
                         <td style="width:12em" *ngIf="publicNotification.notification.notificationType === 'TEXT'">
                             {{publicNotification.notification.message.message}}</td>
@@ -84,6 +86,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:8em">Board Name</th>
+                        <th style="width:8em">Created Date</th>
                         <th style="width:8em">Description</th>
                         <th style="width:12em">Notification</th>
                         <th style="width:2em" *ngIf="isNotificationEdit">Action</th>
@@ -92,6 +95,7 @@
                 <ng-template pTemplate="body" let-privateNotification>
                     <tr [style.background-color]="privateNotification.isActive ? 'white' : '#dddddd'">
                         <td style="width:8em">{{privateNotification.groupName}}</td>
+                        <td style="width:8em">{{privateNotification.createdDate | date:'dd/MM/yyyy'}}</td>
                         <td style="width:8em">{{privateNotification.notification.description}}</td>
                         <td style="width:12em" *ngIf="privateNotification.notification.notificationType === 'TEXT'">
                             {{privateNotification.notification.message.message}}</td>

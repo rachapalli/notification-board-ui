@@ -21,6 +21,7 @@ export class NotificationsComponent implements OnInit {
   isPublicSelect = true;
   isCreateError = false;
   errorMessage = '';
+  isEdit = false;
   groupTypes: SelectItem[];
   groupsData: SelectItem[];
   totalGroups: any[];
@@ -44,6 +45,7 @@ export class NotificationsComponent implements OnInit {
   isNotificationCreate = false;
   isNotificationEdit = false;
   isNotificationDelete = false;
+  files: any[];
   constructor(private httpService: HttpServiceClient, public authService: AuthenticationService, private messageService: MessageService, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
@@ -200,6 +202,7 @@ export class NotificationsComponent implements OnInit {
 
   showAddNotifyDialog() {
     this.display = true;
+    this.isEdit = false;
     this.groupTypes = [{ label: 'Public', value: true }, { label: 'Private', value: false }];
     this.onGroupTypeSelect({ value: true });
     this.enableorDisableSubmit();
@@ -366,9 +369,13 @@ export class NotificationsComponent implements OnInit {
     } else {
       this.isButtonDisabled = true;
     }
+    if(this.groupModel.notification.notificationType === 'FILE' && this.isEdit && this.groupModel.groupId){
+      this.isButtonDisabled = false;
+    }
   }
   onDialogClose(isData: boolean) {
     this.display = false;
+    this.isEdit = false;
     this.groupModel = new CreateGroupModel();
     this.groupModel.notification.notificationType = 'TEXT';
     this.groupTypes = [];
@@ -381,6 +388,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   onEditRow(event: any) {
+    this.isEdit = true;
     this.groupModel = new CreateGroupModel();
     let req = new GroupNotificationModel();
     req.notificationType = event.notification.notificationType;

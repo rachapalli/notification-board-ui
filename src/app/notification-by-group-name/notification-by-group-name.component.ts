@@ -51,6 +51,8 @@ export class NotificationByGroupNameComponent implements OnInit {
     }, err => {
       if(err && err.status === 401){
         this.messageService.add({severity:'error', summary:'Error', detail: 'Please login to get details of ' + this.groupName + ' board.'});
+      }else if(err && err.status === 403 && err.error && err.error.message){
+          this.messageService.add({severity:'error', summary:'Error', detail: err.error.message});
       }else{
       this.messageService.add({severity:'error', summary:'Error', detail: 'Error Occured While Fetching details with ' + this.groupName});
       }
