@@ -17,7 +17,7 @@
         <tr>
             <th>Description</th>
             <th>Notification</th>
-
+            <th>Created Date</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-publicNotification> 
@@ -43,6 +43,7 @@
                 *ngIf="publicNotification.notification.notificationType === 'FILE' && publicNotification.fileFormat === 'docx'">
                 <img width="10%" alt="No Image" class="hoverPointer" (click)="onImageClick(publicNotification.notification.file.fileKey, publicNotification.fileFormat)"  style="vertical-align: middle" src="assets/docIcon.png" />
             </td>
+            <td >{{publicNotification.createdDate | date:'dd/MM/yyyy'}}</td>
         </tr>
     </ng-template>
 </p-table>
