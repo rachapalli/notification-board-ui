@@ -1,135 +1,187 @@
 <form [formGroup]="form" (ngSubmit)="processSignUp()">
-<div class="p-fluid">
-        <div class="p-field p-grid">
-        </div>
-        <div class="p-field p-grid p-jc-center">
-           <div *ngIf="formSubmitted && f.userName.errors" class="p-col-12 p-md-10 p-invalid">
-            <div *ngIf="f.userName.errors.required" >
-                User name required.
-            </div>
-            <div *ngIf="f.userName.errors.minlength">
-                User name must be 3 charecters
-            </div>
-            </div>
-            <div class="p-col-12 p-md-10">
-                <input type="text" formControlName="userName" 
-                [ngClass]="{ 'p-invalid': (formSubmitted && f.userName.errors)}"
-                 pInputText class="p-inputtext-sm" placeholder="Name">
-            </div>
-            <!-- <div class="p-col-6 p-md-5">
-                <input type="text" pInputText class="p-inputtext-sm" placeholder="Last Name">
-            </div> -->
-        </div>
-        <div class="p-field p-grid p-jc-center">
-            <div *ngIf="formSubmitted && f.password.errors" class="p-col-12 p-md-10 p-invalid">
-                <div *ngIf="f.password.errors.required" >
-                    Password required.
+
+    <div class="p-fluid">
+
+        <div *ngIf="formSubmitted && f.userName.errors" class="p-field p-grid p-jc-center">
+            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
+            <div class="p-col-12 p-md-8 p-invalid">
+                <div *ngIf="f.userName.errors.required">
+                    User name required.
                 </div>
-                <div *ngIf="f.password.errors.minlength" >
-                    Password must be 8 charecters
+                <div *ngIf="f.userName.errors.minlength">
+                    User name must be 3 charecters
                 </div>
-                </div>
-        <div class="p-col-12 p-md-10">
-            <input type="password" formControlName="password" 
-            [ngClass]="{ 'p-invalid': (formSubmitted && f.password.errors)}"  pInputText class="p-inputtext-sm" placeholder="Password">
-        </div>
-    </div>
-    <div class="p-field p-grid p-jc-center">
-            <div *ngIf="formSubmitted && form.value && !form.value.userType" class="p-col-12 p-md-10 p-invalid">
-                Please select user type.
-            </div>
-        <div class="p-col-12 p-md-10">
-            <p-dropdown [options]="userTypes"  formControlName="userType" 
-            [ngClass]="{ 'p-invalid': (formSubmitted && f.userType.errors)}"></p-dropdown>
-        </div>
-    </div>
-        <div class="p-field p-grid p-jc-center">
-            <div *ngIf="formSubmitted && form.controls.email && form.controls.email.errors" class="p-col-12 p-md-10 p-invalid">
-                <div *ngIf="form.controls.email.errors.required" >
-                    Email required.
-                </div>
-                <div *ngIf="form.controls.email.errors.pattern" >
-                    Please enter valid email / email must be more than 2 charecters.
-                </div>
-                </div>
-            <div class="p-col-12  p-md-10">
-                <input type="text"  formControlName="email" 
-                [ngClass]="{ 'is-invalid': formSubmitted && f.email.errors }"
-                 pInputText class="p-inputtext-sm" placeholder="Email">
             </div>
         </div>
         <div class="p-field p-grid p-jc-center">
-            <div *ngIf="formSubmitted && form.controls.confEmail" class="p-col-12 p-md-10 p-invalid">
-                <div *ngIf="form.controls.email.value === '' && form.controls.confEmail.errors && form.controls.confEmail.errors.required" >
-                    Confirm Email required.
-                </div>
-                <div *ngIf="form.controls.email.value !== form.controls.confEmail.value" >
-                    Email and Confirm email must be same.
-                </div>
-                </div>
-            <div class="p-col-12  p-md-10">
-                <input type="text"  formControlName="confEmail" 
-                [ngClass]="{ 'is-invalid': formSubmitted && f.confEmail.errors }"
-                 pInputText class="p-inputtext-sm" placeholder="Confirm Email">
-            </div>
-        </div>
-        <div class="p-field p-grid p-jc-center">
-            <div *ngIf="formSubmitted && form.controls.altEmail" class="p-col-12 p-md-10 p-invalid">
-                <div *ngIf="form.controls.altEmail.errors && form.controls.altEmail.errors.required" >
-                   Alternate Email required.
-                </div>
-                <div *ngIf="form.controls.altEmail.errors && form.controls.altEmail.errors.pattern" >
-                    Please enter valid email / email must be more than 2 charecters.
-                </div>
-                <div *ngIf="!(form.controls.altEmail.errors && form.controls.altEmail.errors.required && form.controls.altEmail.errors.pattern) && form.controls.altEmail.value !== '' && form.controls.altEmail.value === form.controls.email.value" >
-                    Email and Alternate Email must be different.
-                </div>
-                </div>
-        <div class="p-col-12  p-md-10">
-            <input type="text" formControlName="altEmail" 
-            [ngClass]="{ 'p-invalid': (formSubmitted && f.altEmail.errors)}" pInputText class="p-inputtext-sm" placeholder="Alternate Email">
-        </div>
-    </div>
-    <div class="p-field p-grid p-jc-center">
-        <div *ngIf="formSubmitted && form.controls.confAltEmail" class="p-col-12 p-md-10 p-invalid">
-            <div *ngIf="form.controls.altEmail.value === '' && form.controls.confAltEmail.errors && form.controls.confEmail.errors.required" >
-                Confirm Alternate Email required.
-            </div>
-            <div *ngIf="form.controls.altEmail.value !== form.controls.confAltEmail.value" >
-                Alternate Email and Confirm Alternate Email must be same.
-            </div>
-            </div>
-        <div class="p-col-12  p-md-10">
-            <input type="text"  formControlName="confAltEmail" 
-            [ngClass]="{ 'is-invalid': formSubmitted && f.confAltEmail.errors }"
-             pInputText class="p-inputtext-sm" placeholder="Confirm Alternate Email">
-        </div>
-    </div>
-        <div class="p-field p-grid p-jc-center">
-            <div *ngIf="formSubmitted && f.mobile.errors" class="p-col-12 p-md-10 p-invalid">
-                <div *ngIf="f.mobile.errors.required" >
-                    Mobile Number required.
-                </div>
-                <div *ngIf="f.mobile.errors.pattern" >
-                    Mobile number must be 10 digits.
-                </div>
-                </div>
-            <div class="p-col-12 p-md-10">
-                <input type="text"  formControlName="mobile" 
-                [ngClass]="{ 'p-invalid': (formSubmitted && f.mobile.errors)}" pInputText class="p-inputtext-sm" placeholder="Mobile Number">
+            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
+            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Name</label>
+            <div class="p-col-6 p-md-8">
+                <input type="text" formControlName="userName"
+                    [ngClass]="{ 'p-invalid': (formSubmitted && f.userName.errors)}" pInputText class="p-inputtext-sm">
             </div>
         </div>
 
-        
-       
+        <!-- <div class="p-col-6 p-md-5">
+                <input type="text" pInputText class="p-inputtext-sm" placeholder="Last Name">
+            </div> -->
+        <div *ngIf="formSubmitted && f.password.errors" class="p-field p-grid p-jc-center">
+            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
+            <div class="p-col-12 p-md-8 p-invalid">
+                <div *ngIf="f.password.errors.required">
+                    Password required.
+                </div>
+                <div *ngIf="f.password.errors.minlength">
+                    Password must be 8 charecters
+                </div>
+            </div>
+        </div>
+        <div class="p-field p-grid p-jc-center">
+            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
+            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Password</label>
+            <div class="p-col-6 p-md-8">
+                <input type="password" formControlName="password"
+                    [ngClass]="{ 'p-invalid': (formSubmitted && f.password.errors)}" pInputText class="p-inputtext-sm">
+            </div>
+        </div>
+
+        <div *ngIf="formSubmitted && form.value && !form.value.userType" class="p-field p-grid p-jc-center">
+            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
+            <div class="p-col-12 p-md-8 p-invalid">
+                Please select user type.
+            </div>
+        </div>
+        <div class="p-field p-grid p-jc-center">
+            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
+            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">User Type</label>
+            <div class="p-col-6 p-md-8">
+                <p-dropdown [options]="userTypes" formControlName="userType"
+                    [ngClass]="{ 'p-invalid': (formSubmitted && f.userType.errors)}"></p-dropdown>
+            </div>
+        </div>
+
+        <div *ngIf="formSubmitted && form.controls.email && form.controls.email.errors"
+            class="p-field p-grid p-jc-center">
+            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
+            <div class="p-col-12 p-md-8 p-invalid">
+                <div *ngIf="form.controls.email.errors.required">
+                    Email required.
+                </div>
+                <div *ngIf="form.controls.email.errors.pattern">
+                    Please enter valid email / email must be more than 2 charecters.
+                </div>
+            </div>
+        </div>
+        <div class="p-field p-grid p-jc-center">
+            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
+            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Email</label>
+            <div class="p-col-6 p-md-8">
+                <input type="text" formControlName="email" [ngClass]="{ 'is-invalid': formSubmitted && f.email.errors }"
+                    pInputText class="p-inputtext-sm">
+            </div>
+        </div>
+
+        <div *ngIf="formSubmitted && form.controls.confEmail" class="p-field p-grid p-jc-center">
+            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
+            <div class="p-col-12 p-md-8 p-invalid">
+                <div
+                    *ngIf="form.controls.email.value === '' && form.controls.confEmail.errors && form.controls.confEmail.errors.required">
+                    Confirm Email required.
+                </div>
+                <div *ngIf="form.controls.email.value !== form.controls.confEmail.value">
+                    Email and Confirm email must be same.
+                </div>
+            </div>
+        </div>
+        <div class="p-field p-grid p-jc-center">
+            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
+            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Confirm Email</label>
+            <div class="p-col-6 p-md-8">
+                <input type="text" formControlName="confEmail"
+                    [ngClass]="{ 'is-invalid': formSubmitted && f.confEmail.errors }" pInputText class="p-inputtext-sm">
+            </div>
+        </div>
+        <div *ngIf="formSubmitted && form.controls.altEmail" class="p-field p-grid p-jc-center">
+            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
+            <div class="p-col-12 p-md-8 p-invalid">
+                <div *ngIf="form.controls.altEmail.errors && form.controls.altEmail.errors.required">
+                    Alternate Email required.
+                </div>
+                <div *ngIf="form.controls.altEmail.errors && form.controls.altEmail.errors.pattern">
+                    Please enter valid email / email must be more than 2 charecters.
+                </div>
+                <div
+                    *ngIf="!(form.controls.altEmail.errors && form.controls.altEmail.errors.required && form.controls.altEmail.errors.pattern) && form.controls.altEmail.value !== '' && form.controls.altEmail.value === form.controls.email.value">
+                    Email and Alternate Email must be different.
+                </div>
+            </div>
+        </div>
+        <div class="p-field p-grid p-jc-center">
+            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
+            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Alternate Email</label>
+            <div class="p-col-6 p-md-8">
+                <input type="text" formControlName="altEmail"
+                    [ngClass]="{ 'p-invalid': (formSubmitted && f.altEmail.errors)}" pInputText class="p-inputtext-sm">
+            </div>
+        </div>
+
+        <div *ngIf="formSubmitted && form.controls.confAltEmail" class="p-field p-grid p-jc-center">
+            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
+            <div class="p-col-12 p-md-8 p-invalid">
+                <div *ngIf="form.controls.altEmail.value === '' && form.controls.confAltEmail.errors && form.controls.confEmail.errors.required">
+                    Confirm Alternate Email required.
+                </div>
+                <div *ngIf="form.controls.altEmail.value !== form.controls.confAltEmail.value">
+                    Alternate Email and Confirm Alternate Email must be same.
+                </div>
+            </div>
+        </div>
+        <div class="p-field p-grid p-jc-center">
+            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
+            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Confirm Alternate Email</label>
+            <div class="p-col-6 p-md-8">
+                <input type="text" formControlName="confAltEmail"
+                    [ngClass]="{ 'is-invalid': formSubmitted && f.confAltEmail.errors }" pInputText
+                    class="p-inputtext-sm">
+            </div>
+        </div>
+
+        <div *ngIf="formSubmitted && f.mobile.errors" class="p-field p-grid p-jc-center">
+            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
+            <div class="p-col-12 p-md-8 p-invalid">
+                <div *ngIf="f.mobile.errors.required">
+                    Mobile number required.
+                </div>
+                <div *ngIf="f.mobile.errors.pattern">
+                    Please enter valid mobile number.
+                </div>
+            </div>
+        </div>
+        <div class="p-field p-grid p-jc-center">
+            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
+            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Mobile Number</label>
+            <div class="p-col-6 p-md-8">
+                <p-inputMask mask="+449999999999" formControlName="mobile"
+                    [ngClass]="{ 'p-invalid': (formSubmitted && f.mobile.errors)}">
+                </p-inputMask>
+                <!-- <input type="text"  formControlName="mobile" 
+                    [ngClass]="{ 'p-invalid': (formSubmitted && f.mobile.errors)}" pInputText class="p-inputtext-sm" placeholder="Mobile Number"> -->
+            </div>
+        </div>
+
+
+
+
         <div class="p-field p-grid p-jc-end">
             <div class="p-col-4 p-md-2">
-                <button pButton type="button" [disabled]="isRegistrationClicked" label="Sign up" class="p-button-info"  styleClass="p-button-sm" (click)="processSignUp()"></button>
+                <button pButton type="button" [disabled]="isRegistrationClicked" label="Sign up" class="p-button-info"
+                    styleClass="p-button-sm" (click)="processSignUp()"></button>
             </div>
             <div class="p-col-4 p-md-2">
-            <button pButton type="button" label="Close"  class="p-button-info" (click)="closeSignUp()" styleClass="p-button-sm">
-            </button>
-        </div>
+                <button pButton type="button" label="Close" class="p-button-info" (click)="closeSignUp()"
+                    styleClass="p-button-sm">
+                </button>
+            </div>
         </div>
     </div>
-    </form>
+</form>

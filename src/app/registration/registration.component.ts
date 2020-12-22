@@ -34,11 +34,10 @@ export class RegistrationComponent implements OnInit {
       confEmail:  ['', [Validators.required, Validators.pattern(/^.{3,}@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
       altEmail: ['', [ Validators.pattern(/^.{3,}@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
       confAltEmail: ['', [ Validators.pattern(/^.{3,}@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
-      mobile: ['', [Validators.required, Validators.pattern(/^((\+91-?)|0)?[0-9]{10}$/), 
-      Validators.pattern(/^(?:[1-9]\d*|0)$/)]],
+      mobile: ['', [Validators.required, Validators.pattern("^((\\+44?)|!0)?[1-9][0-9]{9}$")]],
       
     });
-    this.userTypes = [{label:'User Type', value:null}];
+    this.userTypes = [{label:'Select', value:null}];
     this.httpService.getUserTypes().subscribe((res) => {
       for(let user of res){
         this.userTypes.push({label:user, value:user});
@@ -60,6 +59,9 @@ export class RegistrationComponent implements OnInit {
       return;
     }
     if(this.form.controls.altEmail.value !== this.form.controls.confAltEmail.value){
+      return;
+    }
+    if(this.form.controls.mobile.value){
       return;
     }
     this.isRegistrationClicked = true;
