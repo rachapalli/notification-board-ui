@@ -102,7 +102,7 @@
                         <!-- <td style="width:12em" *ngIf="privateNotification.notification.notificationType === 'FILE'"><img class="hoverPointer" alt="No Image" (click)="onImageClick('assets/Logo.jpg')" src="assets/Logo.jpg" width="60%"
                                 style="vertical-align: middle" /></td> -->
                         <td
-                            *ngIf="privateNotification.notification.notificationType === 'FILE' && privateNotification.fileFormat !== 'pdf' && privateNotification.fileFormat !== 'xlsx'">
+                            *ngIf="privateNotification.notification.notificationType === 'FILE' && privateNotification.fileFormat !== 'pdf' && privateNotification.fileFormat !== 'xlsx' && privateNotification.fileFormat !== 'docx'">
                             <img width="60vw" alt="No Image" style="vertical-align: middle" *ngIf="privateNotification.notification.file.fileKey.length > 1000 " class="hoverPointer"
                                 (click)="onImageClick(privateNotification.notification.file.fileKey, privateNotification.fileFormat)"
                                 [src]="privateNotification.notification.file.fileKey.length > 1000 ? privateNotification.notification.file.fileKey : assets/image.png" />
@@ -118,7 +118,10 @@
                             *ngIf="privateNotification.notification.notificationType === 'FILE' && privateNotification.fileFormat === 'xlsx'">
                             <img width="10%" class="hoverPointer" alt="No Image" style="vertical-align: middle"  (click)="onImageClick(privateNotification.notification.file.fileKey, privateNotification.fileFormat)" src="assets/excelIcon.png" />
                         </td>
-
+                        <td 
+                        *ngIf="privateNotification.notification.notificationType === 'FILE' && privateNotification.fileFormat === 'docx'">
+                        <img width="10%" alt="No Image" class="hoverPointer" (click)="onImageClick(privateNotification.notification.file.fileKey, privateNotification.fileFormat)"  style="vertical-align: middle" src="assets/docIcon.png" />
+                    </td>
                         <td *ngIf="isNotificationEdit">
                             <div class="p-field p-grid p-jc-center">
                                 <div class="p-col-6"  >

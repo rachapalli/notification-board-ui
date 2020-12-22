@@ -9,7 +9,7 @@
              <p-table [value]="publicGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width:6em">Email</th>
+                        <th style="width:12em">Email</th>
                         <th style="width:6em">Board Name</th>
                         <th style="width:6em">Subject</th>
                         <th style="width:12em">Message</th>
@@ -19,7 +19,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-publicGroup>
                     <tr >
-                        <td style="width:6em; word-wrap:break-word;">{{publicGroup.inviteeEmail}}</td>
+                        <td style="width:12em; word-wrap:break-word;">{{publicGroup.inviteeEmail}}</td>
                         <td style="width:6em">{{publicGroup.groupName}}</td>
                         <td style="width:6em; word-break: break-all">
                           {{publicGroup.subject}}
@@ -40,7 +40,7 @@
             <p-table [value]="privateGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th style="width:6em">Email</th>
+                        <th style="width:12em">Email</th>
                         <th style="width:6em">Board Name</th>
                         <th style="width:6em">Subject</th>
                         <th style="width:12em">Message</th>
@@ -50,7 +50,7 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-privateGroup>
                     <tr >
-                        <td style="width:6em; word-wrap:break-word;">{{privateGroup.inviteeEmail}}</td>
+                        <td style="width:12em; word-wrap:break-word;">{{privateGroup.inviteeEmail}}</td>
                         <td style="width:6em">{{privateGroup.groupName}}</td>
                         <td style="width:6em; word-break: break-all">
                           {{privateGroup.subject}}
