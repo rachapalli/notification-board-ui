@@ -61,9 +61,7 @@ export class RegistrationComponent implements OnInit {
     if(this.form.controls.altEmail.value !== this.form.controls.confAltEmail.value){
       return;
     }
-    if(this.form.controls.mobile.value){
-      return;
-    }
+
     this.isRegistrationClicked = true;
     this.prepareModelFromForm();
     this.httpService.registerNewUser(this.model).subscribe((res) => {
