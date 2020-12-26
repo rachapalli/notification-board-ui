@@ -14,9 +14,11 @@ export class HeaderComponent implements OnInit {
   isLoginSuccess = false;
   isLoginDialogOpen = false;
   isRegistrationDisplay = false;
+  headerText = 'Notification Board';
   constructor(private router: Router, public authService: AuthenticationService, private messageService: MessageService) { }
 
   ngOnInit(): void {
+    this.setLoginUser();
   }
 
   handleLogin(){
@@ -25,6 +27,7 @@ export class HeaderComponent implements OnInit {
   }
 
   handleLogOut(){
+    this.headerText = 'Notification Board';
     this.authService.logout();
     this.router.navigate(['/']);
   }
@@ -35,6 +38,13 @@ export class HeaderComponent implements OnInit {
 
   onLogInDialogClose(){
     this.isLoginDialogOpen = false;
+    this.setLoginUser();
+  }
+
+  setLoginUser(){
+    if(this.authService.currentUserValue && this.authService.currentUserValue.results && this.authService.currentUserValue.results.email){
+      this.headerText = 'Logged in user: ' + this.authService.currentUserValue.results.email;
+    }
   }
 
   onRegistrationDialogClose(){
