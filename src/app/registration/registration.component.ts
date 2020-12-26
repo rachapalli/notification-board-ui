@@ -37,11 +37,13 @@ export class RegistrationComponent implements OnInit {
       mobile: ['', [Validators.required, Validators.pattern("^((\\+44?)|!0)?[1-9][0-9]{9}$")]],
       
     });
-    this.userTypes = [{label:'Select', value:null}];
+    this.userTypes = [];
     this.httpService.getUserTypes().subscribe((res) => {
       for(let user of res){
         this.userTypes.push({label:user, value:user});
       }
+      this.userTypes.reverse(); // need to remove once back end is ready
+      this.userTypes.pop();
     });
   }
 
@@ -61,9 +63,7 @@ export class RegistrationComponent implements OnInit {
     if(this.form.controls.altEmail.value !== this.form.controls.confAltEmail.value){
       return;
     }
-    if(this.form.controls.mobile.value){
-      return;
-    }
+
     this.isRegistrationClicked = true;
     this.prepareModelFromForm();
     this.httpService.registerNewUser(this.model).subscribe((res) => {

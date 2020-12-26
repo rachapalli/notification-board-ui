@@ -218,15 +218,15 @@ export class NotificationsComponent implements OnInit {
   }
 
   addNotification() {
-    if (this.groupModel.notification.notificationType === 'FILE') {
+    if (this.groupModel.notification.notificationType === 'FILE' && this.uploadFileVal && this.uploadFileVal.get('file')) {
       this.groupModel.notification.message = null;
-      if(this.groupModel.notification.file.fileId){
-        this.saveNotification();
-      }else{
       this.uploadFile();
-      }
     } else {
-      this.groupModel.notification.file = null;
+      if (!this.groupModel.notification.file.fileId) {
+        this.groupModel.notification.file = null;
+      } else {
+        this.groupModel.notification.message = null;
+      }
       this.saveNotification();
     }
   }
@@ -287,6 +287,7 @@ export class NotificationsComponent implements OnInit {
 
   onFileRmoved() {
     this.filedetails = 0;
+    this.uploadFileVal = new FormData();
     this.enableorDisableSubmit();
   }
 
