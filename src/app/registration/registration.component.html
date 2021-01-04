@@ -3,8 +3,8 @@
     <div class="p-fluid">
 
         <div *ngIf="formSubmitted && f.userName.errors" class="p-field p-grid p-jc-center">
-            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
-            <div class="p-col-12 p-md-8 p-invalid">
+            <div  class="p-col-12 p-md-4 p-lg-4"></div>
+            <div class="p-col-12 p-md-8 p-lg-8 p-jc-start p-invalid">
                 <div *ngIf="f.userName.errors.required">
                     User name required.
                 </div>
@@ -14,9 +14,9 @@
             </div>
         </div>
         <div class="p-field p-grid p-jc-center">
-            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
-            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Name</label>
-            <div class="p-col-6 p-md-8">
+            <div class="p-col-12 p-md-12 p-lg-12"></div>
+            <label class="p-col-12 p-md-4 p-lg-4">Name</label>
+            <div class="p-col-12 p-md-8 p-lg-8 p-jc-start">
                 <input type="text" formControlName="userName"
                     [ngClass]="{ 'p-invalid': (formSubmitted && f.userName.errors)}" pInputText class="p-inputtext-sm">
             </div>
@@ -26,8 +26,8 @@
                 <input type="text" pInputText class="p-inputtext-sm" placeholder="Last Name">
             </div> -->
         <div *ngIf="formSubmitted && f.password.errors" class="p-field p-grid p-jc-center">
-            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
-            <div class="p-col-12 p-md-8 p-invalid">
+            <div  class="p-col-12 p-md-4 p-lg-4 p-jc-start"></div>
+            <div class="p-col-12 p-md-8 p-lg-8 p-jc-start p-invalid">
                 <div *ngIf="f.password.errors.required">
                     Password required.
                 </div>
@@ -36,25 +36,24 @@
                 </div>
             </div>
         </div>
-        <div class="p-field p-grid p-jc-center">
-            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
-            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Password</label>
-            <div class="p-col-6 p-md-8">
+        <div class="p-grid">
+            <label class="p-col-12 p-md-4 p-lg-4 p-jc-start">Password</label>
+            <div class="p-col-12 p-md-8 p-lg-8">
                 <input type="password" formControlName="password"
                     [ngClass]="{ 'p-invalid': (formSubmitted && f.password.errors)}" pInputText class="p-inputtext-sm">
             </div>
         </div>
 
         <div *ngIf="formSubmitted && form.value && !form.value.userType" class="p-field p-grid p-jc-center">
-            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
-            <div class="p-col-12 p-md-8 p-invalid">
+            <div  class="p-col-12 p-md-4 p-lg-4"></div>
+            <div class="p-col-12 p-md-8 p-lg-8 p-invalid">
                 Please select user type.
             </div>
         </div>
         <div class="p-field p-grid p-jc-center">
-            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
-            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">User Type</label>
-            <div class="p-col-6 p-md-8">
+            <!-- <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div> -->
+            <label class="p-col-12 p-md-4 p-lg-4">User Type</label>
+            <div class="p-col-12 p-md-8 p-lg-8">
                 <p-dropdown [options]="userTypes" formControlName="userType"
                     [ngClass]="{ 'p-invalid': (formSubmitted && f.userType.errors)}"></p-dropdown>
             </div>
@@ -62,8 +61,8 @@
 
         <div *ngIf="formSubmitted && form.controls.email && form.controls.email.errors"
             class="p-field p-grid p-jc-center">
-            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
-            <div class="p-col-12 p-md-8 p-invalid">
+            <div  class="p-col-12 p-md-4 p-lg-4"></div>
+            <div class="p-col-12 p-md-8 p-lg-8 p-invalid">
                 <div *ngIf="form.controls.email.errors.required">
                     Email required.
                 </div>
@@ -73,17 +72,16 @@
             </div>
         </div>
         <div class="p-field p-grid p-jc-center">
-            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
-            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Email</label>
-            <div class="p-col-6 p-md-8">
+            <label class="p-col-12 p-md-4 p-lg-4">Email</label>
+            <div class="p-col-12 p-md-8 p-lg-8">
                 <input type="text" formControlName="email" [ngClass]="{ 'is-invalid': formSubmitted && f.email.errors }"
                     pInputText class="p-inputtext-sm">
             </div>
         </div>
 
         <div *ngIf="formSubmitted && form.controls.confEmail" class="p-field p-grid p-jc-center">
-            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
-            <div class="p-col-12 p-md-8 p-invalid">
+            <div  class="p-col-12 p-md-4 p-lg-4"></div>
+            <div class="p-col-12 p-md-8 p-lg-8 p-invalid">
                 <div
                     *ngIf="form.controls.email.value === '' && form.controls.confEmail.errors && form.controls.confEmail.errors.required">
                     Confirm Email required.
@@ -94,16 +92,15 @@
             </div>
         </div>
         <div class="p-field p-grid p-jc-center">
-            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
-            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Confirm Email</label>
-            <div class="p-col-6 p-md-8">
+            <label class="p-col-12 p-md-4 p-lg-4">Confirm Email</label>
+            <div class="p-col-12 p-md-8 p-lg-8">
                 <input type="text" formControlName="confEmail"
                     [ngClass]="{ 'is-invalid': formSubmitted && f.confEmail.errors }" pInputText class="p-inputtext-sm">
             </div>
         </div>
         <div *ngIf="formSubmitted && form.controls.altEmail" class="p-field p-grid p-jc-center">
-            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
-            <div class="p-col-12 p-md-8 p-invalid">
+            <div  class="p-col-12 p-md-4 p-lg-4"></div>
+            <div class="p-col-12 p-md-8 p-lg-8 p-invalid">
                 <div *ngIf="form.controls.altEmail.errors && form.controls.altEmail.errors.required">
                     Alternate Email required.
                 </div>
@@ -117,17 +114,16 @@
             </div>
         </div>
         <div class="p-field p-grid p-jc-center">
-            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
-            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Alternate Email</label>
-            <div class="p-col-6 p-md-8">
+            <label class="p-col-12 p-md-4 p-lg-4">Alternate Email</label>
+            <div class="p-col-12 p-md-8 p-lg-8">
                 <input type="text" formControlName="altEmail"
                     [ngClass]="{ 'p-invalid': (formSubmitted && f.altEmail.errors)}" pInputText class="p-inputtext-sm">
             </div>
         </div>
 
         <div *ngIf="formSubmitted && form.controls.confAltEmail" class="p-field p-grid p-jc-center">
-            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
-            <div class="p-col-12 p-md-8 p-invalid">
+            <div  class="p-col-12 p-md-4 p-lg-4"></div>
+            <div class="p-col-12 p-md-8 p-lg-8 p-invalid">
                 <div *ngIf="form.controls.altEmail.value === '' && form.controls.confAltEmail.errors && form.controls.confEmail.errors.required">
                     Confirm Alternate Email required.
                 </div>
@@ -137,9 +133,8 @@
             </div>
         </div>
         <div class="p-field p-grid p-jc-center">
-            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
-            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Confirm Alternate Email</label>
-            <div class="p-col-6 p-md-8">
+            <label class="p-col-12 p-md-4 p-lg-4">Confirm Alternate Email</label>
+            <div class="p-col-12 p-md-8 p-lg-8">
                 <input type="text" formControlName="confAltEmail"
                     [ngClass]="{ 'is-invalid': formSubmitted && f.confAltEmail.errors }" pInputText
                     class="p-inputtext-sm">
@@ -147,8 +142,8 @@
         </div>
 
         <div *ngIf="formSubmitted && f.mobile.errors" class="p-field p-grid p-jc-center">
-            <div  class="p-col-12 p-mb-3 p-md-4 p-mb-md-0"></div>
-            <div class="p-col-12 p-md-8 p-invalid">
+            <div  class="p-col-12 p-md-4 p-lg-4"></div>
+            <div class="p-col-12 p-md-8 p-lg-8 p-invalid">
                 <div *ngIf="f.mobile.errors.required">
                     Mobile number required.
                 </div>
@@ -158,9 +153,8 @@
             </div>
         </div>
         <div class="p-field p-grid p-jc-center">
-            <div class="p-col-12 p-mb-3 p-md-1 p-mb-md-0"></div>
-            <label class="p-col-12 p-mb-2 p-md-3 p-mb-md-0">Mobile Number</label>
-            <div class="p-col-6 p-md-8">
+            <label class="p-col-12 p-md-4 p-lg-4">Mobile Number</label>
+            <div class="p-col-12 p-md-8 p-lg-8">
                 <p-inputMask mask="+449999999999" formControlName="mobile"
                     [ngClass]="{ 'p-invalid': (formSubmitted && f.mobile.errors)}">
                 </p-inputMask>
@@ -173,11 +167,12 @@
 
 
         <div class="p-field p-grid p-jc-end">
-            <div class="p-col-4 p-md-2">
+            <div class="p-col-12 p-md-5 p-lg-2">
                 <button pButton type="button" [disabled]="isRegistrationClicked" label="Sign up" class="p-button-info"
                     styleClass="p-button-sm" (click)="processSignUp()"></button>
             </div>
-            <div class="p-col-4 p-md-2">
+            <div class="p-col-12 p-md-1 p-lg-1">&nbsp;</div>
+            <div class="p-col-12 p-md-5 p-lg-2">
                 <button pButton type="button" label="Close" class="p-button-info" (click)="closeSignUp()"
                     styleClass="p-button-sm">
                 </button>
