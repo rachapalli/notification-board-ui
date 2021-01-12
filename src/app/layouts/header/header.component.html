@@ -33,5 +33,5 @@
            
     </div>
 </div>
-<app-genericdialog  [isLoginDisplay] = "isLoginDialogOpen" (onClose)="onLogInDialogClose()" [display]= "isLoginDialogOpen" *ngIf="isLoginDialogOpen" [headerText]="'Login'"></app-genericdialog>
+<app-login  [isLoginDisplay] = "isLoginDialogOpen" (onClose)="onLogInDialogClose()" [display]= "isLoginDialogOpen" *ngIf="isLoginDialogOpen" [headerText]="'Login'"></app-login>
 <app-genericdialog  [isRegistrationDisplay] = "isRegistrationDisplay" (onResponseMessages) = "showResponseMessages($event)" (onClose)="onRegistrationDialogClose()" [display]= "isRegistrationDisplay" *ngIf="isRegistrationDisplay" [headerText]="'Registration'"></app-genericdialog>

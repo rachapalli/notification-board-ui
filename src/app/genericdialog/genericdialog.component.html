@@ -1,11 +1,6 @@
-<p-dialog [header]="headerText" [(visible)]="display" modal="false" draggable="false" [style]="{width: '65vw'}"
+<p-dialog [header]="headerText" [(visible)]="display" modal="false" draggable="false" 
     (onHide)="onDialogClose($event)">
-    <div>
-        <div *ngIf="isLoginDisplay">
-            <app-login (onClose)="onDialogClose($event)"></app-login>
-        </div>
         <div *ngIf="isRegistrationDisplay">
             <app-registration (onClose)="onDialogClose($event)" (onResponseMessages)="sendResponseMessages($event)"></app-registration>
         </div>
-    </div>
 </p-dialog>
