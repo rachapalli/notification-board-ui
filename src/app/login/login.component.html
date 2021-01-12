@@ -1,4 +1,6 @@
-﻿<div (keydown.enter)="processLogin()">
+﻿<p-dialog [header]="headerText" [(visible)]="isLoginDisplay"  modal="false" draggable="false" 
+    (onHide)="closeLogin()">
+<div *ngIf="isNormalLogin" (keydown.enter)="processLogin()" class="p-fluid">
     <div class="p-grid  vertical-container">
         <div class="p-col p-as-start">
             <div class="box"></div>
@@ -6,7 +8,7 @@
     </div>
     <div class="p-grid p-fluid p-jc-center">
         <div *ngIf="isLoginError" class="p-invalid">
-           
+
             {{errorMessage}}
         </div>
         <div *ngIf="submitted && f.username.errors && f.password.errors" class="p-invalid">
@@ -21,13 +23,15 @@
             <div *ngIf="f.password.errors.required">Password is required
             </div>
         </div>
-        <div *ngIf="submitted && form.controls.username.errors && form.controls.username.errors.pattern" class="p-invalid">
+        <div *ngIf="submitted && form.controls.username.errors && form.controls.username.errors.pattern"
+            class="p-invalid">
             Please enter valid email.
         </div>
     </div>
     <form [formGroup]="form" (ngSubmit)="processLogin()">
         <div class="p-field p-grid p-jc-center">
-            <div class="form-group p-col-8 ">
+            <div class="p-col-0 p-md-2 p-lg-2"></div>
+            <div class="form-group p-col-12 p-md-8 p-lg-8 ">
                 <div class="p-inputgroup">
                     <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
                     <input type="text" pInputText formControlName="username" class="form-control p-inputtext"
@@ -36,9 +40,11 @@
                         placeholder="Email" />
                 </div>
             </div>
+            <div class="p-col-0 p-md-2 p-lg-2"></div>
         </div>
         <div class="p-field p-grid p-jc-center">
-            <div class="form-group p-col-8 ">
+            <div class="p-col-0 p-md-2 p-lg-2"></div>
+            <div class="form-group p-col-12 p-md-8 p-lg-8 ">
                 <div class="p-inputgroup">
                     <span class="p-inputgroup-addon"><i class="pi pi-key"></i></span>
                     <input type="password" pInputText formControlName="password" (ngModelChange)="onChange()"
@@ -46,16 +52,95 @@
                         [ngClass]="{ 'p-invalid': (submitted && f.password.errors) || isLoginError }" />
                 </div>
             </div>
+            <div class="p-col-0 p-md-2 p-lg-2"></div>
         </div>
+
+        <div class="p-field p-grid p-jc-center">
+            <div class="p-col-0 p-md-2 p-lg-2"></div>
+            <div class="p-col-10 p-md-10 p-lg-10">
+                <a [routerLink]="" (click)="forgotPassword()">forgot password</a>
+
+            </div>
+        </div>
+
         <div class="p-field p-grid p-jc-end">
-            <div class="p-col-4 p-md-2">
-                <button pButton type="button" [disabled]="loading" label="Login" class="p-button-info"  styleClass="p-button-sm" (click)="processLogin()"></button>
+            <div class="p-col-12 p-md-5 p-lg-2">
+                <button pButton type="button" [disabled]="loading" label="Login" class="p-button-info"
+                    styleClass="p-button-sm" (click)="processLogin()"></button>
             </div>
-            <div class="p-col-4 p-md-2">
-                <button pButton type="button" label="Close"  class="p-button-info" (click)="closeLogin()" styleClass="p-button-sm">   </button>
+            <div class="p-col-12 p-md-1 p-lg-1">&nbsp;</div>
+            <div class="p-col-12 p-md-5 p-lg-2">
+                <button pButton type="button" label="Close" class="p-button-info" (click)="closeLogin()"
+                    styleClass="p-button-sm"> </button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<div *ngIf="isForgotScreen"  class="p-fluid">
+    <div class="p-grid p-fluid p-jc-center">
+        <div *ngIf="issubmitError" class="p-invalid">
+            Please enter valid email.
+        </div>
+    </div>
+    <div class="p-field p-grid p-jc-center">
+        <div class="p-col-0 p-md-2 p-lg-1"></div>
+        <div class="form-group p-col-12 p-md-8 p-lg-8 ">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+                <input type="text" pInputText [(ngModel)]="username" class="form-control p-inputtext"
+                    
+                     placeholder="Please enter Email to reset password" />
             </div>
         </div>
-        
-    </form>
-    
+    </div>
+    <div class="p-field p-grid p-jc-center">
+        <div class="p-col-0 p-md-2 p-lg-1"></div>
+        <div class="p-col-12 p-md-5 p-lg-2">
+            <button pButton type="button" [disabled]="!username" label="Submit" class="p-button-info"
+                styleClass="p-button-sm" (click)="processForgotPassword()"></button>
+        </div>
+    </div>
 </div>
+
+<div *ngIf="isPasswordChageReq"  class="p-fluid">
+    <div class="p-grid p-fluid p-jc-center">
+        <div *ngIf="passwordError" class="p-invalid">
+            {{passwordErrorMsg}}
+        </div>
+    </div>
+    <div class="p-field p-grid p-jc-center">
+        <div class="p-col-0 p-md-2 p-lg-2"></div>
+        <div class="form-group p-col-12 p-md-8 p-lg-8 ">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon"><i class="pi pi-key"></i></span>
+                <input type="password" pInputText [(ngModel)]="newPassword" 
+                    placeholder="New Password" class="form-control p-inputtext"
+                    [ngClass]="{ 'p-invalid': (submitted && f.password.errors) || isLoginError }" />
+            </div>
+        </div>
+        <div class="p-col-0 p-md-2 p-lg-2"></div>
+    </div>
+    <div class="p-field p-grid p-jc-center">
+        <div class="p-col-0 p-md-2 p-lg-2"></div>
+        <div class="form-group p-col-12 p-md-8 p-lg-8 ">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon"><i class="pi pi-key"></i></span>
+                <input type="password" pInputText [(ngModel)]="confNewPassword" 
+                    placeholder="Confirm New Password" class="form-control p-inputtext"
+                    [ngClass]="{ 'p-invalid': (submitted && f.password.errors) || isLoginError }" />
+            </div>
+        </div>
+        <div class="p-col-0 p-md-2 p-lg-2"></div>
+    </div>
+
+    <div class="p-field p-grid p-jc-center">
+        <div class="p-col-0 p-md-2 p-lg-1"></div>
+        <div class="p-col-12 p-md-5 p-lg-2">
+            <button pButton type="button"  label="Update" class="p-button-info"
+                styleClass="p-button-sm" (click)="updatePassword()"></button>
+        </div>
+    </div>
+</div>
+</p-dialog>

@@ -105,6 +105,14 @@ export class HttpServiceClient {
     return this.httpService.get(environment.apiUrl + "/user/"+email);
   }
 
+  forgotPassword(email: string): any{
+    return this.httpService.post(environment.apiUrl  + '/user/resetPassword', {'email': email});
+  }
+  
+  updatePassword(userId: string, password: string): any{
+    return this.httpService.post(environment.apiUrl  + '/user/update', {'userId': userId, 'password': password});
+  }
+
   uploadFile(file: any): any {
     return this.httpService.post(environment.apiUrl + "/file/upload", file);
   }

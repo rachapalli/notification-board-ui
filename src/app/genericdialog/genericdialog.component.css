@@ -16,3 +16,34 @@
         margin-top: 0.5rem;
     }
 
+
+    :host ::ng-deep .p-dialog  {
+        width: 65vw;
+    }
+
+
+    @media (min-width: 1em) and (max-width: 60em) {
+        :host ::ng-deep .p-dialog {
+        height: 53%;
+    }
+    }
+    @media (min-width: 61em) and (max-width: 80em) {
+        :host ::ng-deep .p-dialog {
+        height: 42%;
+    }
+    }
+    @media (min-width: 81em) and (max-width: 84em) {
+        :host ::ng-deep .p-dialog {
+        height: 56%;
+    }
+    }
+    @media (min-width:85em) and (max-width: 86em)  {
+        :host ::ng-deep .p-dialog {
+        height: 81%;
+    }
+}
+    @media (min-width:87em) {
+        :host ::ng-deep .p-dialog {
+        height: 50%;
+    }
+    }

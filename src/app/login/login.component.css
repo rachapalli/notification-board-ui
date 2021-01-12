@@ -2,7 +2,60 @@
     
         margin-bottom: .5rem;
         display: block;
-
-        
-  
 }
+:host ::ng-deep .p-dialog .p-dialog-header {
+        border-bottom: 0 none;
+        background: #ffffff;
+        color: #495057;
+        padding: 0.8rem;
+        border-top-right-radius: 3px;
+        border-top-left-radius: 3px;
+        background-color: #2196f3;
+      }
+
+:host ::ng-deep  .p-grid {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -0.5rem;
+        margin-left: -0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    :host ::ng-deep .p-dialog  {
+        width: 45vw;
+    }
+    /* @media (min-width: 1em) and (max-width: 47em) {
+        :host ::ng-deep .p-dialog {
+        height: 52%;
+    }
+    }
+    @media (min-width: 48em) and (max-width: 60em) {
+        :host ::ng-deep .p-dialog {
+        height: 32%;
+    }
+    }
+    @media (min-width: 61em) and (max-width: 80em) {
+        :host ::ng-deep .p-dialog {
+        height: 23%;
+    }
+    }
+    @media (min-width: 81em) and (max-width: 84em) {
+        :host ::ng-deep .p-dialog {
+        height: 28%;
+    }
+    }
+   @media (min-width:85em) and (max-width: 86em)  {
+        :host ::ng-deep .p-dialog {
+        height: 54%;
+    }
+} 
+    @media (min-width:87em) {
+        :host ::ng-deep .p-dialog {
+        height: 26%;
+    }
+    } */
+    @media (min-width:35em) and (max-width: 47.9em) {
+        :host ::ng-deep .p-dialog {
+        height: 60%;
+    }
+    }
