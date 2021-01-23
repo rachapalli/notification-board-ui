@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
   confNewPassword: string;
   passwordError = false;
   passwordErrorMsg = '';
+  passwordConstrain = '';
   errorMessage = 'Invalid Username And/or Password';
   @Output()
   onClose = new EventEmitter();
@@ -51,6 +52,11 @@ export class LoginComponent implements OnInit {
       username: ['', [Validators.required, Validators.pattern(/^.{3,}@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)]],
       password: ['', Validators.required]
     });
+    this.passwordConstrain = `${'Password must contain' +
+                              ' at least eight characters,'+
+                              ' including one uppercase letter,' +
+                              ' one lowercase letter,' +
+                              ' one special charecter and number.'}`;
   }
 
   get f() { return this.form.controls; }
@@ -114,13 +120,17 @@ export class LoginComponent implements OnInit {
   }
   updatePassword(){
     if(this.newPassword){
+      const passRegex =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&]).{8,}$/;
       if(this.newPassword !== this.confNewPassword ){
         this.passwordError = true;
         this.passwordErrorMsg = 'New password and Confirm new password should be same.';
-            }else if(this.newPassword.length < 8){
+            }else if(!passRegex.test(String(this.newPassword))){
+              this.passwordError = true;
+              this.passwordErrorMsg = this.passwordConstrain;
+            } else if(this.newPassword.length < 8){
               this.passwordError = true;
               this.passwordErrorMsg = 'Password must be 8 charecters';
-            }else{
+            }else {
               this.passwordError = false;
               this.httpService.updatePassword(this.authService.currentUserValue.results.id,
                 this.newPassword).subscribe((res) => {

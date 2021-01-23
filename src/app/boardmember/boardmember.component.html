@@ -4,17 +4,26 @@
   </p-tabPanel>
   <p-tabPanel header="Invite Members" leftIcon="pi pi-arrow-down" *ngIf="isInviteView">
     <p-tabView #innerTab (onChange)="handleInnerTabChange($event)" [activeIndex]="selectedInnerTabIndex">
-      <p-tabPanel header="Invitations" >
+      <p-tabPanel header="Invitations">
         <app-invitemembers *ngIf="innerHeader === 'Invitations'"></app-invitemembers>
       </p-tabPanel>
       <p-tabPanel header="Register Approvals">
         <app-registrationapprove *ngIf="innerHeader === 'Register Approvals'"></app-registrationapprove>
       </p-tabPanel>
-      
+
     </p-tabView>
-   
+
   </p-tabPanel>
   <p-tabPanel header="Notifications" leftIcon="pi pi-bell" *ngIf="isNotificationView">
-    <app-notifications  *ngIf="header === 'Notifications'"></app-notifications>
+    <app-notifications *ngIf="header === 'Notifications'"></app-notifications>
+  </p-tabPanel>
+  <p-tabPanel header="All Boards"  *ngIf="isBoardOwnerView">
+    <app-allboard-details *ngIf="header === 'All Boards'"></app-allboard-details>
+  </p-tabPanel>
+  <p-tabPanel header="Registred Users" leftIcon="pi pi-user" *ngIf="isMemberView">
+    <app-rolebaseduserdetails *ngIf="header === 'Registred Users'" [role]="'Member'"></app-rolebaseduserdetails>
+  </p-tabPanel>
+  <p-tabPanel header="Board Owners" leftIcon="pi pi-user" *ngIf="allRegUsersView">
+    <app-rolebaseduserdetails *ngIf="header === 'Board Owners'" [role]="'Board Owner'"></app-rolebaseduserdetails>
   </p-tabPanel>
 </p-tabView>

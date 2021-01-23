@@ -1,0 +1,70 @@
+<p-table #table [paginator]="isPaginator" [responsive]="true" [rows]="rowsperPage" [value]="boardOwners"
+    styleClass="p-datatable-gridlines" [scrollable]="true" scrollHeight="300px">
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width:8em">Board Name</th>
+            <th style="width:12em">URL</th>
+            <th style="width:6em">Type</th>
+            <th style="width:8em">Created Date</th>
+            <th style="width:2em" *ngIf="isBoardEdit">Action</th>
+        </tr>
+        <tr>
+            <th style="width:8em">
+                <input pInputText type="text" (input)="table.filter($event.target.value, 'groupName', 'contains')"
+                    placeholder="Search by Board Name" class="p-column-filter">
+            </th>
+            <th style="width:12em">
+                <input pInputText type="text" (input)="table.filter($event.target.value, 'url', 'contains')"
+                    placeholder="Search by URL" class="p-column-filter">
+            </th>
+            <th style="width:6em">
+                <input pInputText type="text" (input)="table.filter($event.target.value, 'type', 'contains')"
+                    placeholder="Search by Type" class="p-column-filter">
+            </th>
+            <th style="width:8em">
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="2010:2040" inputId="navigators"
+                    (onSelect)="onDateSelect($event)" (onClearClick)="table.filter('', 'date', 'equals')"
+                    [showButtonBar]="true" appendTo="body" styleClass="p-column-filter" placeholder="Registration Date"
+                    [readonlyInput]="true" dateFormat="dd/mm/yy"></p-calendar>
+
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-boardOwner>
+        <tr [style.background-color]="boardOwner.isActive ? 'white' : '#dddddd'">
+            <td style="width:8em">
+                <span class="p-column-title">Board Name</span>
+                {{boardOwner.groupName}}</td>
+            <td style="width:12em; word-break: break-all">
+                <span class="p-column-title">URL</span>
+                <a target="_blank" href={{localUrl}}{{boardOwner.groupName}}>
+                    {{boardOwner.url}}
+                </a>
+            </td>
+            <td style="width:6em">
+                <span class="p-column-title">Type</span>
+                {{boardOwner.type}}</td>
+
+            <td style="width:8em">
+                <span class="p-column-title">Created Date</span>
+                {{boardOwner.date}}</td>
+            <td style="width:2em" *ngIf="isBoardEdit">
+                <span class="p-column-title">Action</span>
+                <div class="p-field p-grid p-jc-center">
+                    <div class="p-col-6">
+                        <i class="pi pi-check-circle hoverPointer" *ngIf="!boardOwner.isApproved" pTooltip="Approve"
+                            tooltipPosition="top" (click)="onApproveOrReject(boardOwner, true)"></i>
+
+                        <i class="pi pi-times hoverPointer" *ngIf="boardOwner.isApproved" pTooltip="Reject"
+                            tooltipPosition="top" (click)="onApproveOrReject(boardOwner, false)"></i>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="5">No customers found.</td>
+        </tr>
+    </ng-template>
+</p-table>
