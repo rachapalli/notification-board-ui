@@ -6,7 +6,7 @@
     </div>
     <p-accordion>
         <p-accordionTab header="Public" [selected]="true">
-            <p-table [value]="publicGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
+            <p-table [paginator]="isPublicPaginator" [rows]="rowsperPage" [value]="publicGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:8em">Board Name</th>
@@ -42,7 +42,7 @@
 
         </p-accordionTab>
         <p-accordionTab header="Private">
-            <p-table [value]="privateGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
+            <p-table [paginator]="isPrivatePaginator" [rows]="10" [value]="privateGroups" styleClass="p-datatable-gridlines"  [scrollable]="true" scrollHeight="300px">
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:8em">Board Name</th>
@@ -84,8 +84,9 @@
             </div>
         </div>
 
-        <div class="p-grid p-fluid p-jc-center">
-            <div *ngIf="isCreateError" class="p-invalid">
+        <div *ngIf="isCreateError" class="p-grid p-fluid p-jc-center">
+            <div  class="p-col-12 p-md-4 p-lg-4"></div>
+            <div  class="p-col-12 p-md-8 p-lg-8 p-jc-start p-invalid">
                 {{errorMessage}}
             </div>
         </div>
@@ -93,15 +94,15 @@
 
             <div class="p-fluid">
                 <div class="p-field p-grid">
-                    <label class="p-col-2 p-mb-2 p-md-2 p-mb-md-0">Name</label>
-                    <div class="p-col-10 p-md-10">
+                    <label class="p-col-12 p-md-2 p-lg-2">Name</label>
+                    <div class="p-col-12 p-md-8 p-lg-8">
                         <input type="text" formControlName="groupName"  (ngModelChange)="onGroupNameChange()" [style]="{'width':'35vw'}"
                         pInputText class="p-inputtext-sm" [ngClass]="{ 'p-invalid': submitted && (f.groupName.errors) }" >
                     </div>
                 </div>
-                <div class="p-field p-grid p-jc-center">
-                    <label for="groupType" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Type</label>
-                    <div class="p-col-12 p-md-10">
+                <div class="p-field p-grid">
+                    <label for="groupType" class="p-col-12 p-md-2 p-lg-2">Type</label>
+                    <div class="p-col-12 p-md-8 p-lg-8">
                         <p-dropdown class="form-control p-col-9" formControlName="groupType" [style]="{'width':'35vw'}"
                         [options]="groupTypes" (onChange)="onGroupTypeSelect()"
                         [ngClass]="{ 'p-invalid': submitted && (f.groupType.errors) }"></p-dropdown>
@@ -126,10 +127,11 @@
                 </div>
             </div> -->
             <div class="p-field p-grid p-jc-end">
-                <div class="p-col-4 p-md-2">
+                <div class="p-col-12 p-md-5 p-lg-2">
                     <button pButton type="button"  label="Submit" class="p-button-info"  styleClass="p-button-sm" (click)="createGroup()"></button>
                 </div>
-                <div class="p-col-4 p-md-2">
+                <div class="p-col-12 p-md-1 p-lg-1">&nbsp;</div>
+                <div class="p-col-12 p-md-5 p-lg-2">
                 <button pButton type="button" label="Close"  class="p-button-info" (click)="onDialogClose(false)" styleClass="p-button-sm">
                 </button>
             </div>

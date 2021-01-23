@@ -22,6 +22,14 @@ export class CurrentUser {
     results: any;
 }
 
+export class User {
+    userName: string;
+    email: string;
+    createdDate: Date;
+    isApproved: boolean;
+    date: any;
+}
+
 export class UserStatus {
     userEmail: string;
     userName: string;

@@ -30,6 +30,9 @@ export class BoardDetailsComponent implements OnInit {
   isBoardCreate = false;
   isBoardEdit = false;
   isBoardDelete = false;
+  isPrivatePaginator = false;
+  isPublicPaginator = false;
+  rowsperPage = 10;
   constructor(private formBuilder: FormBuilder, private httpService: HttpServiceClient,
     private messageService: MessageService, public authService: AuthenticationService) { }
 
@@ -135,6 +138,16 @@ export class BoardDetailsComponent implements OnInit {
       if(res){
        this.publicGroups = res.filter(s => s.isPublic);
        this.privateGroups = res.filter(s => !s.isPublic);
+       if(this.privateGroups && this.privateGroups.length > this.rowsperPage){
+        this.isPrivatePaginator = true;
+       } else{
+        this.isPrivatePaginator = false;
+       }
+       if(this.publicGroups && this.publicGroups.length > this.rowsperPage){
+        this.isPublicPaginator = true;
+       } else{
+        this.isPublicPaginator = false;
+       }
       }
     }, error => {
       console.log(error);

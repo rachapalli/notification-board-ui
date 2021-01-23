@@ -136,5 +136,22 @@ export class HttpServiceClient {
   authenticateAndUpdateUser(req: UserStatus): any{
     return this.httpService.post(environment.apiUrl + "/user/group/approve", req);
   }
+
+  getAllBoards(): any{
+    return this.httpService.get(environment.apiUrl + "/group/getGroups");    
+  }
+  
+  getUserDetailsByRole(role: string): any{
+    return this.httpService.post(environment.apiUrl+ "/user/getUserDetailsByRole", {"roleName": role});
+  }
+
+  approveUser(req): any{
+    return this.httpService.post(environment.apiUrl+ "/user/approveUser", req);
+  }
+
+  approveGroup(req): any{
+    return this.httpService.post(environment.apiUrl+ "/group/approve", req);
+  }
+
   
 }

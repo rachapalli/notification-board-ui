@@ -28,6 +28,7 @@ import {InputMaskModule} from 'primeng/inputmask';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ChipsModule} from 'primeng/chips';
 import {EditorModule} from 'primeng/editor';
+import {CalendarModule} from 'primeng/calendar';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RegistrationComponent } from './registration/registration.component';
 import { GenericdialogComponent } from './genericdialog/genericdialog.component';
@@ -39,6 +40,8 @@ import { LoaderService } from './loader.service';
 import { LoaderInterceptorService } from './loader-interceptor.service';
 import { InvitemembersComponent } from './invitemembers/invitemembers.component';
 import { RegistrationapproveComponent } from './registrationapprove/registrationapprove.component';
+import { AllboardDetailsComponent } from './allboard-details/allboard-details.component';
+import { RolebaseduserdetailsComponent } from './rolebaseduserdetails/rolebaseduserdetails.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +57,9 @@ import { RegistrationapproveComponent } from './registrationapprove/registration
     FooterComponent,
     NotificationByGroupNameComponent,
     InvitemembersComponent,
-    RegistrationapproveComponent
+    RegistrationapproveComponent,
+    AllboardDetailsComponent,
+    RolebaseduserdetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -81,7 +86,8 @@ import { RegistrationapproveComponent } from './registrationapprove/registration
     ProgressSpinnerModule,
     TooltipModule,
     ChipsModule,
-    EditorModule
+    EditorModule,
+    CalendarModule
   ],
   providers: [{provide: LocationStrategy, useClass: HashLocationStrategy},
      MessageService,
