@@ -14,9 +14,9 @@ export class BoardmemberComponent implements OnInit {
   isInviteView = false;
   isBoardView = false;
   isNotificationView = false;
-  isBoardOwnerView = true;
-  isMemberView = true;
-  allRegUsersView = true;
+  isBoardOwnerView = false;
+  isMemberView = false;
+  allRegUsersView = false;
   selectedIndex = 0;
   selectedInnerTabIndex = 0;
   @ViewChild('mainTab') tabView: TabView;
@@ -39,15 +39,15 @@ export class BoardmemberComponent implements OnInit {
     if(notification && notification.length > 0){
       this.isNotificationView = notification[0].isView;
     }
-    const boardOwner = this.map.filter(e => e.name === 'BOARDOWNER');
+    const boardOwner = this.map.filter(e => e.name === 'ALL_BOARD_OWNERS');
     if(boardOwner && boardOwner.length > 0){
       this.isBoardOwnerView = boardOwner[0].isView;
     }
-    const member = this.map.filter(e => e.name === 'MEMBER');
+    const member = this.map.filter(e => e.name === 'ALL_BOARDS');
     if(member && member.length > 0){
       this.isMemberView = boardOwner[0].isView;
     }
-    const allUsers = this.map.filter(e => e.name === 'ALLUSERS');
+    const allUsers = this.map.filter(e => e.name === 'ALL_USERS');
     if(allUsers && allUsers.length > 0){
       this.allRegUsersView = allUsers[0].isView;
     }

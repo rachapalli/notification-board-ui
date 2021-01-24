@@ -88,6 +88,7 @@ export class LoginComponent implements OnInit {
     if(res && res.results.isTempPwd){
       this.resetScreen();
       this.isPasswordChageReq = true;
+      this.headerText = 'Update Password';
     }else {
     if(localStorage.getItem('prevUrl')){
       location.href = localStorage.getItem('prevUrl');
@@ -101,6 +102,7 @@ export class LoginComponent implements OnInit {
   forgotPassword(){
     this.isForgotScreen = true;
     this.isNormalLogin = false;
+    this.headerText = 'Forgot Password';
   }
 
   processForgotPassword(){
@@ -110,7 +112,7 @@ export class LoginComponent implements OnInit {
         this.messageService.add({severity:'success', summary: 'Success', detail: res.message + ' Please check your email'});
         this.resetScreen();
         this.isNormalLogin = true;
-
+        this.headerText = 'Login';
       }, err=>{
         this.messageService.add({severity:'error', summary: 'Error', detail: err.error.message});
       });
@@ -157,6 +159,9 @@ export class LoginComponent implements OnInit {
     this.isLoginError = false;
   }
   closeLogin() {
+    if(this.headerText === 'Update Password'){
+      this.router.navigate(['/boardMember']);
+    }
     this.onClose.emit();
   }
 
@@ -164,6 +169,7 @@ export class LoginComponent implements OnInit {
     this.isForgotScreen = false;
     this.isNormalLogin = false;
     this.isPasswordChageReq = false;
+    this.headerText = 'Login';
   }
 
 }

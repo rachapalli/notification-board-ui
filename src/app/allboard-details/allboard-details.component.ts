@@ -10,11 +10,11 @@ import { HttpServiceClient } from '../http-service-client';
 })
 export class AllboardDetailsComponent implements OnInit {
 
-  isPaginator = true;
+  isPaginator = false;
   isBoardEdit = false;
   isBoardDelete = false;
   boardOwners: any[];
-  rowsperPage = 5;
+  rowsperPage = 10;
   @ViewChild('table') table: Table;
   localUrl = "";
 
@@ -25,7 +25,7 @@ export class AllboardDetailsComponent implements OnInit {
     if (hrefUrl) {
       this.localUrl = hrefUrl[0] + '#/getNotifications?groupName=';
     }
-    const board = JSON.parse(localStorage.getItem("permission")).filter(e => e.name === 'BOARD');
+    const board = JSON.parse(localStorage.getItem("permission")).filter(e => e.name === 'ALL_BOARDS');
     if (board && board.length > 0) {
       this.isBoardEdit = board[0].isEdit;
       this.isBoardDelete = board[0].isDelete;
@@ -45,7 +45,7 @@ export class AllboardDetailsComponent implements OnInit {
           }
         });
         this.boardOwners = res;
-        if (this.boardOwners && this.boardOwners.length > 10) {
+        if (this.boardOwners && this.boardOwners.length > this.rowsperPage) {
           this.isPaginator = true;
         } else {
           this.isPaginator = false;
