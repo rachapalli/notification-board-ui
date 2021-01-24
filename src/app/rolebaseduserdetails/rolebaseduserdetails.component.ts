@@ -24,7 +24,12 @@ export class RolebaseduserdetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchUserDetailsbyRole();
-    const approv = JSON.parse(localStorage.getItem("permission")).filter(e => e.name === 'INVITATION_APPROVALS');
+    let approv = null;
+    if(this.role === 'Member'){
+      approv = JSON.parse(localStorage.getItem("permission")).filter(e => e.name === 'ALL_USERS');
+    }else if(this.role === 'Board Owner'){
+      approv = JSON.parse(localStorage.getItem("permission")).filter(e => e.name === 'ALL_BOARD_OWNERS');
+    }
     if (approv && approv.length > 0) {
       this.isapprovEdit = approv[0].isEdit;
 
@@ -42,7 +47,7 @@ export class RolebaseduserdetailsComponent implements OnInit {
           }
         });
         this.userDetails = res.filter(s => !s.isPublic);
-        if (this.userDetails && this.userDetails.length > 10) {
+        if (this.userDetails && this.userDetails.length > this.rowsperPage) {
           this.isPaginator = true;
         } else {
           this.isPaginator = false;

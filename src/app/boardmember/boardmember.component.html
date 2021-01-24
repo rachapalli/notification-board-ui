@@ -17,13 +17,14 @@
   <p-tabPanel header="Notifications" leftIcon="pi pi-bell" *ngIf="isNotificationView">
     <app-notifications *ngIf="header === 'Notifications'"></app-notifications>
   </p-tabPanel>
-  <p-tabPanel header="All Boards"  *ngIf="isBoardOwnerView">
-    <app-allboard-details *ngIf="header === 'All Boards'"></app-allboard-details>
-  </p-tabPanel>
-  <p-tabPanel header="Registred Users" leftIcon="pi pi-user" *ngIf="isMemberView">
-    <app-rolebaseduserdetails *ngIf="header === 'Registred Users'" [role]="'Member'"></app-rolebaseduserdetails>
-  </p-tabPanel>
   <p-tabPanel header="Board Owners" leftIcon="pi pi-user" *ngIf="allRegUsersView">
     <app-rolebaseduserdetails *ngIf="header === 'Board Owners'" [role]="'Board Owner'"></app-rolebaseduserdetails>
   </p-tabPanel>
+  <p-tabPanel header="Boards"  *ngIf="isBoardOwnerView">
+    <app-allboard-details *ngIf="header === 'Boards'"></app-allboard-details>
+  </p-tabPanel>
+  <p-tabPanel header="Users" leftIcon="pi pi-user" *ngIf="isMemberView">
+    <app-rolebaseduserdetails *ngIf="header === 'Users'" [role]="'Member'"></app-rolebaseduserdetails>
+  </p-tabPanel>
+ 
 </p-tabView>
