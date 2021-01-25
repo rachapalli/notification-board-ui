@@ -40,7 +40,9 @@ export class RegistrationComponent implements OnInit {
     this.userTypes = [];
     this.httpService.getUserTypes().subscribe((res) => {
       for(let user of res){
-        this.userTypes.push({label:user, value:user});
+        if(user && user !== 'Product Owner'){
+          this.userTypes.push({label:user, value:user});
+        }
       }
       this.userTypes.reverse(); // need to remove once back end is ready
       this.userTypes.pop();
