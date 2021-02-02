@@ -2,18 +2,23 @@
     styleClass="p-datatable-gridlines" [scrollable]="true" scrollHeight="300px">
     <ng-template pTemplate="header">
         <tr>
-            <th style="width:8em">Board Name</th>
-            <th style="width:12em">URL</th>
+            <th style="width:6em">Board Name</th>
+            <th style="width:6em">Board Owner Name</th>
+            <th style="width:8em">URL</th>
             <th style="width:6em">Type</th>
-            <th style="width:8em">Created Date</th>
+            <th style="width:6em">Created Date</th>
             <th style="width:2em" *ngIf="isBoardEdit">Action</th>
         </tr>
         <tr>
-            <th style="width:8em">
+            <th style="width:6em">
                 <input pInputText type="text" (input)="table.filter($event.target.value, 'groupName', 'contains')"
                     placeholder="Search by Board Name" class="p-column-filter">
             </th>
-            <th style="width:12em">
+            <th style="width:6em">
+                <input pInputText type="text" (input)="table.filter($event.target.value, 'createdUserName', 'contains')"
+                    placeholder="Search by Board Owner" class="p-column-filter">
+            </th>
+            <th style="width:8em">
                 <input pInputText type="text" (input)="table.filter($event.target.value, 'url', 'contains')"
                     placeholder="Search by URL" class="p-column-filter">
             </th>
@@ -21,21 +26,24 @@
                 <input pInputText type="text" (input)="table.filter($event.target.value, 'type', 'contains')"
                     placeholder="Search by Type" class="p-column-filter">
             </th>
-            <th style="width:8em">
-                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="2010:2040" inputId="navigators"
-                    (onSelect)="onDateSelect($event)" (onClearClick)="table.filter('', 'date', 'equals')"
+            <th style="width:6em">
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="2010:2040" 
+                    (onSelect)="onDateSelect($event)" (onClearClick)="table.filter('', 'date', 'lte')"
                     [showButtonBar]="true" appendTo="body" styleClass="p-column-filter" placeholder="Search by Created Date"
-                    [readonlyInput]="true" dateFormat="dd/mm/yy"></p-calendar>
+                    [readonlyInput]="true" dateFormat="yy/mm/dd"></p-calendar>
 
             </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-boardOwner>
-        <tr [style.background-color]="boardOwner.isActive ? 'white' : '#dddddd'">
-            <td style="width:8em">
+        <tr >
+            <td style="width:6em">
                 <span class="p-column-title">Board Name</span>
                 {{boardOwner.groupName}}</td>
-            <td style="width:12em; word-break: break-all">
+                <td style="width:6em">
+                    <span class="p-column-title">Board Owner Name</span>
+                    {{boardOwner.createdUserName}}</td>
+            <td style="width:8em; word-break: break-all">
                 <span class="p-column-title">URL</span>
                 <a target="_blank" href={{localUrl}}{{boardOwner.groupName}}>
                     {{boardOwner.url}}
@@ -45,7 +53,7 @@
                 <span class="p-column-title">Type</span>
                 {{boardOwner.type}}</td>
 
-            <td style="width:8em">
+            <td style="width:6em">
                 <span class="p-column-title">Created Date</span>
                 {{boardOwner.date}}</td>
             <td style="width:2em" *ngIf="isBoardEdit">
