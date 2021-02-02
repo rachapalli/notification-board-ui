@@ -74,7 +74,7 @@ export class RolebaseduserdetailsComponent implements OnInit {
     });
   }
   onDateSelect(value: any) {
-    this.table.filter(this.formatDate(value), 'date', 'equals')
+    this.table.filter(this.formatDate(value), 'date', 'lte')
   }
 
   formatDate(date) {
@@ -89,6 +89,6 @@ export class RolebaseduserdetailsComponent implements OnInit {
       day = '0' + day;
     }
 
-    return day + '/' + month + '/' + date.getFullYear();
+    return  date.getFullYear() + '/' + month + '/' + day;
   }
 }

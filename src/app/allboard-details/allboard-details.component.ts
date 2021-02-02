@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -41,7 +42,7 @@ export class AllboardDetailsComponent implements OnInit {
           element.url = this.localUrl + element.groupName;
           element.type = element.isPublic ? 'Public' : 'Private';
           if (element.createdDate) {
-            element.date = this.formatDate(new Date(element.createdDate));
+            element.date = formatDate(element.createdDate, 'yyyy/MM/dd', 'en-US');
           }
         });
         this.boardOwners = res;
@@ -72,10 +73,10 @@ export class AllboardDetailsComponent implements OnInit {
   }
 
   onDateSelect(value: any) {
-    this.table.filter(this.formatDate(value), 'date', 'equals')
+    this.table.filter(this.formatDate(value), 'date', 'lte')
   }
 
-  formatDate(date) {
+  formatDate(date): string {
     let month = date.getMonth() + 1;
     let day = date.getDate();
 
@@ -87,7 +88,7 @@ export class AllboardDetailsComponent implements OnInit {
       day = '0' + day;
     }
 
-    return day + '/' + month + '/' + date.getFullYear();
+    return date.getFullYear() + "/" + month + "/" + day;
   }
 
 }
