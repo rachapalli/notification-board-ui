@@ -70,6 +70,14 @@
     <p-dialog header="Invite Members" modal="false" [(visible)]="display" [style]="{width: '80vw'}"
         (onHide)="onDialogClose()">
         <div class="p-fluid">
+
+            <div *ngIf="isError" class="p-grid p-fluid p-jc-center">
+                <div  class="p-col-12 p-md-4 p-lg-4"></div>
+                <div  class="p-col-12 p-md-8 p-lg-8 p-jc-start p-invalid">
+                    {{errorMessage}}
+                </div>
+            </div>
+
             <div class="p-field p-grid p-jc-center">
                 <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Group type</label>
                 <div class="p-col-6 p-md-4">
@@ -85,13 +93,13 @@
                 <label class="p-col-2 p-md-2">To</label>
                 <div class="p-col-10 p-md-10">
                     <p-chips [(ngModel)]="invitationModel.emailIdList" addOnTab="true" separator=";"
-                        [allowDuplicate]="allowDuplicateEmail" (onAdd)="onEmailAdd($event)"></p-chips>
+                        [allowDuplicate]="allowDuplicateEmail" (onAdd)="onEmailAdd($event)" (onRemove)="validateTemplate()"></p-chips>
                 </div>
             </div>
             <div class="p-field p-grid p-jc-center">
                 <label for="details" class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Subject</label>
                 <div class="p-col-12 p-md-10">
-                    <input type="text" [(ngModel)]="invitationModel.emailSubject" (ngModelChange)="enableorDisableSendButton()" pInputText class="p-inputtext-sm">
+                    <input type="text" [(ngModel)]="invitationModel.emailSubject" (ngModelChange)="validateTemplate()" pInputText class="p-inputtext-sm">
                 </div>
 
             </div>
@@ -99,12 +107,12 @@
                 <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Message</label>
                 <div class="p-col-12 p-md-10">
                     <!-- <input type="text" [(ngModel)]="invitationModel.emailBody" pInputText class="p-inputtext-sm"> -->
-                    <p-editor [(ngModel)]="invitationModel.emailBody" (ngModelChange)="enableorDisableSendButton()" [style]="{'height':'200px'}"></p-editor>
+                    <p-editor [(ngModel)]="invitationModel.emailBody" (ngModelChange)="validateTemplate()" [style]="{'height':'200px'}"></p-editor>
                 </div>
             </div>
             <div class="p-field p-grid p-jc-end">
                 <div class="p-col-2 p-md-2">
-                    <button pButton type="button" [disabled]="isButtonDisabled" label="Send" class="p-button-info"
+                    <button pButton type="button"  label="Send" class="p-button-info"
                         styleClass="p-button-sm" (click)="sendInvitation()"></button>
                 </div>
                 <div class="p-col-2 p-md-2">

@@ -13,7 +13,7 @@ import { BoardInvitation, Invitation } from '../model/invitation.model';
 export class InvitemembersComponent implements OnInit {
 
   invitations: any;
-  isButtonDisabled: boolean;
+  isError= false;
   groupTypes: SelectItem[];
   publicGroups: any;
   privateGroups: any;
@@ -25,6 +25,8 @@ export class InvitemembersComponent implements OnInit {
   display: boolean;
   allowDuplicateEmail = false;
   isInviteCreate = false;
+  errorMessage = '';
+  isSubmitClicked = false;
    constructor(private httpService: HttpServiceClient,
     private messageService: MessageService, public authService: AuthenticationService) { }
 
@@ -95,10 +97,10 @@ export class InvitemembersComponent implements OnInit {
     } else {
       this.invitationModel.emailBody = '';
     }
-    this.enableorDisableSendButton();
+    this.validateTemplate();
   }
   showInvitationDialog() {
-    this.isButtonDisabled = true;
+    this.isError = false;
     this.groupTypes = [{ label: 'Public', value: true }, { label: 'Private', value: false }];
     this.invitationModel = new BoardInvitation();
     this.display = true;
@@ -112,23 +114,48 @@ export class InvitemembersComponent implements OnInit {
       this.invitationModel.emailIdList.splice(index, 1);
       this.messageService.add({ severity: 'warn', detail: 'Please enter correct email.' });
     }
-    this.enableorDisableSendButton();
+    this.validateTemplate();
   }
   
-  enableorDisableSendButton(){
-    if(this.invitationModel && this.invitationModel.groupName && this.invitationModel.emailIdList && this.invitationModel.emailIdList.length > 0 && this.invitationModel.emailBody){
-      this.isButtonDisabled = false;
-    }else {
-      this.isButtonDisabled = true;
+  validateTemplate(): boolean{
+    if(this.isSubmitClicked){
+    if(!this.invitationModel.groupName){
+      this.errorMessage = "Please Select Board.";
+      this.isError = true;
+      return false;
+    }
+    if(!this.invitationModel.emailIdList){
+      this.errorMessage = "Please Enter Valid Email Address.";
+      this.isError = true;
+      return false;
+    }
+    if(this.invitationModel.emailIdList && this.invitationModel.emailIdList.length === 0){
+      this.errorMessage = "Please Enter Valid Email Address.";
+      this.isError = true;
+      return false;
+    }
+    if(this.invitationModel.emailBody){
+      this.isError = false;
+      this.invitationModel.emailBody = this.invitationModel.emailBody.replaceAll('<p><br></p>','');
+      return true;
+    }else{
+      this.errorMessage = "Please Enter Valid Message";
+      this.isError = true;
+      return false;
     }
   }
+    return true;
+  }
   sendInvitation() {
+    this.isError = false;
+    this.isSubmitClicked = true;
+    if(!this.validateTemplate()){
+      return;
+    }
   if(this.authService.currentUserValue){
     this.invitationModel.createdBy = this.authService.currentUserValue.results.id;
     }
-    if(this.invitationModel.emailBody){
-      this.invitationModel.emailBody = this.invitationModel.emailBody.replaceAll('<p><br></p>','');
-    }
+   
   this.httpService.sendInvitation(this.invitationModel).subscribe( res => {
     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Invitations sent successfully.' });
     this.onDialogClose();
@@ -145,7 +172,8 @@ export class InvitemembersComponent implements OnInit {
   onDialogClose() {
     this.display = false;
     this.invitationModel = new BoardInvitation();
-    this.isButtonDisabled = true;
+    this.isError = false;
+    this.isSubmitClicked = false;
 
   }
 }
